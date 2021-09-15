@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Helmet} from 'react-helmet'
 // import {
 //     BrowserRouter as Router,
 //     Switch,
@@ -14,9 +15,16 @@ import React, { Component } from 'react'
     render() {
         return (
             
-            <div>  
-               
-            <h1>Welcome to Uber eats</h1>
+         
+            <div >  
+               <Helmet>
+                <style>{'body{ background-color :azure}'}</style>
+                </Helmet>
+            <div>
+             <center>  
+            <h1 style ={{marginTop : '17%'}}>Welcome to Uber eats</h1>
+            </center>
+            </div>
             </div>
         )
     }

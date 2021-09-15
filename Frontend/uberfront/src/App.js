@@ -13,29 +13,35 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from './Components/Navbar';
 import React, { Component } from 'react'
-import Resterauntinit from './Components/Resterauntinit';
+import Restaurantinit from './Components/Restaurantinit';
 import Customerinit from './Components/Customerinit';
-import { ResterauntRegister } from './Components/ResterauntRegister';
+import { RestaurantRegister } from './Components/RestaurantRegister';
 import CustomerRegistration from './Components/CustomerRegistration';
+import {Helmet} from 'react-helmet'
 function App() {
   return (
     <div>
+        <Helmet>
+                <style>{'body{ background-color :azure}'}</style>
+                </Helmet>
       <Router>
       <Navbar></Navbar>
       <Switch>
         <Route exact path = "/">
+        
            <Home></Home>
+         
         </Route>
         <Route exact path = "/Customer">
        <Customerinit></Customerinit>
         </Route>
-        <Route exact path = "/Resteraunt">
-       <Resterauntinit></Resterauntinit>
+        <Route exact path = "/Restaurant">
+       <Restaurantinit></Restaurantinit>
         </Route>
-          <Route exact path = "/Resterauntregister">
-            <ResterauntRegister></ResterauntRegister>
+          <Route exact path = "/Restaurantregister">
+            <RestaurantRegister></RestaurantRegister>
         </Route>
-        <Route exact path ="/Customregister">
+        <Route exact path ="/Customerregister">
           <CustomerRegistration></CustomerRegistration>
         </Route>
         </Switch>
@@ -44,22 +50,7 @@ function App() {
       </Router>
     {/* <Home></Home> */}
     </div>
-  //   <div className="App">
-  //     <header className="App-header">
-  //       <img src={logo} className="App-logo" alt="logo" />
-  //       <p>
-  //         Edit <code>src/App.js</code> and save to reload.
-  //       </p>
-  //       <a
-  //         className="App-link"
-  //         href="https://reactjs.org"
-  //         target="_blank"
-  //         rel="noopener noreferrer"
-  //       >
-  //         Learn React
-  //       </a>
-  //     </header>
-  //   </div>
+
   );
   
 }

@@ -4,15 +4,21 @@ const Navbar = () =>
 {
     return(
 
-        <nav className = "navbar navbar-expand-sm bg-light justify-content-center">
-
-            <h1>Uber eats</h1>
-            <div className ="Links">
-                
-                <NavLink to="/">Home</NavLink>
-                <NavLink to ="/Customer">Customer</NavLink>
-                <NavLink to="/Resteraunt">Resteraunt</NavLink>
+        <nav className = "navbar navbar-inverse" style ={{backgroundColor:'lightblue'}}>
+            <div className="container-fluid">
+    <div className="navbar-header">
+         <a className="navbar-brand" style ={{fontSize: '40px'}}>Uber Eats</a>
+     </div>
+          
+         <div className="nav navbar-nav" style ={{display : 'inline'}} >
+             
+              <Link to="/" style ={{fontSize : '30px' , marginRight: '20px'}}>Home</Link>
+              <Link to ="/Customer" style ={{fontSize : '30px' , marginRight: '20px'}}>Customer</Link>
+             <Link to="/Restaurant" style ={{fontSize : '30px' }}>Resteraunt</Link>
+          </div>
+   
             </div>
+           
        </nav>
     )
 }
