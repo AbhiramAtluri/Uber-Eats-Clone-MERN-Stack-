@@ -17,7 +17,9 @@ import Restaurantinit from './Components/Restaurantinit';
 import Customerinit from './Components/Customerinit';
 import { RestaurantRegister } from './Components/RestaurantRegister';
 import CustomerRegistration from './Components/CustomerRegistration';
+import RestaurantLanding from './RestaurantLanding';
 import {Helmet} from 'react-helmet'
+import RestaurantProfile from './Components/RestaurantProfile';
 function App() {
   return (
     <div>
@@ -43,6 +45,14 @@ function App() {
         </Route>
         <Route exact path ="/Customerregister">
           <CustomerRegistration></CustomerRegistration>
+        </Route>
+        <Route exact path = "/RestaurantLanding" render = {(props) =><RestaurantLanding  {...props}/> }  >
+          {/* <RestaurantLanding></RestaurantLanding> */}
+        </Route>
+        <Route exact path = "/RestProfile" render = {(props) =><RestaurantProfile  {...props}/> } >
+
+      {/* <RestaurantProfile></RestaurantProfile> */}
+   
         </Route>
         </Switch>
 

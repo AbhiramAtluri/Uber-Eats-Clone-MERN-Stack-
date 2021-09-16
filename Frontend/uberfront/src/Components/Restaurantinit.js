@@ -138,7 +138,10 @@ export class Restaurantinit extends Component {
         )
     }else
     {
-        return <Redirect to ="/"></Redirect>  
+        return <Redirect to ={{ pathname :"/RestaurantLanding",
+                state: {message : "Hello1111"}
+    
+    }} ></Redirect>  
     }
 }
 }
