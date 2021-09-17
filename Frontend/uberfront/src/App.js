@@ -13,13 +13,16 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from './Components/Navbar';
 import React, { Component } from 'react'
-import Restaurantinit from './Components/Restaurantinit';
-import Customerinit from './Components/Customerinit';
-import { RestaurantRegister } from './Components/RestaurantRegister';
-import CustomerRegistration from './Components/CustomerRegistration';
-import RestaurantLanding from './RestaurantLanding';
+import Restaurantinit from './Components/RestaurantComponents/Restaurantinit';
+import Customerinit from './Components/CustomerComponents/Customerinit';
+import { RestaurantRegister } from './Components/RestaurantComponents/RestaurantRegister';
+import CustomerRegistration from './Components/CustomerComponents/CustomerRegistration';
+import RestaurantLanding from './Components/RestaurantComponents/RestaurantLanding';
 import {Helmet} from 'react-helmet'
-import RestaurantProfile from './Components/RestaurantProfile';
+import RestaurantProfile from './Components/RestaurantComponents/RestaurantProfile';
+import CustomerProfile from './Components/CustomerComponents/CustomerProfile';
+import EditDish from './Components/RestaurantComponents/EditDish';
+import AddDish from './Components/RestaurantComponents/AddDish';
 function App() {
   return (
     <div>
@@ -54,6 +57,17 @@ function App() {
       {/* <RestaurantProfile></RestaurantProfile> */}
    
         </Route>
+        <Route exact path = "/CustomerProfile">
+           
+       <CustomerProfile></CustomerProfile>
+        </Route>
+        <Route exact path ="/EditDish/:id" component = {EditDish}>
+         {/* <EditDish></EditDish>         */}
+        </Route>
+        <Route exact path = "/AddDishes" component = {AddDish}>
+
+        </Route>
+
         </Switch>
 
       <div></div>

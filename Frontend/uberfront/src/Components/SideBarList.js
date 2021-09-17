@@ -16,9 +16,9 @@ const sideBarList = [
 
 },
 {
-    title : "Edit Dishes",
+    title : "Add Dishes",
     icon : <FastfoodIcon></FastfoodIcon>,
-    link : "/Dishes"
+    link : "/AddDishes"
 }
 
 

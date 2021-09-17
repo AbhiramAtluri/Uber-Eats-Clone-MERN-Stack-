@@ -14,7 +14,7 @@ const Navbar = () =>
              
               <Link to="/" style ={{fontSize : '30px' , marginRight: '20px'}}>Home</Link>
               <Link to ="/Customer" style ={{fontSize : '30px' , marginRight: '20px'}}>Customer</Link>
-             <Link to="/Restaurant" style ={{fontSize : '30px' }}>Resteraunt</Link>
+             <Link to="/Restaurant" style ={{fontSize : '30px' }}>Restaurant</Link>
           </div>
    
             </div>

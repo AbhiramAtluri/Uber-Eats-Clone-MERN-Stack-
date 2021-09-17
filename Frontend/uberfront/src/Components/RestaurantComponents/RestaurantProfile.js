@@ -1,21 +1,47 @@
 import React, { Component } from 'react'
-import { Formik, Form, Field, ErrorMessage } from "formik"
+import PropTypes from 'prop-types'
 import * as Yup from "yup";
-import "../Uber.css";
+import { Formik, Form, Field, ErrorMessage } from "formik"
+import "./Uber.css";
 
+export default class RestaurantProfile extends Component {
 
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+             
+            allowEdit : false
+        }
+    }
+    
 
-
-export class CustomerProfile extends Component {
+    componentDidMount(props)
+    {
+        const x = this.props.location.state.message
+        console.log(x)
+    }
     render() {
+        const initialValues =
+        {
+
+            r_email: "",
+            r_password: "",
+            r_picture:"",
+            r_number:"",
+            r_county:"",
+            r_opentime:"",
+            r_closeime:"",
+            r_state:""
+        }
+        
         return (
             <div>
-                <div>
                 <h1></h1>
                 
                
              
-                <div className = "CustomerProfile">
+                <div className = "RestarauntProfile">
                   
                 <Formik initialValues={initialValues}>
                 <Form className = "form-group" contentEditable = "false">
@@ -24,45 +50,44 @@ export class CustomerProfile extends Component {
                 <div className = "row ">
                      <div className = "col-md-4">
                     <img src = "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"/>
-                     <label>Upload your profile pictures</label>
+                     <label>Upload Restaraunt pictures</label>
                      <Field className = "form-control" 
-                     type = "file" name = "c_picture"
+                     type = "file" name = "r_picture"
                      placeholder = "Upload pictures"   ></Field>
 
                      </div>
                      <div className = "col-md-8">
-                     <center><label>About</label></center>
-                    <Field className = "form-control" name = "c_about" as="textarea" 
-                     placeholder = "Enter a small description of yourself"   ></Field>
-                    <ErrorMessage name="c_textarea">
+                     <center><label>Resteraunt description</label></center>
+                    <Field className = "form-control" name = "r_description" as="textarea" 
+                     placeholder = "Enter a small description"   ></Field>
+                    <ErrorMessage name="r_textarea">
                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
                     </ErrorMessage>
                     </div>
                      </div>   
                  <div className = "row">
                  <div className = "col-md-6"> 
-                 <label>name</label>
-                <Field className = "form-control" name = "c_name" placeholder = "Enter username" ></Field>
-                <ErrorMessage name="c_name">
+                 <label>Restauraunt name</label>
+                <Field className = "form-control" name = "r_name" placeholder = "Enter username" ></Field>
+                <ErrorMessage name="r_name">
                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                 </ErrorMessage>    
                 <label>Registered email</label>
-                <Field className = "form-control" name = "c_email" placeholder = "Enter your email id"></Field>
-                <ErrorMessage name="c_email"> 
+                <Field className = "form-control" name = "r_email" placeholder = "Enter email"></Field>
+                <ErrorMessage name="r_email"> 
                 {msg => <div style={{ color: 'red' }}>{msg}</div>} 
                  </ErrorMessage>
-                 <label>Contact Number</label>
-                <Field className = "form-control" type = "number" name = "c_number" placeholder = "Enter your contact number" ></Field>
-                <ErrorMessage name="c_number"> 
+                 <label>Restauraunt contact number</label>
+                <Field className = "form-control" type = "number" name = "r_number" placeholder = "Enter phone number" ></Field>
+                <ErrorMessage name="r_number"> 
                  {msg => <div style={{ color: 'red' }}>{msg}</div>} 
                  </ErrorMessage>
-                 <label>Restauraunt country</label>
-                 <Field className = "form-control" name = "c_country" placeholder = "Enter your county"></Field>
-                <ErrorMessage name="c_county"> 
+                 <label>Restauraunt county</label>
+                 <Field className = "form-control" name = "r_county" placeholder = "Enter county"></Field>
+                <ErrorMessage name="r_county"> 
                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                  </ErrorMessage>
                  </div>
-                 
 
                  <div className = "col-md-6"> 
                  <label>Restauraunt opening time</label>
@@ -90,9 +115,13 @@ export class CustomerProfile extends Component {
                 
                 </div>  
                 </div>
-            </div>
+              
+                
+             
+
+
+          
+      
         )
     }
 }
-
-export default CustomerProfile
