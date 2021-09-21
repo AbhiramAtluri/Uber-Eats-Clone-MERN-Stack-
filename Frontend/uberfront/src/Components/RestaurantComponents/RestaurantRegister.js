@@ -98,7 +98,7 @@ export class RestaurantRegister extends Component {
         // {
         //     console.log("inside")
         
-        axios.post("http://localhost:3030/register/resreg", {
+        axios.post("http://localhost:3030/Restaurant/resreg", {
 
             r_email: this.state.r_email,
             r_name: this.state.r_name,

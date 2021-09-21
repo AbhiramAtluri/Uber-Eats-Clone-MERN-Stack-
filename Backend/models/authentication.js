@@ -94,7 +94,7 @@ exports.resterauntLogin = async function (req, res) {
 
 exports.resterauntProfile = async function (req, res) {
 
-    const { name, data } = req.files.r_pictures
+   
 
     console.log(data)
 
@@ -103,7 +103,7 @@ exports.resterauntProfile = async function (req, res) {
         rid: req.body.rid,
         r_name: req.body.r_name,
         r_location: req.body.r_location,
-        // r_pictures : req.body.r_pictures,
+        r_pictures : req.body.r_pictures,
         r_contact: req.body.r_contact,
         r_description: req.body.r_description
 
@@ -112,7 +112,7 @@ exports.resterauntProfile = async function (req, res) {
     res.send('hello')
 
     db.query('INSERT INTO r_profile(rid,r_name,r_location,r_description,r_pictures,r_contact) VALUES(?,?,?,?,?,?)',
-        [profileDetails.rid, profileDetails.r_name, profileDetails.r_location, profileDetails.r_description, "adasdas", profileDetails.r_contact]).then(
+        [profileDetails.rid, profileDetails.r_name, profileDetails.r_location, profileDetails.r_description,profileDetails.r_pictures, profileDetails.r_contact]).then(
 
             resp => {
                 //    console.log(resp)
@@ -186,5 +186,48 @@ exports.customerRegistration = async function (req, res)
 
 
 
+    }
 
+    exports.getRestaurantProfile = async function(req,res)
+    
+    {
+     let   r_id = req.body.r_id
+      
+        console.log(req.body.r_id)
+       db.query('SELECT * from res_reg where r_id = ?',[r_id])
+       .then(resp=>
+        {
+              res.json(resp[0])
+        }
+        ).catch(err=>{console.log(err)})
+
+
+    }
+
+    exports.updateRestaurantProfile = async function (req,res) {
+
+        console.log(req.body)
+        console.log(req.body.r_contact)
+        let r_number = req.body.r_number
+        let r_name = req.body.r_name
+        let r_state = req.body.r_state
+        let r_email = req.body.r_email
+        let r_description = req.body.r_description
+
+        let r_opentime = req.body.r_opentime
+        let r_closetime = req.body.r_closetime
+        let r_county = req.body.r_county
+        let r_picture = req.body.r_picture
+        let r_id = req.body.r_id
+
+         console.log(req.body)
+        
+     db.query("UPDATE res_reg SET r_name = ? ,r_state = ?, r_email = ?,r_description = ?,r_number = ?,r_opentime = ?,r_closetime = ?,r_county = ?,r_picture =? where r_id = ?",[r_name,r_state,r_email,r_description,r_number,r_opentime,r_closetime,r_county,r_picture,r_id] )
+     .then(resp =>{
+         res.send("Success")
+        }).catch(err =>{
+            console.log(err)
+        })
+
+        
     }

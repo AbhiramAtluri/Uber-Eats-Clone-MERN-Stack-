@@ -21,7 +21,8 @@ export class Restaurantinit extends Component {
         this.state = {
 
             redirect : false,
-            loginvalid :""
+            loginvalid :"",
+            r_email : ""
 
         }
     }
@@ -64,14 +65,13 @@ export class Restaurantinit extends Component {
                                     <Formik initialValues={initialValues}
                                         validationSchema={validationSchema}
 
-                                        onSubmit={(data) => {
-                                            console.log(data)
-                                            let e = data.r_email
-                                            let p = data.r_password
-                                            axios.post("http://localhost:3030/register/reslog", {
+                                        onSubmit={(datasend) => {
+                                            console.log(datasend)
+                                           
+                                            axios.post("http://localhost:3030/Restaurant/reslog", {
 
-                                                r_email:data.r_email,
-                                                r_password:data.r_password,
+                                                r_email:datasend.r_email,
+                                                r_password:datasend.r_password,
                                                 
 
 
@@ -83,7 +83,8 @@ export class Restaurantinit extends Component {
                                                {
                                                    this.setState(
                                                        {
-                                                           redirect : true
+                                                           redirect : true,
+                                                           r_email:datasend.r_email
                                                        }
                                                    )
                                                }
@@ -139,7 +140,8 @@ export class Restaurantinit extends Component {
     }else
     {
         return <Redirect to ={{ pathname :"/RestaurantLanding",
-                state: {message : "Hello1111"}
+                state: {message : "Hello1111" ,
+                           r_email : this.state.r_email}
     
     }} ></Redirect>  
     }

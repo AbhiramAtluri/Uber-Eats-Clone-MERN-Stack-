@@ -23,6 +23,9 @@ import RestaurantProfile from './Components/RestaurantComponents/RestaurantProfi
 import CustomerProfile from './Components/CustomerComponents/CustomerProfile';
 import EditDish from './Components/RestaurantComponents/EditDish';
 import AddDish from './Components/RestaurantComponents/AddDish';
+import Orders from './Components/RestaurantComponents/Orders';
+
+
 function App() {
   return (
     <div>
@@ -67,6 +70,7 @@ function App() {
         <Route exact path = "/AddDishes" component = {AddDish}>
 
         </Route>
+        <Route exact path = "/Orders" component = {Orders}></Route>
 
         </Switch>
 

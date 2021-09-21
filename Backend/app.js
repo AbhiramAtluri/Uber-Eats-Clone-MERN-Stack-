@@ -9,7 +9,7 @@ var cors = require('cors')
 
 var indexRouter = require('./routes/index');
 ///Router for resteraunt
-var RestRouter = require('./routes/temp');
+var RestRouter = require('./routes/RestaurantRoutes');
 var custrouter = require('./routes/custroutes')
 var app = express();
 
@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/register', RestRouter);
+app.use('/Restaurant', RestRouter);
 app.use('/customer',custrouter)
 
 
