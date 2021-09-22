@@ -11,6 +11,7 @@ router.post('/getRestaurantProfileDetails',auth.getRestaurantProfile)
 router.post('/reslog',auth.resterauntLogin)
 router.post('/addish',dishrequests.AddDish)
 router.post('/GetDish',dishrequests.getDish)
+router.post('/EditDish',dishrequests.editDish)
 router.post('/RestProfUpdate',auth.updateRestaurantProfile)
 //Restaurant get requests listing
 router.get('/details/:r_email',restget.getRestaurantDetails)

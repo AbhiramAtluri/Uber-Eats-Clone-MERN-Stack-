@@ -3,27 +3,148 @@ import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup";
 import "../RestaurantComponents/Uber.css";
 import { Carousel } from 'bootstrap';
-
-
+import Countrylist from './Countries';
+import StateList from './States';
+import axios from 'axios';
+import config from "../S3upload"
+import S3 from 'react-aws-s3';
 
 
 export class CustomerProfile extends Component {
 
+
+    constructor(props) {
+        super(props)
+
+        this.state = {
+
+            c_email: "coolboygajji@gmail.com",
+            c_city: "",
+            c_name: "",
+            c_nickname: "",
+            c_profilepic: "",
+            c_state: "",
+            c_county: "",
+            c_country: "",
+            c_description :"",
+            c_id:"",
+            c_dob:""
+
+        }
+    }
+
+
+    componentDidMount(props) {
+        //Fetching Customer profile data
+        axios.post("http://localhost:3030/customer/CustomerProfileFetch",
+            {
+                c_email: this.state.c_email,
+                
+                //    c_city :this.state.c_city,
+                //    c_name :this.state.c_name,
+                //    c_nickname:this.state.c_nickname,
+                //    c_profilepic :this.state.c_profilepic,
+                //    c_state:this.state.c_state,
+                //    c_county:this.state.c_county
+            }
+
+        ).then(res => {
+            console.log(res)
+            console.log(res.data[0])
+            this.setState(
+                {
+                    c_city: res.data[0].c_city,
+                    c_name: res.data[0].c_name,
+                    c_nickname: res.data[0].c_nickname,
+                    c_profilepic: res.data[0].c_profilepic ===null ? "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
+                    :res.data[0].c_profilepic,
+                    c_state: res.data[0].c_state,
+                    c_county: res.data[0].c_county,
+                    c_country: res.data[0].c_country,
+                    c_description:res.data[0].c_description,
+                    c_id:res.data[0].c_id,
+                    c_dob:res.data[0].c_dob,
+                    c_number:res.data[0].c_number
+                }
+            )
+
+
+        }
+        )
+
+
+
+
+    }
+    handleOnPicUpload = (e)=>
+    {
+        let filename =Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) 
+      console.log(e.target.files[0])
+      const Reacts3client = new S3(config)
+    Reacts3client.uploadFile(e.target.files[0],filename)
+    .then(res=>
+        {
+            this.setState({
+
+                c_profilepic:res.location
+            })
+        }
+        )
+    }
+
+
+    handleOnSubmit = (e)=>
+    {
+        axios.post("http://localhost:3030/customer/CustomerProfileUpdate",
+        {   c_id:this.state.c_id,
+            c_email: e.c_email,
+            c_city: e.c_city,
+            c_name: e.c_name,
+            c_nickname: e.c_nickname,
+            c_profilepic: this.state.c_profilepic,
+            c_state: e.c_state,
+            c_county: e.c_county,
+            c_country: e.c_country,
+            c_description :e.c_description,
+            c_dob:e.c_dob,
+            c_number:e.c_number
+        }
+        ).then(res=>
+            {
+
+                    console.log(res)
+                    alert("Profile Updation Successfull")
+                   
+            })
+    }
 
     render() {
 
         const initialValues =
         {
 
-            r_email: "",
-            r_password: "",
-            r_picture: "",
-            r_number: "",
-            r_county: "",
-            r_opentime: "",
-            r_closeime: "",
-            r_state: ""
+            c_email: this.state.c_email,
+            c_city: this.state.c_city == 0 ? "" : this.state.c_city,
+            c_name: this.state.c_name == 0 ? "" : this.state.c_name,
+            c_nickname: this.state.c_nickname == 0 ? "" : this.state.c_nickname,
+            c_profilepic: this.state.c_profilepic == 0 ? "" : this.state.c_profilepic,
+            c_state: this.state.c_state == 0 ? "" : this.state.c_state,
+            c_county: this.state.c_county == 0 ? "" : this.state.c_county,
+            c_country: this.state.c_country == 0 ? "United States" : this.state.c_country,
+            c_description:this.state.c_description == 0 ?"": this.state.c_description,
+            c_dob:this.state.c_dob == 0 ?"": this.state.c_dob
         }
+        
+        const validationSchema = Yup.object(
+            {
+                c_name: Yup.string().max(25,"Maximum of 25 charachters").required("Username is required"),
+                c_description : Yup.string().max(255,"maximum of 255 characters"),
+                c_email :Yup.string().email("Please enter in email format"),
+                c_county:Yup.string().max(30,"Maximum of 30 characters"),
+                c_nickname:Yup.string().max(10,"Maximum of 10 letters")
+
+            }
+        )
 
 
 
@@ -36,23 +157,28 @@ export class CustomerProfile extends Component {
 
                     <div className="CustomerProfile">
 
-                        <Formik initialValues={initialValues}>
+                        <Formik initialValues={initialValues}  enableReinitialize 
+                        
+                        onSubmit ={e=>{this.handleOnSubmit(e)}}
+                        
+                        >
                             <Form className="form-group" contentEditable="false">
                                 {/* Upload [pictures] and description are in a seperate row  */}
                                 <div className="container" >
                                     <div className="row ">
                                         <div className="col-md-4">
-                                            <img src="https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png" />
+                                            <img src={this.state.c_profilepic}
+                                                style={{ height: "300px", width: "354px" }} />
                                             <label>Upload your profile pictures</label>
                                             <Field className="form-control"
                                                 type="file" name="c_picture"
-                                                placeholder="Upload pictures"   ></Field>
+                                                placeholder="Upload pictures" onChange ={(e)=>{this.handleOnPicUpload(e)}}  ></Field>
 
-                                        </div>
-                                       
+                                        </div> 
+
                                         <div className="col-md-8">
                                             <center><label>About</label></center>
-                                            <Field className="form-control" name="c_about" as="textarea"
+                                            <Field className="form-control" name="c_description" as="textarea"
                                                 placeholder="Enter a small description of yourself"   ></Field>
                                             <ErrorMessage name="c_textarea">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
@@ -66,7 +192,7 @@ export class CustomerProfile extends Component {
                                             <ErrorMessage name="c_name">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
-                                             
+
                                             <label>Nickname</label>
                                             <Field className="form-control" name="c_nickname" placeholder="Enter your nickname" ></Field>
                                             <ErrorMessage name="c_nickname">
@@ -93,255 +219,9 @@ export class CustomerProfile extends Component {
 
                                             <label>Country name</label>
                                             <Field className="form-control" name="c_country" as="select">
-                                               
-                                                    <option value="Afganistan">Afghanistan</option>
-                                                    <option value="Albania">Albania</option>
-                                                    <option value="Algeria">Algeria</option>
-                                                    <option value="American Samoa">American Samoa</option>
-                                                    <option value="Andorra">Andorra</option>
-                                                    <option value="Angola">Angola</option>
-                                                    <option value="Anguilla">Anguilla</option>
-                                                    <option value="Antigua & Barbuda">Antigua & Barbuda</option>
-                                                    <option value="Argentina">Argentina</option>
-                                                    <option value="Armenia">Armenia</option>
-                                                    <option value="Aruba">Aruba</option>
-                                                    <option value="Australia">Australia</option>
-                                                    <option value="Austria">Austria</option>
-                                                    <option value="Azerbaijan">Azerbaijan</option>
-                                                    <option value="Bahamas">Bahamas</option>
-                                                    <option value="Bahrain">Bahrain</option>
-                                                    <option value="Bangladesh">Bangladesh</option>
-                                                    <option value="Barbados">Barbados</option>
-                                                    <option value="Belarus">Belarus</option>
-                                                    <option value="Belgium">Belgium</option>
-                                                    <option value="Belize">Belize</option>
-                                                    <option value="Benin">Benin</option>
-                                                    <option value="Bermuda">Bermuda</option>
-                                                    <option value="Bhutan">Bhutan</option>
-                                                    <option value="Bolivia">Bolivia</option>
-                                                    <option value="Bonaire">Bonaire</option>
-                                                    <option value="Bosnia & Herzegovina">Bosnia & Herzegovina</option>
-                                                    <option value="Botswana">Botswana</option>
-                                                    <option value="Brazil">Brazil</option>
-                                                    <option value="British Indian Ocean Ter">British Indian Ocean Ter</option>
-                                                    <option value="Brunei">Brunei</option>
-                                                    <option value="Bulgaria">Bulgaria</option>
-                                                    <option value="Burkina Faso">Burkina Faso</option>
-                                                    <option value="Burundi">Burundi</option>
-                                                    <option value="Cambodia">Cambodia</option>
-                                                    <option value="Cameroon">Cameroon</option>
-                                                    <option value="Canada">Canada</option>
-                                                    <option value="Canary Islands">Canary Islands</option>
-                                                    <option value="Cape Verde">Cape Verde</option>
-                                                    <option value="Cayman Islands">Cayman Islands</option>
-                                                    <option value="Central African Republic">Central African Republic</option>
-                                                    <option value="Chad">Chad</option>
-                                                    <option value="Channel Islands">Channel Islands</option>
-                                                    <option value="Chile">Chile</option>
-                                                    <option value="China">China</option>
-                                                    <option value="Christmas Island">Christmas Island</option>
-                                                    <option value="Cocos Island">Cocos Island</option>
-                                                    <option value="Colombia">Colombia</option>
-                                                    <option value="Comoros">Comoros</option>
-                                                    <option value="Congo">Congo</option>
-                                                    <option value="Cook Islands">Cook Islands</option>
-                                                    <option value="Costa Rica">Costa Rica</option>
-                                                    <option value="Cote DIvoire">Cote DIvoire</option>
-                                                    <option value="Croatia">Croatia</option>
-                                                    <option value="Cuba">Cuba</option>
-                                                    <option value="Curaco">Curacao</option>
-                                                    <option value="Cyprus">Cyprus</option>
-                                                    <option value="Czech Republic">Czech Republic</option>
-                                                    <option value="Denmark">Denmark</option>
-                                                    <option value="Djibouti">Djibouti</option>
-                                                    <option value="Dominica">Dominica</option>
-                                                    <option value="Dominican Republic">Dominican Republic</option>
-                                                    <option value="East Timor">East Timor</option>
-                                                    <option value="Ecuador">Ecuador</option>
-                                                    <option value="Egypt">Egypt</option>
-                                                    <option value="El Salvador">El Salvador</option>
-                                                    <option value="Equatorial Guinea">Equatorial Guinea</option>
-                                                    <option value="Eritrea">Eritrea</option>
-                                                    <option value="Estonia">Estonia</option>
-                                                    <option value="Ethiopia">Ethiopia</option>
-                                                    <option value="Falkland Islands">Falkland Islands</option>
-                                                    <option value="Faroe Islands">Faroe Islands</option>
-                                                    <option value="Fiji">Fiji</option>
-                                                    <option value="Finland">Finland</option>
-                                                    <option value="France">France</option>
-                                                    <option value="French Guiana">French Guiana</option>
-                                                    <option value="French Polynesia">French Polynesia</option>
-                                                    <option value="French Southern Ter">French Southern Ter</option>
-                                                    <option value="Gabon">Gabon</option>
-                                                    <option value="Gambia">Gambia</option>
-                                                    <option value="Georgia">Georgia</option>
-                                                    <option value="Germany">Germany</option>
-                                                    <option value="Ghana">Ghana</option>
-                                                    <option value="Gibraltar">Gibraltar</option>
-                                                    <option value="Great Britain">Great Britain</option>
-                                                    <option value="Greece">Greece</option>
-                                                    <option value="Greenland">Greenland</option>
-                                                    <option value="Grenada">Grenada</option>
-                                                    <option value="Guadeloupe">Guadeloupe</option>
-                                                    <option value="Guam">Guam</option>
-                                                    <option value="Guatemala">Guatemala</option>
-                                                    <option value="Guinea">Guinea</option>
-                                                    <option value="Guyana">Guyana</option>
-                                                    <option value="Haiti">Haiti</option>
-                                                    <option value="Hawaii">Hawaii</option>
-                                                    <option value="Honduras">Honduras</option>
-                                                    <option value="Hong Kong">Hong Kong</option>
-                                                    <option value="Hungary">Hungary</option>
-                                                    <option value="Iceland">Iceland</option>
-                                                    <option value="Indonesia">Indonesia</option>
-                                                    <option value="India">India</option>
-                                                    <option value="Iran">Iran</option>
-                                                    <option value="Iraq">Iraq</option>
-                                                    <option value="Ireland">Ireland</option>
-                                                    <option value="Isle of Man">Isle of Man</option>
-                                                    <option value="Israel">Israel</option>
-                                                    <option value="Italy">Italy</option>
-                                                    <option value="Jamaica">Jamaica</option>
-                                                    <option value="Japan">Japan</option>
-                                                    <option value="Jordan">Jordan</option>
-                                                    <option value="Kazakhstan">Kazakhstan</option>
-                                                    <option value="Kenya">Kenya</option>
-                                                    <option value="Kiribati">Kiribati</option>
-                                                    <option value="Korea North">Korea North</option>
-                                                    <option value="Korea Sout">Korea South</option>
-                                                    <option value="Kuwait">Kuwait</option>
-                                                    <option value="Kyrgyzstan">Kyrgyzstan</option>
-                                                    <option value="Laos">Laos</option>
-                                                    <option value="Latvia">Latvia</option>
-                                                    <option value="Lebanon">Lebanon</option>
-                                                    <option value="Lesotho">Lesotho</option>
-                                                    <option value="Liberia">Liberia</option>
-                                                    <option value="Libya">Libya</option>
-                                                    <option value="Liechtenstein">Liechtenstein</option>
-                                                    <option value="Lithuania">Lithuania</option>
-                                                    <option value="Luxembourg">Luxembourg</option>
-                                                    <option value="Macau">Macau</option>
-                                                    <option value="Macedonia">Macedonia</option>
-                                                    <option value="Madagascar">Madagascar</option>
-                                                    <option value="Malaysia">Malaysia</option>
-                                                    <option value="Malawi">Malawi</option>
-                                                    <option value="Maldives">Maldives</option>
-                                                    <option value="Mali">Mali</option>
-                                                    <option value="Malta">Malta</option>
-                                                    <option value="Marshall Islands">Marshall Islands</option>
-                                                    <option value="Martinique">Martinique</option>
-                                                    <option value="Mauritania">Mauritania</option>
-                                                    <option value="Mauritius">Mauritius</option>
-                                                    <option value="Mayotte">Mayotte</option>
-                                                    <option value="Mexico">Mexico</option>
-                                                    <option value="Midway Islands">Midway Islands</option>
-                                                    <option value="Moldova">Moldova</option>
-                                                    <option value="Monaco">Monaco</option>
-                                                    <option value="Mongolia">Mongolia</option>
-                                                    <option value="Montserrat">Montserrat</option>
-                                                    <option value="Morocco">Morocco</option>
-                                                    <option value="Mozambique">Mozambique</option>
-                                                    <option value="Myanmar">Myanmar</option>
-                                                    <option value="Nambia">Nambia</option>
-                                                    <option value="Nauru">Nauru</option>
-                                                    <option value="Nepal">Nepal</option>
-                                                    <option value="Netherland Antilles">Netherland Antilles</option>
-                                                    <option value="Netherlands">Netherlands (Holland, Europe)</option>
-                                                    <option value="Nevis">Nevis</option>
-                                                    <option value="New Caledonia">New Caledonia</option>
-                                                    <option value="New Zealand">New Zealand</option>
-                                                    <option value="Nicaragua">Nicaragua</option>
-                                                    <option value="Niger">Niger</option>
-                                                    <option value="Nigeria">Nigeria</option>
-                                                    <option value="Niue">Niue</option>
-                                                    <option value="Norfolk Island">Norfolk Island</option>
-                                                    <option value="Norway">Norway</option>
-                                                    <option value="Oman">Oman</option>
-                                                    <option value="Pakistan">Pakistan</option>
-                                                    <option value="Palau Island">Palau Island</option>
-                                                    <option value="Palestine">Palestine</option>
-                                                    <option value="Panama">Panama</option>
-                                                    <option value="Papua New Guinea">Papua New Guinea</option>
-                                                    <option value="Paraguay">Paraguay</option>
-                                                    <option value="Peru">Peru</option>
-                                                    <option value="Phillipines">Philippines</option>
-                                                    <option value="Pitcairn Island">Pitcairn Island</option>
-                                                    <option value="Poland">Poland</option>
-                                                    <option value="Portugal">Portugal</option>
-                                                    <option value="Puerto Rico">Puerto Rico</option>
-                                                    <option value="Qatar">Qatar</option>
-                                                    <option value="Republic of Montenegro">Republic of Montenegro</option>
-                                                    <option value="Republic of Serbia">Republic of Serbia</option>
-                                                    <option value="Reunion">Reunion</option>
-                                                    <option value="Romania">Romania</option>
-                                                    <option value="Russia">Russia</option>
-                                                    <option value="Rwanda">Rwanda</option>
-                                                    <option value="St Barthelemy">St Barthelemy</option>
-                                                    <option value="St Eustatius">St Eustatius</option>
-                                                    <option value="St Helena">St Helena</option>
-                                                    <option value="St Kitts-Nevis">St Kitts-Nevis</option>
-                                                    <option value="St Lucia">St Lucia</option>
-                                                    <option value="St Maarten">St Maarten</option>
-                                                    <option value="St Pierre & Miquelon">St Pierre & Miquelon</option>
-                                                    <option value="St Vincent & Grenadines">St Vincent & Grenadines</option>
-                                                    <option value="Saipan">Saipan</option>
-                                                    <option value="Samoa">Samoa</option>
-                                                    <option value="Samoa American">Samoa American</option>
-                                                    <option value="San Marino">San Marino</option>
-                                                    <option value="Sao Tome & Principe">Sao Tome & Principe</option>
-                                                    <option value="Saudi Arabia">Saudi Arabia</option>
-                                                    <option value="Senegal">Senegal</option>
-                                                    <option value="Seychelles">Seychelles</option>
-                                                    <option value="Sierra Leone">Sierra Leone</option>
-                                                    <option value="Singapore">Singapore</option>
-                                                    <option value="Slovakia">Slovakia</option>
-                                                    <option value="Slovenia">Slovenia</option>
-                                                    <option value="Solomon Islands">Solomon Islands</option>
-                                                    <option value="Somalia">Somalia</option>
-                                                    <option value="South Africa">South Africa</option>
-                                                    <option value="Spain">Spain</option>
-                                                    <option value="Sri Lanka">Sri Lanka</option>
-                                                    <option value="Sudan">Sudan</option>
-                                                    <option value="Suriname">Suriname</option>
-                                                    <option value="Swaziland">Swaziland</option>
-                                                    <option value="Sweden">Sweden</option>
-                                                    <option value="Switzerland">Switzerland</option>
-                                                    <option value="Syria">Syria</option>
-                                                    <option value="Tahiti">Tahiti</option>
-                                                    <option value="Taiwan">Taiwan</option>
-                                                    <option value="Tajikistan">Tajikistan</option>
-                                                    <option value="Tanzania">Tanzania</option>
-                                                    <option value="Thailand">Thailand</option>
-                                                    <option value="Togo">Togo</option>
-                                                    <option value="Tokelau">Tokelau</option>
-                                                    <option value="Tonga">Tonga</option>
-                                                    <option value="Trinidad & Tobago">Trinidad & Tobago</option>
-                                                    <option value="Tunisia">Tunisia</option>
-                                                    <option value="Turkey">Turkey</option>
-                                                    <option value="Turkmenistan">Turkmenistan</option>
-                                                    <option value="Turks & Caicos Is">Turks & Caicos Is</option>
-                                                    <option value="Tuvalu">Tuvalu</option>
-                                                    <option value="Uganda">Uganda</option>
-                                                    <option value="United Kingdom">United Kingdom</option>
-                                                    <option value="Ukraine">Ukraine</option>
-                                                    <option value="United Arab Erimates">United Arab Emirates</option>
-                                                    <option value="United States of America">United States of America</option>
-                                                    <option value="Uraguay">Uruguay</option>
-                                                    <option value="Uzbekistan">Uzbekistan</option>
-                                                    <option value="Vanuatu">Vanuatu</option>
-                                                    <option value="Vatican City State">Vatican City State</option>
-                                                    <option value="Venezuela">Venezuela</option>
-                                                    <option value="Vietnam">Vietnam</option>
-                                                    <option value="Virgin Islands (Brit)">Virgin Islands (Brit)</option>
-                                                    <option value="Virgin Islands (USA)">Virgin Islands (USA)</option>
-                                                    <option value="Wake Island">Wake Island</option>
-                                                    <option value="Wallis & Futana Is">Wallis & Futana Is</option>
-                                                    <option value="Yemen">Yemen</option>
-                                                    <option value="Zaire">Zaire</option>
-                                                    <option value="Zambia">Zambia</option>
-                                                    <option value="Zimbabwe">Zimbabwe</option>
-                                           
-
+                                                {Countrylist.map((value, key) => {
+                                                    return (<option value={value.name}>{value.name}</option>)
+                                                })}
 
                                             </Field>
                                             <ErrorMessage name="c_country">
@@ -352,36 +232,33 @@ export class CustomerProfile extends Component {
 
 
                                         </div>
-
-
-
-
                                         <div className="col-md-6">
-                                            <label>Restauraunt opening time</label>
-                                            <Field className="form-control" type="time" name="r_opentime" placeholder="Enter opening time" ></Field>
-                                            <ErrorMessage name="r_opentime">
+                                            <label>City Name</label>
+                                            <Field className="form-control" type="name" name="c_city" placeholder="Enter name of city that you live in" ></Field>
+                                            <ErrorMessage name="c_city">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
-                                            <label>Restauraunt closing time</label>
-                                            <Field className="form-control" type="time" name="r_closetime" placeholder="Enter closing time" ></Field>
-                                            <ErrorMessage name="r_opentime">
-                                                {msg => <div style={{ color: 'red' }}>{msg}</div>}
-                                            </ErrorMessage>
-                                            <label>Restauraunt state</label>
-                                            <Field className="form-control" name="r_state" placeholder="Enter State" ></Field>
-                                            <ErrorMessage name="r_state">
+
+                                            <label>State of residence</label>
+                                            <Field className="form-control" name="c_state" placeholder="Enter State" as="select" >
+                                                {StateList.map((value, key) => {
+                                                    return (<option value={value.abbreviation}>{value.abbreviation}</option>)
+                                                })}
+
+                                            </Field>
+                                            <ErrorMessage name="c_state">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
 
                                             <label>Date of Birth</label>
-                                            <Field className="form-control" name="r_dob" placeholder="Enter date of birth" type = "Date" ></Field>
+                                            <Field className="form-control" name="c_dob" placeholder="Enter date of birth" type="Date" ></Field>
                                             <ErrorMessage name="r_dob">
                                                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                             </ErrorMessage>
 
                                         </div>
                                     </div>
-                                    <button type="submit" className="btn btn-primary"  >Edit</button>
+                                    <button type="submit" className="btn btn-primary"  >Update</button>
                                 </div>
 
                             </Form>

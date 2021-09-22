@@ -89,7 +89,7 @@ exports.resterauntLogin = async function (req, res) {
 
 
 
-
+////API for fetching Restaurant Profile
 
 
 exports.resterauntProfile = async function (req, res) {
@@ -123,7 +123,7 @@ exports.resterauntProfile = async function (req, res) {
         ).catch(err => { console.log(err) })
 
 }
-
+/////API for Customer registration
 
 exports.customerRegistration = async function (req, res) 
 
@@ -160,7 +160,7 @@ exports.customerRegistration = async function (req, res)
 
             
     }
-
+/////Customer login Authentication
     exports.customerLogin = async function(req,res)
     {
 
@@ -187,7 +187,7 @@ exports.customerRegistration = async function (req, res)
 
 
     }
-
+/////Getting Restaurant profile details
     exports.getRestaurantProfile = async function(req,res)
     
     {
@@ -203,7 +203,7 @@ exports.customerRegistration = async function (req, res)
 
 
     }
-
+/////////Updating restaurant profile///////
     exports.updateRestaurantProfile = async function (req,res) {
 
         console.log(req.body)
@@ -230,4 +230,40 @@ exports.customerRegistration = async function (req, res)
         })
 
         
+    }
+
+
+    ////API for Fetching Customer details
+
+    exports.getCustomerProfileDetails = async function(req,res)
+    {
+      
+        
+
+       db.query('SELECT * from cust_reg where c_email = ?',[req.body.c_email] )
+       .then(resp =>{
+        resp = Object.values(JSON.parse(JSON.stringify(resp)));
+           res.json(resp[0])
+       })
+
+
+    }
+
+
+    exports.updateCustomerProfile = async function(req,res)
+    {
+        console.log(req.body)
+        let queryvalues = [req.body.c_name,req.body.c_email,req.body.c_dob,req.body.c_city,req.body.c_state,req.body.c_country,req.body.c_number,req.body.c_profilepic,req.body.c_nickname,req.body.c_county,req.body.c_description,req.body.c_id]
+      
+        db.query("UPDATE cust_reg SET c_name = ?,c_email = ?,c_dob = ?,c_city = ?,c_state = ?, c_country = ?,c_number = ?,c_profilepic = ?,c_nickname = ?,c_county = ?,c_description = ?  where c_id = ?",queryvalues)
+        .then(resp=>
+            {
+                // console.log(resp)
+                res.send("Success")
+            }
+            ).catch(err=>
+                {console.log(err)
+                }
+                ) 
+
     }

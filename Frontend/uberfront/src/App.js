@@ -24,14 +24,16 @@ import CustomerProfile from './Components/CustomerComponents/CustomerProfile';
 import EditDish from './Components/RestaurantComponents/EditDish';
 import AddDish from './Components/RestaurantComponents/AddDish';
 import Orders from './Components/RestaurantComponents/Orders';
-
+import CustomerLandingPage from './Components/CustomerComponents/CustomerLandingPage';
 
 function App() {
+
+
   return (
     <div>
-        <Helmet>
+      <Helmet>
                 <style>{'body{ background-color :azure}'}</style>
-                </Helmet>
+      </Helmet>
       <Router>
       <Navbar></Navbar>
       <Switch>
@@ -64,13 +66,14 @@ function App() {
            
        <CustomerProfile></CustomerProfile>
         </Route>
-        <Route exact path ="/EditDish/:id" component = {EditDish}>
+        <Route exact path ="/EditDish/" component = {EditDish}>
          {/* <EditDish></EditDish>         */}
         </Route>
         <Route exact path = "/AddDishes" component = {AddDish}>
 
         </Route>
         <Route exact path = "/Orders" component = {Orders}></Route>
+        <Route exact path ="/Customerlanding"  component ={CustomerLandingPage}></Route>
 
         </Switch>
 

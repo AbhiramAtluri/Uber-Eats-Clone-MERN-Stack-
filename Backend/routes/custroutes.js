@@ -6,5 +6,7 @@ var auth = require('../models/authentication')
 
 router.post('/custreg',auth.customerRegistration)
 router.post('/custlog',auth.customerLogin)
+router.post('/CustomerProfileFetch',auth.getCustomerProfileDetails)
+router.post('/CustomerProfileUpdate',auth.updateCustomerProfile)
 
 module.exports = router

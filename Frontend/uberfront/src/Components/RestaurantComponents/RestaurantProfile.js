@@ -104,10 +104,9 @@ export default class RestaurantProfile extends Component {
         }
         ).then(res=>
             {
-                if(res == "Success")
-                {
+
                     alert("Profile Update success")
-                }
+                   
             })
     }
 

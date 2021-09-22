@@ -19,7 +19,8 @@ export class Customerinit extends Component {
     
         this.state = {
                redirect : false,
-               loginvalid:""
+               loginvalid:"",
+               c_email:""
         }
     }
 
@@ -66,8 +67,7 @@ export class Customerinit extends Component {
                               
                               onSubmit={(data) => {
                                 console.log(data)
-                                let e = data.r_email
-                                let p = data.r_password
+                            
                                 axios.post("http://localhost:3030/customer/custlog", {
 
                                     c_email:data.c_email,
@@ -82,7 +82,8 @@ export class Customerinit extends Component {
                                    if(res.data === 'Login successfull')
                                    {
                                        this.setState(
-                                           {
+                                           {   
+                                               c_email:data.c_email,
                                                redirect : true
                                            }
                                        )
@@ -166,7 +167,7 @@ export class Customerinit extends Component {
         )
     }else
     {
-        return <Redirect to ="/"></Redirect>  
+        return <Redirect to ={{pathname : "/Customerlanding", state :{  c_email:this.state.c_email  }}}   ></Redirect>  
     }
 
 }  
