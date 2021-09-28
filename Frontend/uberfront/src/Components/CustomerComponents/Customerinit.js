@@ -20,7 +20,8 @@ export class Customerinit extends Component {
         this.state = {
                redirect : false,
                loginvalid:"",
-               c_email:""
+               c_email:"",
+               c_id:""
         }
     }
 
@@ -48,6 +49,7 @@ export class Customerinit extends Component {
 
             c_email: "",
             c_password: "",
+            c_id:""
 
 
         }
@@ -79,12 +81,15 @@ export class Customerinit extends Component {
                                 {
                                     // console.log("hi")
                                     console.log(res)
-                                   if(res.data === 'Login successfull')
+                                   if(res.data.message === 'Login successfull')
                                    {
+                                       console.log()
                                        this.setState(
                                            {   
-                                               c_email:data.c_email,
-                                               redirect : true
+                                               c_email:res.data.c_email,
+                                               c_id:res.data.c_id,
+                                               redirect : true,
+                                               
                                            }
                                        )
                                    }
@@ -129,45 +134,13 @@ export class Customerinit extends Component {
                             </div>
                         </div>
                     </div>
-                    {/* <center><h1>Customer Login</h1></center>
-                                <div className="form-group">
-                                    <center>
-                                        <form>
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <label>Email id</label>
-                                                        </td>
-                                                        <td>
-                                                            <input type="email" placeholder="Enter youe email id" className="form-control"></input>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label>Password</label>
-                                                        </td>
-                                                        <td>
-                                                            <input type="password" placeholder="Enter your password" className="form-control"></input>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label></label>
-                                                        </td>
-                                                        <td><center><Link to="/Customregister">Register?</Link></center></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
-                                        </form>
-                                    </center> */}
+                    
                                </div>
             </div>
         )
     }else
     {
-        return <Redirect to ={{pathname : "/Customerlanding", state :{  c_email:this.state.c_email  }}}   ></Redirect>  
+        return <Redirect to ={{pathname : "/Customerlanding", state :{  c_email:this.state.c_email, c_id :this.state.c_id  }}}   ></Redirect>  
     }
 
 }  

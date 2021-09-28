@@ -12,9 +12,10 @@ exports.AddDish = async function(req,res)
      let d_category  = req.body.d_category;
      let d_picture = req.body.d_picture
      let d_description = req.body.d_description
+     let d_type = req.body.d_type
      
 
-     db.query("INSERT INTO dishes(r_id,d_name,d_price,d_category,d_picture,d_description) VALUES(?,?,?,?,?,?)",[r_id,d_name,d_price,d_category,d_picture,d_description])
+     db.query("INSERT INTO dishes(r_id,d_name,d_price,d_category,d_picture,d_description,d_type) VALUES(?,?,?,?,?,?,?)",[r_id,d_name,d_price,d_category,d_picture,d_description,d_type])
      .then(resp =>
         {
            res.send("Success")         
@@ -58,6 +59,25 @@ exports.editDish = async function (req,res) {
 
    
 }
+
+//Getting all the dishes
+
+
+exports.getAllDishes = async function(req,res)
+{
+ 
+  db.query("SELECT * from dishes").then
+  (
+     resp=>
+     {
+        res.json(resp[0])
+     }
+     ).catch(err=>{console.log(err)})
+
+}
+
+///Getting all dishes with nearest location
+
 
 
 

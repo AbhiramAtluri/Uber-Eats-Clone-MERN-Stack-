@@ -18,7 +18,7 @@ export class CustomerProfile extends Component {
 
         this.state = {
 
-            c_email: "coolboygajji@gmail.com",
+            c_email: "",
             c_city: "",
             c_name: "",
             c_nickname: "",
@@ -28,7 +28,8 @@ export class CustomerProfile extends Component {
             c_country: "",
             c_description :"",
             c_id:"",
-            c_dob:""
+            c_dob:"",
+           
 
         }
     }
@@ -36,9 +37,21 @@ export class CustomerProfile extends Component {
 
     componentDidMount(props) {
         //Fetching Customer profile data
+        const c_id = this.props.location.state.c_id
+        const c_email = this.props.location.state.c_email
+        // console.log("In Profile Page")
+        // console.log(this.props.location.state)
+        // console.log(c_id)
+        // console.log(this.props.location.state.c_email)
+        this.setState(
+            {
+                c_id:c_id,
+                c_email:c_email
+            }
+            )
         axios.post("http://localhost:3030/customer/CustomerProfileFetch",
             {
-                c_email: this.state.c_email,
+                c_email: c_email,
                 
                 //    c_city :this.state.c_city,
                 //    c_name :this.state.c_name,
@@ -49,8 +62,8 @@ export class CustomerProfile extends Component {
             }
 
         ).then(res => {
-            console.log(res)
-            console.log(res.data[0])
+            // console.log(res)
+            // console.log(res.data[0])
             this.setState(
                 {
                     c_city: res.data[0].c_city,
@@ -62,7 +75,7 @@ export class CustomerProfile extends Component {
                     c_county: res.data[0].c_county,
                     c_country: res.data[0].c_country,
                     c_description:res.data[0].c_description,
-                    c_id:res.data[0].c_id,
+                    // c_id:res.data[0].c_id,
                     c_dob:res.data[0].c_dob,
                     c_number:res.data[0].c_number
                 }

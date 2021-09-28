@@ -15,7 +15,11 @@ router.post('/EditDish',dishrequests.editDish)
 router.post('/RestProfUpdate',auth.updateRestaurantProfile)
 //Restaurant get requests listing
 router.get('/details/:r_email',restget.getRestaurantDetails)
-
+router.get('/GetAllDishes',dishrequests.getAllDishes)
+router.get('/GetAllRestaurants',restget.getAllRestaurants)
+router.post('/GetAllNearestRestaurants',restget.getAllnearestRestaurants)
+router.post('/GetFarAwayRestaurants',restget.getFarAwayRestaurants)
+router.post('/GetRestaurantsBasedOnDish',restget.getRestaurantsBasedOnDish)
 
 
 module.exports = router;

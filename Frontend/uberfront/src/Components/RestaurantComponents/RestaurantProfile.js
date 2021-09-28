@@ -23,6 +23,7 @@ export default class RestaurantProfile extends Component {
             r_opentime:"",
             r_closetime:"",
             r_state:"",
+            del_type:"s_both",
             r_picture:"https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
         }
     }
@@ -52,8 +53,8 @@ export default class RestaurantProfile extends Component {
                         r_opentime:res.data[0].r_opentime,
                         r_closetime:res.data[0].r_closetime,
                         r_state:res.data[0].r_state,
-                        r_description:res.data[0].r_description
-                        
+                        r_description:res.data[0].r_description,
+                        del_type:res.data[0].del_type
                       }
                       )
                 
@@ -89,6 +90,7 @@ export default class RestaurantProfile extends Component {
 
     handleOnSubmit = (e)=>
     {
+        console.log(e.del_type+"Delivery type")
         axios.post("http://localhost:3030/Restaurant/RestProfUpdate",
         {   
             r_id:this.props.location.state.r_id,
@@ -100,7 +102,8 @@ export default class RestaurantProfile extends Component {
             r_closetime:e.r_closetime,
             r_state:e.r_state,
             r_picture:this.state.r_picture,
-            r_description :e.r_description
+            r_description :e.r_description,
+            del_type:e.del_type
         }
         ).then(res=>
             {
@@ -127,7 +130,8 @@ export default class RestaurantProfile extends Component {
             r_opentime:this.state.r_opentime == 0 ?"":this.state.r_opentime,
             r_closetime:this.state.r_closetime == 0 ?"":this.state.r_closetime,
             r_state:this.state.r_state == 0 ?"":this.state.r_state,
-            r_description:this.state.r_description == 0 ?"":this.state.r_description
+            r_description:this.state.r_description == 0 ?"":this.state.r_description,
+            del_type:this.state.d_type == 0 ?"":this.state.del_type
         }
         const validationSchema = Yup.object(
             {
@@ -215,6 +219,18 @@ export default class RestaurantProfile extends Component {
                 <ErrorMessage name="r_state"> 
                  {msg => <div style={{ color: 'red' }}>{msg}</div>} 
                  </ErrorMessage>
+                 <label>Delivery Type</label>
+                 <Field className = "form-control"  name = "del_type" as ="select">
+                 <option value="s_delivery">Delivery</option>
+                 <option value="s_pickup">Pickup</option>
+                 <option value="s_both">Both</option>
+                 </Field>
+                <ErrorMessage name="r_state"> 
+                 {msg => <div style={{ color: 'red' }}>{msg}</div>} 
+                 </ErrorMessage>
+
+
+
                  </div>
                  </div>
                  <button type = "submit" className ="btn btn-primary" >Update</button>

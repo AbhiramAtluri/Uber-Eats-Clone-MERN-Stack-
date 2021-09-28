@@ -105,14 +105,14 @@ exports.resterauntProfile = async function (req, res) {
         r_location: req.body.r_location,
         r_pictures : req.body.r_pictures,
         r_contact: req.body.r_contact,
-        r_description: req.body.r_description
-
+        r_description: req.body.r_description,
+        d_type:req.body.d_type
     }
     console.log(profileDetails)
     res.send('hello')
 
-    db.query('INSERT INTO r_profile(rid,r_name,r_location,r_description,r_pictures,r_contact) VALUES(?,?,?,?,?,?)',
-        [profileDetails.rid, profileDetails.r_name, profileDetails.r_location, profileDetails.r_description,profileDetails.r_pictures, profileDetails.r_contact]).then(
+    db.query('INSERT INTO r_profile(rid,r_name,r_location,r_description,r_pictures,r_contact,d_type) VALUES(?,?,?,?,?,?,?)',
+        [profileDetails.rid, profileDetails.r_name, profileDetails.r_location, profileDetails.r_description,profileDetails.r_pictures, profileDetails.r_contact,profileDetails.d_type]).then(
 
             resp => {
                 //    console.log(resp)
@@ -173,10 +173,21 @@ exports.customerRegistration = async function (req, res)
         console.log(cust_details)
         db.query('select * from cust_reg where cust_reg.c_email = ? and cust_reg.c_password = ?', [cust_details.c_email, cust_details.c_password])
         .then(resp => {
-            console.log(resp[0])
+           
             if (resp[0].length > 0) {
-
-                res.send("Login successfull")
+                resp = Object.values(JSON.parse(JSON.stringify(resp)));
+                 console.log(resp[0])
+                 console.log((resp[0])[0].c_id)
+                 let num = (resp[0])[0].c_id
+                 let c_email = (resp[0])[0].c_email
+                // res.send("Login successfull")
+                res.json(
+                    {
+                        message:"Login successfull",
+                        c_id :num,
+                        c_email:c_email
+                    }
+                )
 
 
             } else {
@@ -219,14 +230,15 @@ exports.customerRegistration = async function (req, res)
         let r_county = req.body.r_county
         let r_picture = req.body.r_picture
         let r_id = req.body.r_id
-
+        let del_type =req.body.del_type
          console.log(req.body)
         
-     db.query("UPDATE res_reg SET r_name = ? ,r_state = ?, r_email = ?,r_description = ?,r_number = ?,r_opentime = ?,r_closetime = ?,r_county = ?,r_picture =? where r_id = ?",[r_name,r_state,r_email,r_description,r_number,r_opentime,r_closetime,r_county,r_picture,r_id] )
+     db.query("UPDATE res_reg SET r_name = ? ,r_state = ?, r_email = ?,r_description = ?,r_number = ?,r_opentime = ?,r_closetime = ?,r_county = ?,r_picture =?,del_type = ? where r_id = ?",[r_name,r_state,r_email,r_description,r_number,r_opentime,r_closetime,r_county,r_picture,del_type,r_id] )
      .then(resp =>{
+         console.log(resp)
          res.send("Success")
         }).catch(err =>{
-            console.log(err)
+            console.log(err) 
         })
 
         

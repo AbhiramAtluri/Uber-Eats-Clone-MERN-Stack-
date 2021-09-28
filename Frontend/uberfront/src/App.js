@@ -30,7 +30,8 @@ function App() {
 
 
   return (
-    <div>
+    <div className="container-fluid">
+      <div className="row">
       <Helmet>
                 <style>{'body{ background-color :azure}'}</style>
       </Helmet>
@@ -62,9 +63,9 @@ function App() {
       {/* <RestaurantProfile></RestaurantProfile> */}
    
         </Route>
-        <Route exact path = "/CustomerProfile">
+        <Route exact path = "/CustomerProfile" component = {CustomerProfile}>
            
-       <CustomerProfile></CustomerProfile>
+       
         </Route>
         <Route exact path ="/EditDish/" component = {EditDish}>
          {/* <EditDish></EditDish>         */}
@@ -76,9 +77,8 @@ function App() {
         <Route exact path ="/Customerlanding"  component ={CustomerLandingPage}></Route>
 
         </Switch>
-
-      <div></div>
       </Router>
+      </div>
     {/* <Home></Home> */}
     </div>
 

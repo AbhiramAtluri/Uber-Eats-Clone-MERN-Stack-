@@ -33,3 +33,94 @@ exports.getRestaurantDetails = async function(req,res)
 //     console.log(req.params['r_email'])
 
 }
+
+
+exports.getAllRestaurants = async function(req,res)
+{
+
+db.query("Select * from res_reg ").then(resp=>{
+
+  res.json(resp[0])
+
+})
+}
+
+//GET ALL RESTAURANTS FROM NEAREST LOCATION
+
+exports.getAllnearestRestaurants = async function(req,res)
+{
+  if(req.body.c_county.length <1)
+  {
+      res.json("c_profile_update")
+  }
+  else
+  {
+   
+console.log(req.body.c_county)
+    db.query("select * from res_reg where r_county =?",[req.body.c_county])
+    .then(
+        resp=>{
+            if(resp[0].length>=1)
+            {
+            res.json(resp[0])
+            }
+            else
+            {
+                res.json(
+                    {
+                        message:"NoLoc"
+                    })
+            }
+        }
+        )
+    .catch(err=>{
+        console.log(err)
+    })
+
+}
+} 
+
+//GET RESTERAUNTS AWAY FROM LOCATION
+
+exports.getFarAwayRestaurants = async function(req,res)
+
+{
+    console.log(req.body.c_county)
+
+    db.query("select * from res_reg where r_county !=?",[req.body.c_county])
+    .then(
+     resp=>
+     {
+         res.json(resp[0])
+     }
+    )
+
+}
+
+//GET RESTAURANT BASED ON DISH
+
+exports.getRestaurantsBasedOnDish = async function(req,res)
+
+  {
+      console.log(req.body.s_dish)
+      let s_dish = '%' + req.body.s_dish+ '%'
+
+  db.query("SELECT  *  FROM res_reg WHERE r_id IN(SELECT r_id from dishes where d_name LIKE N?)",[s_dish] )
+  .then(resp=>
+    {
+
+      if(resp[0].length>1)
+      {  
+      res.json(resp[0])
+      }
+      else
+      {
+          res.json({
+              message : "NoDish"
+          })
+      }
+
+
+    }
+    ).catch(err=>{console.log(err)})
+}

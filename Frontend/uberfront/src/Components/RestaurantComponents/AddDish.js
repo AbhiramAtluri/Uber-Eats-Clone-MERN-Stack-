@@ -45,7 +45,8 @@ export default class AddDish extends Component {
             d_price:e.d_price,
             d_category:e.d_category,
             d_description:e.d_description,
-            d_picture:this.state.d_picture
+            d_picture:this.state.d_picture,
+            d_type:e.d_type
            
         }).then(res =>
             {alert("Dish added Successfully")
@@ -90,7 +91,8 @@ export default class AddDish extends Component {
             d_name: "",
             d_description : "",
             d_category :"Appetizer",
-            d_price :0
+            d_price :0,
+            d_type:"NV"
         }
 
         const validationSchema = Yup.object(
@@ -98,6 +100,7 @@ export default class AddDish extends Component {
                 d_name: Yup.string().required("Name of the dish is required"),
                 d_description : Yup.string().required("Description of the dish is required").max(120,"maximum of 120 words"),
                 d_category : Yup.string().required("Dish Category is required"),
+                d_type:Yup.string().required("Type of dish is required"),
                 d_price :Yup.number().max(1001,"Maximum price is 1000$").required("Price of dish is required")
             }
         )
@@ -155,6 +158,12 @@ export default class AddDish extends Component {
                <option value = "Main course">Main course</option>
                <option value = "Desserts">Desserts</option>
                <option value = "Beverages">Beverages</option>
+               </Field>
+               <label>Dish Type</label>
+               <Field className = "form-control" name = "d_type" as="select">
+                   <option value = "NV">Non-veg</option>
+                   <option value = "Veg">Vegetarian</option>
+                   <option value = "Vegan">Vegan</option>
                </Field>
                </div>
               <center> <button type = "submit" className ="btn btn-primary"  >Add Dish</button></center>
