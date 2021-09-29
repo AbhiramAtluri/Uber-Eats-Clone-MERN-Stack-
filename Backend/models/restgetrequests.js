@@ -124,3 +124,59 @@ exports.getRestaurantsBasedOnDish = async function(req,res)
     }
     ).catch(err=>{console.log(err)})
 }
+
+
+///ADDING RESTAURANT TO FAVOURITES
+
+
+exports.AddRestaurantToFavourites = async function(req,res)
+{
+
+    db.query("INSERT INTO c_fav(c_id,r_id) VALUES(?,?)",[req.body.c_id,req.body.r_id])
+    .then(resp=>
+        {
+            res.json(resp)
+        })
+     .catch
+     (
+         err=>{
+             res.json(err)
+         }
+     )   
+
+
+}
+
+//GETTING ALL THE FAVOURITE RESTAURANTS
+
+exports.GetAllTheFavRestaurants = async function(req,res)
+{
+   db.query("SELECT * FROM res_reg WHERE r_id IN(SELECT `r_id` FROM c_fav WHERE c_id = ?)",[req.body.c_id])
+   .then(resp=>
+    {
+       res.json(resp[0])
+
+    }
+    )
+    .catch(err =>
+        {
+            res.json(err)
+        }
+        )
+
+
+}
+
+
+///GET all REST ID OF CUSTOMER FAVOURITES
+
+exports.GetFavResterauntIds = async function(req,res)
+{
+console.log("in fav rest")
+  console.log(req.body.c_id)  
+  db.query("SELECT r_id FROM c_fav WHERE c_id =?",[req.body.c_id])
+  .then(resp=>{res.json(resp[0])})
+  .catch(err=>{res.json(err)})
+
+
+}

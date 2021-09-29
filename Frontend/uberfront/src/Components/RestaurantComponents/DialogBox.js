@@ -11,6 +11,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import OutlinedCard from './Card.js'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useRouteMatch,
+    useParams
+} from "react-router-dom";
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -93,7 +101,7 @@ export default function CustomizedDialogs() {
             >
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose} style={{ height: "100px" }} >
                     <center>Shopping Cart</center>
-                    <div className="col-md-12" style={{ display: "inline-flex", marginBottom: "25px" }}>
+                    <div className="col-md-12 " style={{ display: "inline-flex", marginBottom: "25px" }}>
                         <div className="col-md-3">
                             <center><h5>Image</h5></center>
                         </div>
@@ -154,10 +162,11 @@ export default function CustomizedDialogs() {
                             </div>}
                         <DialogActions>
 
-                            <Button >
-                                Checkout
-                            </Button>
-
+                        
+                          <Link className="btn btn-primary" to ={{pathname:"/Checkout",state:{checkoutList : CartData}}}>
+                              Checkout
+                          </Link>                                         
+                                
                         </DialogActions>
 
                     </DialogContent >

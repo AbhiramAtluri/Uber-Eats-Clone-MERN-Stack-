@@ -167,7 +167,7 @@ export default class RestaurantProfile extends Component {
                      <label>Upload Restauraunt pictures</label>
                      <Field className = "form-control" 
                      type = "file" name = "r_picture"
-                     placeholder = "Upload pictures" onChange ={(e)=>{this.handleOnPicUpload(e)}}   ></Field>
+                     placeholder = "Upload pictures" onChange ={(e)=>{this.handleOnPicUpload(e)}}></Field>
 
                      </div>
                      <div className = "col-md-8">

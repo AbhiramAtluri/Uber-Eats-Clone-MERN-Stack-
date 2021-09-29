@@ -20,6 +20,14 @@ router.get('/GetAllRestaurants',restget.getAllRestaurants)
 router.post('/GetAllNearestRestaurants',restget.getAllnearestRestaurants)
 router.post('/GetFarAwayRestaurants',restget.getFarAwayRestaurants)
 router.post('/GetRestaurantsBasedOnDish',restget.getRestaurantsBasedOnDish)
+//Adding Restaurant to favourites
+
+router.post('/AddRestToFav',restget.AddRestaurantToFavourites)
+//GETTING favourite restaurants
+
+router.post('/GetFavRest',restget.GetAllTheFavRestaurants)
+//Getting fav restaurants id's
+router.post('/GetFavRestID',restget.GetFavResterauntIds)
 
 
 module.exports = router;

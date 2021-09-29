@@ -24,7 +24,7 @@ import CustomizedDialogs from './DialogBox'
 import { margin } from '@mui/system';
 import {connect } from 'react-redux'
 import shopReducer from '../../Redux/Shopping/Shop-reducer';
-
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 
 
@@ -36,6 +36,9 @@ export class RestaurantLanding extends Component {
 
     constructor(props) {
         super(props)
+
+
+        this.handleAddToCartClick = this.handleAddToCartClick.bind(this)
 
         this.state = {
             r_name: "",
@@ -57,12 +60,28 @@ export class RestaurantLanding extends Component {
         
         if(this.props.location.state.view_id =="Customer")
       {
+
+
        this.setState(
            {
                view_id:this.props.location.state.view_id,
                c_id:this.props.location.state.c_id
            }
        )
+       if(JSON.parse(sessionStorage.getItem("cartValue"))!=null && JSON.parse(sessionStorage.getItem("cartValue")).value>0  )
+       {
+          this.setState(
+              
+                   {
+                         cartnumber:JSON.parse(sessionStorage.getItem("cartValue")).value
+ 
+                   }
+        
+          )
+       }
+
+
+
         }
         axios.get(`http://localhost:3030/Restaurant/details/${this.props.location.state.r_email}`)
             .then(
@@ -103,18 +122,18 @@ export class RestaurantLanding extends Component {
 
             )
     }
-    handleRemoveFromCartClick = (e,d_name,d_price,d_picture,d_id)=>
+    handleRemoveFromCartClick = async(e,d_name,d_price,d_picture,d_id)=>
     { 
 
         e.preventDefault()
-
+    
        
         let cartData = JSON.parse(sessionStorage.getItem("cartData"))
         let index = cartData.findIndex( (item)=>{return item.d_id == d_id})
 
         if(this.state.cartnumber!=0 && index>=0)
         {
-        this.setState(
+       await this.setState(
             {
                 cartnumber:this.state.cartnumber-1
             }
@@ -145,7 +164,7 @@ export class RestaurantLanding extends Component {
         }
         
     
-
+     console.log(this.state.cartnumber)
 
 
     }
@@ -153,13 +172,22 @@ export class RestaurantLanding extends Component {
 
 
 
-    handleAddToCartClick = (e,d_name,d_price,d_picture,d_id)=>
+    handleAddToCartClick = async(e,d_name,d_price,d_picture,d_id)=>
     {
     
 
         let i_price = d_price
      e.preventDefault()
-
+       console.log("Before enter" + this.state.cartnumber)
+       if(this.state.cartnumber == 0)
+       {  console.log("in side")
+          await this.setState
+           (
+               {
+                   cartnumber:1
+               }
+           )
+       }
  
 ////IF CART VALUE IS NULL INITIALIZE IT TO ONE ON FIRST CLICK
        let cartvalue = JSON.parse(sessionStorage.getItem("cartValue"))
@@ -169,18 +197,18 @@ export class RestaurantLanding extends Component {
             value:1
         })) 
         
-        this.setState(
-            {
-                cartnumber:this.state.cartnumber+1
-            }
-            )
+        // this.setState(
+        //     {
+        //         cartnumber:1
+        //     }
+        //     )
 
 
        }else
        {
            cartvalue.value = cartvalue.value+1
            sessionStorage.setItem("cartValue",JSON.stringify(cartvalue))
-           this.setState(
+         await  this.setState(
             {
                 cartnumber:cartvalue.value
             }
@@ -188,7 +216,7 @@ export class RestaurantLanding extends Component {
        }
 
 
-    console.log(this.state.cartnumber)
+    
     console.log(this.state.c_id)
     console.log(e)
     console.log(d_name)
@@ -229,7 +257,7 @@ export class RestaurantLanding extends Component {
      }
 
      }
-     
+     console.log(this.state.cartnumber)
     }
 
 
@@ -252,15 +280,15 @@ export class RestaurantLanding extends Component {
                         <ProSidebar  style={{ height: "1500px",width:"100%" }} collapsed = {true} >
                             <Menu iconShape="circle" style={{marginTop:"250px"}}>
 
-                                <SubMenu icon={<ElectricBikeIcon/>} >
-                                    <MenuItem icon ={<RestaurantIcon/>}>Profile <Link to={ {pathname:"/RestProfile",state :{r_id:this.state.r_id,r_name: this.state.r_name}}}/>   </MenuItem>
+                            {this.state.view_id == "Customer"?<div></div>:<SubMenu icon={<ElectricBikeIcon/>} >
+                                <MenuItem icon ={<RestaurantIcon/>}>Profile <Link to={ {pathname:"/RestProfile",state :{r_id:this.state.r_id,r_name: this.state.r_name}}}/></MenuItem>
                                     <MenuItem icon = {<FastfoodIcon/>}>Orders<Link to={ {pathname:"/Orders",state :{r_id:this.state.r_id,r_name: this.state.r_name}}}/></MenuItem>
                                     <MenuItem  icon = {<KitchenIcon/>}>Add Dishes<Link to={ {pathname:"/AddDishes",state :{r_id:this.state.r_id,r_name: this.state.r_name}}}/>   </MenuItem>
                                     
                                     <MenuItem >Log Out<Link to= {"/"} /></MenuItem>
-                                </SubMenu>
+                                </SubMenu>}
                                 
-                                <MenuItem style={{marginRight : "22px"}}><center> <CustomizedDialogs ></CustomizedDialogs><p>{this.state.cartnumber}</p></center  > </MenuItem>
+                                {this.state.view_id == "Customer"?<MenuItem style={{marginRight : "22px"}}><center> <CustomizedDialogs ></CustomizedDialogs><p>{this.state.cartnumber}</p></center  > </MenuItem>:<div></div>}
                             </Menu>
                         </ProSidebar>
                                

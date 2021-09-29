@@ -23,7 +23,10 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 // import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
 // import  restaurantlist  from './Restaurantlist';
 import ElectricBikeIcon from '@mui/icons-material/ElectricBike';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import axios from 'axios'
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 
 export default class CustomerLandingPage extends Component {
@@ -38,7 +41,8 @@ export default class CustomerLandingPage extends Component {
             c_county :"",
             s_filter :"s_location",
             del_type :"s_both",
-            masterList:[]
+            masterList:[],
+            favList:[] 
             
         }
 
@@ -59,6 +63,31 @@ export default class CustomerLandingPage extends Component {
                 
             }
         )
+
+
+       ////Getting Customer Favs
+       axios.post("http://localhost:3030/Restaurant/GetFavRestID",
+       {
+           c_id:c_id
+       }
+       )
+       .then(res=>{
+            // console.log(res)
+         this.setState(
+             {
+                favList:res.data
+             }
+             )
+            
+
+
+
+        }
+        )
+
+
+
+
        console.log(this.state.c_county + "Before component")
        if(this.state.c_county ==="")
        {
@@ -91,14 +120,14 @@ export default class CustomerLandingPage extends Component {
         {
          this.loadLandingPageRestaurantList(this.state.c_county)
         }
-
+      
 
     }
 
 
    loadLandingPageRestaurantList(c_county)
-   {
-       
+   {console.log(this.state)
+     ////Fetching the nearest and farthest restaurants  
     let nearbyrestaurants = "http://localhost:3030/Restaurant/GetAllNearestRestaurants"
     let restallrestaurants = "http://localhost:3030/Restaurant/GetFarAwayRestaurants"
      
@@ -267,6 +296,30 @@ changeLandingPageFilteredWithDishOnChange=(e)=>
    } 
 
 
+handleAddToFav =(r_id)=>{
+    console.log(r_id)
+  
+    axios.post("http://localhost:3030/Restaurant/AddRestToFav",
+    {
+        r_id:r_id,
+        c_id:this.state.c_id
+    })
+    .then(res=>
+        {
+            console.log(res)
+        }
+        )
+    .catch(err=>{console.log(err)})    
+
+
+
+} 
+handleFavOnload=()=>
+{
+    console.log("in onload")
+}
+
+
 
 
     render() {
@@ -286,12 +339,14 @@ changeLandingPageFilteredWithDishOnChange=(e)=>
                     <div className="col-md-1" style={{ padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
 
 
-                        <ProSidebar width="228px" style={{ height: "1500px" }} collapsed = {true} >
+                        <ProSidebar width="228px" style={{ height: "2000px" }} collapsed = {true} >
                             <Menu iconShape="square">
 
                                 <SubMenu style={{marginTop:"200px"}} icon={<ElectricBikeIcon/>} >
                                     <MenuItem icon={<PermIdentityIcon />}>Customize Profile<Link to={{ pathname: "/CustomerProfile", state: { c_id: this.state.c_id, c_email: this.state.c_email } }} /></MenuItem>
+                                    <MenuItem icon={<FavoriteIcon />}>Favourites<Link to={{ pathname: "/Favourites", state: { c_id: this.state.c_id, c_email: this.state.c_email } }} /></MenuItem>
                                     <MenuItem icon={<ExitToAppIcon />}>Log Out<Link to="/" /></MenuItem>
+
                                 </SubMenu>
                             </Menu>
                         </ProSidebar>
@@ -334,7 +389,8 @@ changeLandingPageFilteredWithDishOnChange=(e)=>
                                                 <div className="card card-block mx-2" style={{ width: '17rem'  }}>
                                                     <img style={{ width: '100%', height: '200px' }} class="card-img-top" src={value.r_picture} />
                                                     <div className="card-body">
-                                                       <Link to ={{ pathname: "/RestaurantLanding" ,state:{r_email:value.r_email,view_id:"Customer",c_id:this.state.c_id}  }}  > <h5 className="card-title" id="name">{value.r_name}</h5></Link>
+                                                    <div ><Link to ={{ pathname: "/RestaurantLanding" ,state:{r_email:value.r_email,view_id:"Customer",c_id:this.state.c_id}  }}  ><h5 className="card-title" id="name">{value.r_name}
+                                                    </h5></Link><FavoriteBorderIcon  style={{height:"28px",width:"20px"}}  onClick = {()=>this.handleAddToFav(value.r_id)} /></div>
                                                         <p className="card-text" id="county">Location:{value.r_county}</p>
                                                         <p className="card-test" id = "opentime">OpenTime : {value.r_opentime}</p>
                                                         <p className = "card-test" id ="closetime">CloseTime : {value.r_closetime}</p>
