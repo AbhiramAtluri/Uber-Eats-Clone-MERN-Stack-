@@ -42,7 +42,8 @@ export default class CustomerLandingPage extends Component {
             s_filter :"s_location",
             del_type :"s_both",
             masterList:[],
-            favList:[] 
+            favList:[] ,
+           
             
         }
 
@@ -104,6 +105,10 @@ export default class CustomerLandingPage extends Component {
                      c_county:res.data[0].c_county
                     }
                     )
+            
+                 
+
+
                  this.loadLandingPageRestaurantList(res.data[0].c_county)
               
             }

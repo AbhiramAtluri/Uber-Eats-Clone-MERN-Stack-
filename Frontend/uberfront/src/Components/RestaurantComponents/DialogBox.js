@@ -69,11 +69,13 @@ export default function CustomizedDialogs() {
     };
 
     const CartData = JSON.parse(sessionStorage.getItem("cartData"))
+   
     console.log(CartData)
    let amount=0
 
    if(CartData!=null)
    {
+    const c_id = CartData[0].c_id
   for(let a in CartData)
   {
       amount = CartData[a].d_price+ amount
@@ -163,7 +165,7 @@ export default function CustomizedDialogs() {
                         <DialogActions>
 
                         
-                          <Link className="btn btn-primary" to ={{pathname:"/Checkout",state:{checkoutList : CartData}}}>
+                          <Link className="btn btn-primary" to ={{pathname:"/Checkout",state:{checkoutList : CartData,c_id:"3"}}}>
                               Checkout
                           </Link>                                         
                                 

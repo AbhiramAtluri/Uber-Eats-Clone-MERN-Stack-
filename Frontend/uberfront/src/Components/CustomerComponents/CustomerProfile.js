@@ -172,8 +172,7 @@ export class CustomerProfile extends Component {
 
                         <Formik initialValues={initialValues}  enableReinitialize 
                         
-                        onSubmit ={e=>{this.handleOnSubmit(e)}}
-                        
+                        onSubmit ={e=>{this.handleOnSubmit(e)}}      
                         >
                             <Form className="form-group" contentEditable="false">
                                 {/* Upload [pictures] and description are in a seperate row  */}

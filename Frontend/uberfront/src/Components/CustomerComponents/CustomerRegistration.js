@@ -12,7 +12,7 @@ import axios from 'axios'
 
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
-import { string } from 'yup/lib/locale';
+
 
 export class CustomerRegistration extends Component {
 

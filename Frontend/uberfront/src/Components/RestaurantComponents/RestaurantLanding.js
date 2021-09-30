@@ -61,7 +61,7 @@ export class RestaurantLanding extends Component {
         if(this.props.location.state.view_id =="Customer")
       {
 
-
+     
        this.setState(
            {
                view_id:this.props.location.state.view_id,

@@ -13,7 +13,11 @@ console.log("in del add")
     .then(resp=>
         {
          
-            res.json(resp)
+            res.json(
+              {
+              message:"success"
+              }
+            )
         }
         ).catch
         (
@@ -35,7 +39,7 @@ console.log("in del fetch")
     .then(resp=>
         {
          
-            res.json(resp)
+            res.json(resp[0])
         }
         ).catch
         (
@@ -45,4 +49,23 @@ console.log("in del fetch")
             }
         )
 
+}
+
+
+///Fetching number from custdetails
+
+exports.fetchingCustNumber= async function(req,res)
+{
+    db.query("select c_number,c_email,c_name from cust_reg where c_id=?",[req.body.c_id])
+    .then
+    (resp=>
+        {
+          res.json(resp[0])
+        }
+
+
+    )
+    .catch(err=>{
+        res.json(err)
+    })
 }
