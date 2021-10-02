@@ -48,7 +48,8 @@ export class RestaurantLanding extends Component {
             r_description: "",
             view_id:"",
             cartnumber:0,
-            c_id:""
+            c_id:"",
+            del_type:""
         }
     }
 
@@ -93,6 +94,7 @@ export class RestaurantLanding extends Component {
                             r_id: res.data.r_id,
                             r_picture : res.data.r_picture == null ?"http://prcagrimex.co.th/en/wp-content/uploads/2014/04/dummy-image-green-e1398449160839.jpg":res.data.r_picture,
                             r_description :res.data.r_description== 0|| null ?"Please update your profile":res.data.r_description,
+                            del_type:res.data.del_type
                             
                         }
                     )
@@ -121,6 +123,8 @@ export class RestaurantLanding extends Component {
             }
 
             )
+
+   
     }
     handleRemoveFromCartClick = async(e,d_name,d_price,d_picture,d_id)=>
     { 
@@ -266,7 +270,7 @@ export class RestaurantLanding extends Component {
 
 
     render() {
-
+        console.log(this.state)
         return (
             <div>
                 
@@ -288,7 +292,7 @@ export class RestaurantLanding extends Component {
                                     <MenuItem >Log Out<Link to= {"/"} /></MenuItem>
                                 </SubMenu>}
                                 
-                                {this.state.view_id == "Customer"?<MenuItem style={{marginRight : "22px"}}><center> <CustomizedDialogs ></CustomizedDialogs><p>{this.state.cartnumber}</p></center  > </MenuItem>:<div></div>}
+                                {this.state.view_id == "Customer"?<MenuItem style={{marginRight : "22px"}}><center> <CustomizedDialogs del_type={this.state.del_type}></CustomizedDialogs><p>{this.state.cartnumber}</p></center  > </MenuItem>:<div></div>}
                             </Menu>
                         </ProSidebar>
                                

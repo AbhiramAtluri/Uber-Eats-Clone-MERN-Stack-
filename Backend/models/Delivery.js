@@ -69,3 +69,58 @@ exports.fetchingCustNumber= async function(req,res)
         res.json(err)
     })
 }
+
+
+///Adding order into database table
+exports.placingOrder =async function(req,res)
+{
+    console.log(req.body.d_list)
+
+    db.query("INSERT INTO orders(c_id,r_id,d_list) VALUES(?,?,?)",[req.body.c_id,req.body.r_id,req.body.d_list])
+    .then
+    (
+        resp=>
+        {
+            res.json
+            (
+                resp
+            )
+        }
+    )
+    .catch(err=>
+        {
+         res.json
+         (
+             err
+         )
+        }
+        )
+
+}
+
+///Fetching Orders for customer
+
+exports.fetchOrders = async function(req,res)
+{
+
+    db.query("select * from orders where c_id =?",[req.body.c_id])
+    .then(resp=>
+        {
+              
+            res.json
+            (
+              resp[0]
+            )
+        }
+        )
+    .catch(err=>
+        {
+            res.json({
+                message:"Noorders"
+            })
+        }
+        )
+
+
+
+}

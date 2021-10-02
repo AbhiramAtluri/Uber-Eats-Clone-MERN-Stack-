@@ -59,7 +59,7 @@ BootstrapDialogTitle.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-export default function CustomizedDialogs() {
+export default function CustomizedDialogs(props) {
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -68,14 +68,17 @@ export default function CustomizedDialogs() {
         setOpen(false);
     };
 
+    // console.log(props.del_type)
+
     const CartData = JSON.parse(sessionStorage.getItem("cartData"))
-   
+    let c_id = null
     console.log(CartData)
    let amount=0
 
-   if(CartData!=null)
-   {
-    const c_id = CartData[0].c_id
+   if(CartData!=null && CartData.length >0 )
+   { 
+    c_id = CartData[0].c_id
+
   for(let a in CartData)
   {
       amount = CartData[a].d_price+ amount
@@ -126,7 +129,7 @@ export default function CustomizedDialogs() {
                 </BootstrapDialogTitle>
                 <div className="Cart_class" style={{ width: "500px" }}    >
                     <DialogContent dividers>
-                        {CartData == null ? <div>No Items Added</div> :
+                        {CartData == null || CartData.length == 0 ? <center><div>No Items Added</div></center> :
                             <div className="container-fluid">
                                 <ul className="list-group" style={{ display: "table", listStyle: "none", width: "100%" }}>
 
@@ -164,10 +167,10 @@ export default function CustomizedDialogs() {
                             </div>}
                         <DialogActions>
 
-                        
-                          <Link className="btn btn-primary" to ={{pathname:"/Checkout",state:{checkoutList : CartData,c_id:"3"}}}>
+                        {CartData !=null && c_id !=null && CartData.length>0?
+                          <Link className="btn btn-primary" to ={{pathname:"/Checkout",state:{checkoutList : CartData,c_id:c_id,del_type:props.del_type}}}>
                               Checkout
-                          </Link>                                         
+                          </Link>:""}                                     
                                 
                         </DialogActions>
 

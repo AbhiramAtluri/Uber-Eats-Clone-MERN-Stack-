@@ -17,6 +17,12 @@ router.post('/AddDeliveryAddress',delivery.DeliveryAddressAdd)
 router.post('/FetchDelAddress',delivery.FetchDelAddress)
 //Fetching  cust number in final checkout page
 router.post('/FetchCustNumber',delivery.fetchingCustNumber)
+//Placing order
+router.post('/PlaceOrder',delivery.placingOrder)
+//Fetching Orders list
+router.post('/FetchOrderList',delivery.fetchOrders)
+
+
 
 
 module.exports = router

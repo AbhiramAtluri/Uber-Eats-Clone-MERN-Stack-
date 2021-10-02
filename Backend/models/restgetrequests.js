@@ -20,7 +20,8 @@ exports.getRestaurantDetails = async function(req,res)
                     "r_name" :(resp[0])[0].r_name,
                     "r_id" : (resp[0])[0].r_id,
                     "r_picture" : (resp[0])[0].r_picture,
-                    "r_description": (resp[0])[0].r_description
+                    "r_description": (resp[0])[0].r_description,
+                    "del_type":(resp[0])[0].del_type
                 }
             )
         }
