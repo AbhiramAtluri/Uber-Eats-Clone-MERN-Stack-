@@ -1,15 +1,27 @@
 import React, { Component } from 'react'
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
-import { getImageListItemBarUtilityClass } from '@mui/material';
+
 import axios from 'axios'
-import { Button } from '@material-ui/core';
-import { StylesContext } from '@material-ui/styles';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ColorToggleButton from './ExportToggleButton';
-
-
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect,
+    Link,
+    useRouteMatch,
+    useParams
+  } from "react-router-dom";
+import PropTypes from 'prop-types';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Typography from '@mui/material/Typography';
 export default class Checkout extends Component {
 
 
@@ -26,8 +38,12 @@ export default class Checkout extends Component {
             c_email: "",
             c_name: "",
             total_price: "",
-            selected_delivery_type:"",
-            del_type:""
+            selected_delivery_type:"s_pickup",
+            del_type:"",
+            r_id:"",
+            Selected_Address:"",
+            open_dialog:false,
+            redirect:false
         }
     }
 
@@ -37,6 +53,15 @@ export default class Checkout extends Component {
         const c_id = this.props.location.state.c_id
         console.log(this.props.location.state.del_type)
         let checkoutList = JSON.parse(sessionStorage.getItem("cartData"))
+        
+        let   r_id = checkoutList[0].r_id
+        this.setState
+        (
+            {
+                r_id:checkoutList[0].r_id
+            }
+        )
+
 
         console.log(this.state.c_id)
         console.log(c_id)
@@ -88,7 +113,7 @@ export default class Checkout extends Component {
 
 
     }
-
+////HANDLER TO SHOW THE ADD ADDRESS FIELDS
     handleAddAddress = () => {
 
         this.setState(
@@ -100,7 +125,7 @@ export default class Checkout extends Component {
         console.log(this.state)
     }
 
-
+////fUNCTION TO PULL THE ADDRESS LISTS AFTER ADDING
     pullfreshAddressList = () => {
 
         axios.post("http://localhost:3030/customer/FetchDelAddress",
@@ -121,7 +146,7 @@ export default class Checkout extends Component {
 
     }
 
-
+///////HANDLER TO SHOW THE Select ADDRESS FIELDS
     handleOnSelectAddress = () => {
 
         this.setState
@@ -131,6 +156,62 @@ export default class Checkout extends Component {
             })
 
                                   }
+
+
+  ////Below function hits the order table after address has been selected                                 
+   PlaceOrderHandler=async(data)=>
+
+   {
+    if(this.state.del_type == "s_both")
+    {
+       await this.setState(
+            {
+                del_type:this.state.selected_delivery_type
+            }
+        )
+    }
+
+
+      console.log(data.s_address)
+      console.log("inp")
+      let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+      console.log(cartData)
+      axios.post("http://localhost:3030/customer/PlaceOrder",
+      {
+            
+          c_id:this.state.c_id,
+          r_id:this.state.r_id,
+          d_list:cartData,
+          del_type:this.state.del_type,
+          del_id:data.s_address
+      }
+      )
+      .then(res=>
+          {
+             if(res.data.message == "Successful")
+             {
+                this.setState(
+                    {
+                        open_dialog:true
+                    }
+                )
+                sessionStorage.clear() 
+             }
+          }
+          )   
+   }
+
+   handleOnclose = ()=>
+   {
+       this.setState(
+           {
+               open_dialog:false,
+               redirect:true
+           }
+           )
+   }
+
+
 
     calculateTotalPrice = () => {
 
@@ -149,6 +230,8 @@ export default class Checkout extends Component {
                 }
             )
 
+            
+            
 
     }
 
@@ -159,12 +242,7 @@ export default class Checkout extends Component {
         // e.preventDefault()
         console.log(e)
         console.log("hi")
-
-
-
-
-
-
+        let del_id =null
         axios.post("http://localhost:3030/customer/AddDeliveryAddress",
             {
 
@@ -177,7 +255,12 @@ export default class Checkout extends Component {
         )
             .then(res => {
                 if (res.data.message == "success") {
-                    alert("Address added Succesfully")
+                    ///Fetching the delivery if after succefull insertion into the table
+           
+                    del_id = res.data.del_id
+            
+                    
+                 this.PlaceOrderAfterAddressAdd(del_id)
                 }
                 this.pullfreshAddressList()
 
@@ -189,7 +272,126 @@ export default class Checkout extends Component {
             )
 
 
+           
+
     }
+
+/// Below Function hits the orders table after New Address has been added 
+
+   PlaceOrderAfterAddressAdd = async(del_id)=>
+   {
+    let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+    console.log(cartData)
+
+
+    if(this.state.del_type == "s_both")
+    {
+       await this.setState(
+            {
+                del_type:this.state.selected_delivery_type
+            }
+        )
+        sessionStorage.clear()
+    }
+
+
+
+
+    axios.post("http://localhost:3030/customer/PlaceOrder",
+    {
+          
+        c_id:this.state.c_id,
+        r_id:this.state.r_id,
+        d_list:cartData,
+        del_type:this.state.del_type,
+        del_id:del_id
+    }
+    )
+    .then(res=>
+        {
+           if(res.data.message == "Successful")
+           {
+            this.setState(
+                {
+                    open_dialog:true
+                }
+                
+            )
+            sessionStorage.clear()
+           }
+        }
+        )
+
+   }
+
+
+
+
+
+
+    PlaceOrderPickup = async()=>
+    {  
+        console.log("inp")
+        let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+        console.log(cartData)
+        if(this.state.del_type == "s_both")
+        {
+           await this.setState(
+                {
+                    del_type:this.state.selected_delivery_type
+                }
+            )
+        }
+    
+        axios.post("http://localhost:3030/customer/PlaceOrder",
+        {
+              
+            c_id:this.state.c_id,
+            r_id:this.state.r_id,
+            d_list:cartData,
+            del_type:this.state.del_type,
+            del_id:null
+        }
+        )
+        .then(res=>
+            {
+               if(res.data.message == "Successful")
+               {console.log("hi")
+                   this.setState(
+                       {
+                           open_dialog:true
+                       }
+                   )
+                   sessionStorage.clear()
+               }
+            }
+            )       
+
+    }
+    // PlaceOrderHandler= ()=>
+    // {
+    //     let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+    //     console.log(cartData)
+    //     axios.post("http://localhost:3030/customer/PlaceOrder",
+    //     {
+              
+    //         c_id:this.state.c_id,
+    //         r_id:this.state.r_id,
+    //         d_list:cartData,
+    //         del_type:this.state.del_type
+    //     }
+    //     )
+    //     .then(res=>
+    //         {
+    //            if(res.data.message == "Successful")
+    //            {
+    //                alert("Add Success")
+    //            }
+    //         }
+    //         )       
+
+    // }
+
 
 
     addIteminCart =  async(d_name, d_price, d_id) => {
@@ -280,6 +482,12 @@ export default class Checkout extends Component {
             d_quantity: "2"
         }
 
+    if(this.state.redirect == true)
+    {
+        return(<Redirect to ={{pathname:"/CustomerOrder", state:{c_id:this.state.c_id}}}></Redirect>)
+    }
+
+
         return (
             <div>
                 <div className="container-fluid" style={{ margin: 0, padding: 0 }} >
@@ -300,7 +508,7 @@ export default class Checkout extends Component {
                                              
                                             {this.state.del_type=="s_delivery" ||this.state.selected_delivery_type=="s_delivery"?
                                             <center><button className="btn btn-primary" style={{ marginRight: "100px", width: "170px" }} onClick={this.handleAddAddress} >Add Address</button><button className="btn btn-primary" onClick={this.handleOnSelectAddress}  >Have a previous address?</button></center>
-                                            :<center><button className="btn btn-primary">Pay and pickup?</button></center>
+                                            :<center><button className="btn btn-primary" onClick={this.PlaceOrderPickup}  >Pay and pickup?</button></center>
                                            }
                                         </Form>
 
@@ -321,14 +529,19 @@ export default class Checkout extends Component {
                                 }
                                 {this.state.selectAddress == true && this.state.del_type!="s_pickup"&&this.state.selected_delivery_type!="s_pickup" ?
                                     <div>
-                                        <select style={{ width: "100%", height: "50px" }}>
+                                        <Formik initialValues={{s_address:""}} onSubmit = {(e)=>{this.PlaceOrderHandler(e)}}  >
+                                            <Form>
+                                        <Field style={{ width: "100%", height: "50px" }} as ="select" name="s_address" >
                                             {this.state.addresslist != null ?
                                                 this.state.addresslist.map((address, key) => {
-                                                    return (<option value={address} style={{ width: "100%", height: "50px" }} >{" " + address.d_add_1 + "," + address.d_add_2 + "," + address.d_zipcode}</option>)
+                                                    return (<option  value={address.del_id} style={{ width: "100%", height: "50px" }} >{" " + address.d_add_1 + "," + address.d_add_2 + "," + address.d_zipcode}</option>)
                                                 }
                                                 ) : <option value="none">No Address Added</option>}
-                                        </select>
-                                        <center>  <button className="btn btn-primary" >Place the order</button></center>
+                                        </Field>
+                                        <center>  <button className="btn btn-primary" type="submit"  >Place the order</button></center>
+                                        
+                                        </Form>
+                                        </Formik>
                                     </div>
                                     :
                                     <div></div>
@@ -425,9 +638,20 @@ export default class Checkout extends Component {
                             </div>
                         </div>
                     </div>
+                {this.state.open_dialog == true?
+                 <Dialog open={this.state.open_dialog} onClose={this.handleOnclose} fullWidth={true} >
+                  <DialogTitle>
+                     <center><h4> Order Status</h4></center>
+                   </DialogTitle>      
+                 <DialogContent>
+                    <center> <h5>Order Placed Successfully</h5></center>                              
 
+                 </DialogContent>
+                 </Dialog>:""
+                   }
 
                 </div>
+                
             </div>
         )
     }

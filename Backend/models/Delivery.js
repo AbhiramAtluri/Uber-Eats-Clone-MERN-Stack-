@@ -11,13 +11,21 @@ exports.DeliveryAddressAdd =async function (req,res)
 console.log("in del add")
     db.query("INSERT INTO d_address(c_id,d_add_1,d_add_2,d_zipcode) VALUES(?,?,?,?)",[req.body.c_id,req.body.d_add_1,req.body.d_add_2,req.body.d_zipcode])
     .then(resp=>
-        {
+        {   
+            db.query("select del_id from d_address where c_id = ? and d_add_1 = ? and d_add_2 = ? and d_zipcode = ?",[req.body.c_id,req.body.d_add_1,req.body.d_add_2,req.body.d_zipcode])
+            .then(respa=>
+                {console.log((respa[0])[0].del_id)
+                    res.json(
+                        {
+                        message:"success",
+                        del_id:(respa[0])[0].del_id
+                        }
+                      )
+                }
+                
+                )
+                .catch(err=>{res.send(err)})
          
-            res.json(
-              {
-              message:"success"
-              }
-            )
         }
         ).catch
         (
@@ -75,23 +83,37 @@ exports.fetchingCustNumber= async function(req,res)
 exports.placingOrder =async function(req,res)
 {
     console.log(req.body.d_list)
+//   let row = JSON.stringify(req.body.d_list)
+// console.log(req.body)
 
-    db.query("INSERT INTO orders(c_id,r_id,d_list) VALUES(?,?,?)",[req.body.c_id,req.body.r_id,req.body.d_list])
+     let row = JSON.stringify(req.body.d_list)
+     console.log(row)
+    db.query("INSERT INTO orders(c_id,r_id,d_list,del_type,del_id) VALUES(?,?,?,?,?)",[req.body.c_id,req.body.r_id,row,req.body.del_type,req.body.del_id])
     .then
     (
+
+        
         resp=>
+       
         {
+            // console.log(resp[0])
+            
             res.json
             (
-                resp
+                {
+                    message:"Successful"
+                }
             )
         }
     )
     .catch(err=>
         {
+            // console.log(err)
          res.json
          (
-             err
+             {
+                 message:"failed"
+             }
          )
         }
         )
@@ -102,25 +124,25 @@ exports.placingOrder =async function(req,res)
 
 exports.fetchOrders = async function(req,res)
 {
-
     db.query("select * from orders where c_id =?",[req.body.c_id])
     .then(resp=>
         {
-              
+            //   console.log(resp[0])
+              resp = Object.values(JSON.parse(JSON.stringify(resp)));
+              console.log(resp[0])
+              let x =(resp[0])[0].d_list
+              console.log(x[0])
+            //  let data = JSON.parse((resp[0])[0].d_list)
             res.json
-            (
-              resp[0]
-            )
+            (resp[0])
         }
         )
     .catch(err=>
-        {
+        {  console.log(err)
             res.json({
                 message:"Noorders"
             })
         }
         )
-
-
-
 }
+

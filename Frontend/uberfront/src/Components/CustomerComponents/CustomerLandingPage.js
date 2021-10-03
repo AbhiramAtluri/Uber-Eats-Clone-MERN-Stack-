@@ -27,7 +27,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import axios from 'axios'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-
+import HistoryIcon from '@mui/icons-material/History';
 
 export default class CustomerLandingPage extends Component {
 
@@ -58,7 +58,7 @@ export default class CustomerLandingPage extends Component {
             {
                 c_id: c_id, 
 
-
+        
 
                 c_email: c_email,
                 
@@ -351,7 +351,7 @@ handleFavOnload=()=>
                                     <MenuItem icon={<PermIdentityIcon />}>Customize Profile<Link to={{ pathname: "/CustomerProfile", state: { c_id: this.state.c_id, c_email: this.state.c_email } }} /></MenuItem>
                                     <MenuItem icon={<FavoriteIcon />}>Favourites<Link to={{ pathname: "/Favourites", state: { c_id: this.state.c_id, c_email: this.state.c_email } }} /></MenuItem>
                                     <MenuItem icon={<ExitToAppIcon />}>Log Out<Link to="/" /></MenuItem>
-
+                                    <MenuItem icon={<HistoryIcon/>}>orders<Link to={ {pathname:"/CustomerOrder",state:{c_id:this.state.c_id}}} /></MenuItem>
                                 </SubMenu>
                             </Menu>
                         </ProSidebar>

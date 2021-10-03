@@ -27,6 +27,7 @@ import Orders from './Components/RestaurantComponents/Orders';
 import CustomerLandingPage from './Components/CustomerComponents/CustomerLandingPage';
 import Favourites from './Components/CustomerComponents/Favourites';
 import Checkout from './Components/CustomerComponents/Checkout';
+import CustomerOrders from './Components/CustomerComponents/CustomerOrders';
 
 function App() {
 
@@ -61,7 +62,7 @@ function App() {
           {/* <RestaurantLanding></RestaurantLanding> */}
         </Route>
         <Route exact path = "/RestProfile" render = {(props) =><RestaurantProfile  {...props}/> } >
-
+         
       {/* <RestaurantProfile></RestaurantProfile> */}
    
         </Route>
@@ -79,6 +80,7 @@ function App() {
         <Route exact path ="/Customerlanding"  component ={CustomerLandingPage}></Route>
         <Route exact path ="/Favourites"  component ={Favourites}></Route>
         <Route exact path = "/Checkout" component = {Checkout}></Route>
+        <Route exact path = "/CustomerOrder" component = {CustomerOrders}  />
         </Switch>
       </Router>
       </div>
