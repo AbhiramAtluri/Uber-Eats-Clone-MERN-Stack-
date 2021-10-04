@@ -28,6 +28,7 @@ import CustomerLandingPage from './Components/CustomerComponents/CustomerLanding
 import Favourites from './Components/CustomerComponents/Favourites';
 import Checkout from './Components/CustomerComponents/Checkout';
 import CustomerOrders from './Components/CustomerComponents/CustomerOrders';
+import RestauranOrderList from './Components/RestaurantComponents/RestauranOrderList';
 
 function App() {
 
@@ -81,6 +82,7 @@ function App() {
         <Route exact path ="/Favourites"  component ={Favourites}></Route>
         <Route exact path = "/Checkout" component = {Checkout}></Route>
         <Route exact path = "/CustomerOrder" component = {CustomerOrders}  />
+        <Route  exact path = "/RestaurantOrders" component={RestauranOrderList}   />
         </Switch>
       </Router>
       </div>

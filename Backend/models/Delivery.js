@@ -146,3 +146,26 @@ exports.fetchOrders = async function(req,res)
         )
 }
 
+/////Fetching delivery address in customer orders list
+
+exports.FetchDelAddressInCustomerOrders =async function (req,res)
+{
+
+let del_id = req.body.del_id
+console.log("del id is" + del_id)
+console.log("in del fetch")
+    db.query("SELECT * FROM d_address where del_id =?",[del_id])
+    .then(resp=>
+        {
+         
+            res.json(resp[0])
+        }
+        ).catch
+        (
+            err=>
+            {
+                res.json(err)
+            }
+        )
+
+}

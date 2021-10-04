@@ -30,5 +30,9 @@ router.post('/FetchOrderList',delivery.fetchOrders)
 
 router.post('/FetchRestaurantNameFromCustId',Order.FetchRestaurantNameFromCustId)
 
+router.post('/FetchDelAddressInCustomerOrders',delivery.FetchDelAddressInCustomerOrders)
+
+router.post('/UpdateOrderStatus',Order.UpdateOrderStatus)
+
 
 module.exports = router

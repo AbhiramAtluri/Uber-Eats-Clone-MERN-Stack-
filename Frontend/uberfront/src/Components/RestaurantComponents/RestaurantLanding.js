@@ -286,7 +286,7 @@ export class RestaurantLanding extends Component {
 
                             {this.state.view_id == "Customer"?<div></div>:<SubMenu icon={<ElectricBikeIcon/>} >
                                 <MenuItem icon ={<RestaurantIcon/>}>Profile <Link to={ {pathname:"/RestProfile",state :{r_id:this.state.r_id,r_name: this.state.r_name}}}/></MenuItem>
-                                    <MenuItem icon = {<FastfoodIcon/>}>Orders<Link to={ {pathname:"/Orders",state :{r_id:this.state.r_id,r_name: this.state.r_name}}}/></MenuItem>
+                                    <MenuItem icon = {<FastfoodIcon/>}>Orders<Link to={ {pathname:"/RestaurantOrders",state :{r_id:this.state.r_id,r_name: this.state.r_name}}}/></MenuItem>
                                     <MenuItem  icon = {<KitchenIcon/>}>Add Dishes<Link to={ {pathname:"/AddDishes",state :{r_id:this.state.r_id,r_name: this.state.r_name}}}/>   </MenuItem>
                                     
                                     <MenuItem >Log Out<Link to= {"/"} /></MenuItem>

@@ -47,6 +47,8 @@ db.query("SELECT t2.r_name,t1.* FROM uber_eats.orders t1 inner join res_reg t2 o
 
 }
 
+
+
 exports.fetchCustomerDetailsbyId = async function(req,res)
 
 {
@@ -63,6 +65,8 @@ db.query("SELECT t2.c_name,t1.* FROM uber_eats.orders t1 inner join cust_reg t2 
 
 
 }
+
+///Fetching rest name from rest id
 
 exports.FetchRestaurantNameFromCustId = async function(req,res)
 
@@ -84,6 +88,29 @@ res.json(
 
 
 
+
+}
+
+
+exports.UpdateOrderStatus = async function(req,res)
+
+{
+    console.log(req.body)
+    let o_id = req.body.o_id
+    let r_id = req.body.r_id
+    let o_status = req.body.o_status
+db.query("UPDATE orders SET o_status = ? where o_id = ?",[o_status,o_id])
+.then(resp=>
+    {
+      res.json(
+          {
+              message:"success"
+          }
+      )
+ console.log(resp)
+    }
+    )
+.catch(err=>{console.log(err)})
 
 }
 

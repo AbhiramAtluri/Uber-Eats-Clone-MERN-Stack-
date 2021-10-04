@@ -14,7 +14,7 @@ export default class ListItem extends Component {
       super(props)
   
       this.state = {
-             item :"",
+             Order_details :"",
              d_list:[],
              r_id:"",
              r_name:"",
@@ -31,39 +31,24 @@ export default class ListItem extends Component {
     
 componentDidMount(props)
 {
-    console.log(this.props.testOrder)
-let details =this.props.testOrder
-console.log(this.props.testOrder.d_list)
-let rd_list = this.props.testOrder.d_list
-console.log(rd_list)
-let order_status = this.props.testOrder.o_status
-let order_time = this.props.testOrder.o_time
-let order_date = this.props.testOrder.o_date
+    console.log("in did mount - child")
+
+let Orderdetails = this.props.testOrder
+console.log(Orderdetails)
+let itemlist = this.props.testOrder.d_list
+console.log(itemlist)
+let order = this.props.testOrder.d_list
+let bill = 0
+for(let a in order)
+{
+    bill = bill + order[a].d_price * order[a].d_quantity
+}
+
 this.setState(
     {
-        item:details,
-        d_list:rd_list,
-        totalcost:"",
-        // o_status:order_status,
-        // o_time:order_time,
-        // o_date:order_date
+         totalcost:bill
     }
     )
-
-
-   ///Calculating total cost for the order 
-    let order = this.props.testOrder.d_list
-    let bill = 0
-    for(let a in order)
-    {
-        bill = bill + order[a].d_price * order[a].d_quantity
-    }
-    
-    this.setState(
-        {
-             totalcost:bill
-        }
-        )
 ////GETTING R_NAME WITH AN API CALL
 axios.post("http://localhost:3030/customer/FetchRestaurantNameFromCustId",
 {
@@ -71,19 +56,34 @@ r_id:10
 }
 )
 .then(res=>
+{
+    console.log(res.data)
+  
+    this.setState(
+        {
+            r_name:res.data[0].r_name
+        }
+        )
+}
+)
+console.log(this.props.testOrder.del_id)
+axios.post("http://localhost:3030/customer/FetchDelAddressInCustomerOrders",
+{
+    del_id:this.props.testOrder.del_id
+}
+)
+.then(res=>
     {
-        console.log(res.data)
-      
-        this.setState(
-            {
-                r_name:res.data[0].r_name
-            }
-            )
+   console.log(res)
     }
     )
+this.setState(
+    {
+        Order_details:Orderdetails,
+        d_list:itemlist,
 
-
-
+    }
+    )
 }
 
 
@@ -141,7 +141,7 @@ console.log(this.state)
                    <div className = "row"> 
                        <h4>Total : {this.state.totalcost}$</h4>
                        </div>
-                       {this.state.d_list.map((data,key)=>{
+                       {this.props.testOrder.d_list.map((data,key)=>{
                      
                      
                      return   <div className = "row"> 
@@ -159,6 +159,8 @@ console.log(this.state)
                       } )}
                      <div className= "col-md-6"style={{marginTop:"15px"}}>
                     <h5>Status :{this.state.o_status}</h5>
+                    <div className="col-md-6">Delivery Address:{}</div>
+                    <h5>Deliverd to:-</h5>
                      </div>  
                      </div>
                    </div>

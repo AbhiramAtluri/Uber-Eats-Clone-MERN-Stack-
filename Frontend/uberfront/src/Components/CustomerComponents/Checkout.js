@@ -213,7 +213,8 @@ export default class Checkout extends Component {
 
 
 
-    calculateTotalPrice = () => {
+    calculateTotalPrice = () => 
+    {
 
         let templist = this.state.checkoutList
         console.log(templist)
@@ -230,7 +231,11 @@ export default class Checkout extends Component {
                 }
             )
 
-            
+        let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+            cartData[0].checkoutprice = Total_price 
+            console.log(cartData[0].checkoutprice) 
+         
+            sessionStorage.setItem("cartData",JSON.stringify(cartData))
             
 
     }
