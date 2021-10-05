@@ -29,7 +29,7 @@ import Favourites from './Components/CustomerComponents/Favourites';
 import Checkout from './Components/CustomerComponents/Checkout';
 import CustomerOrders from './Components/CustomerComponents/CustomerOrders';
 import RestauranOrderList from './Components/RestaurantComponents/RestauranOrderList';
-
+// const BrowserHistory = require('react-router/lib/BrowserHistory').default;
 function App() {
 
 
@@ -39,7 +39,7 @@ function App() {
       <Helmet>
                 <style>{'body{ background-color :azure}'}</style>
       </Helmet>
-      <Router>
+      <Router >
       <Navbar></Navbar>
       <Switch>
         <Route exact path = "/">

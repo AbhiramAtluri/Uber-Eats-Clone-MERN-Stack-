@@ -21,11 +21,16 @@ import KitchenIcon from '@mui/icons-material/Kitchen';
 import ElectricBikeIcon from '@mui/icons-material/ElectricBike';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CustomizedDialogs from './DialogBox'
+
 import { margin } from '@mui/system';
 import {connect } from 'react-redux'
 import shopReducer from '../../Redux/Shopping/Shop-reducer';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import {useHistory} from "react-router-dom";
 
 
 
@@ -49,7 +54,9 @@ export class RestaurantLanding extends Component {
             view_id:"",
             cartnumber:0,
             c_id:"",
-            del_type:""
+            del_type:"",
+            NewOrderDialog:false,
+            CreateNewOrder:false
         }
     }
 
@@ -58,7 +65,7 @@ export class RestaurantLanding extends Component {
 
     componentDidMount(props) {
         ///Calling the res_reg table and fetching the details through below request
-        
+        console.log("in mount")
         if(this.props.location.state.view_id =="Customer")
       {
 
@@ -71,6 +78,8 @@ export class RestaurantLanding extends Component {
        )
        if(JSON.parse(sessionStorage.getItem("cartValue"))!=null && JSON.parse(sessionStorage.getItem("cartValue")).value>0  )
        {
+
+    
           this.setState(
               
                    {
@@ -88,6 +97,21 @@ export class RestaurantLanding extends Component {
             .then(
                 res => {
                     //Setting the name of the restaurant after successfully fetching the data
+                    let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+                    let seshstorage_rid=0
+                    if(cartData!=null && cartData!=undefined)
+                    {
+                    seshstorage_rid=cartData.r_id 
+                    }else
+                    {
+                        seshstorage_rid = res.data.r_id
+                    }
+
+                console.log("hello")
+                      
+
+                    if (seshstorage_rid ==res.data.r_id)
+                    {
                     this.setState(
                         {
                             r_name: res.data.r_name == 0|| null ?"Please update your profile":res.data.r_name,
@@ -98,8 +122,15 @@ export class RestaurantLanding extends Component {
                             
                         }
                     )
-
-
+                    }
+                    else
+                    {
+                        this.setState(
+                            {
+                                 NewOrderDialog:true
+                            }
+                            )
+                    }
                 })
             ///Fetching Dish data after r_id has been set
             .then(res => {
@@ -265,8 +296,27 @@ export class RestaurantLanding extends Component {
     }
 
 
+    handleOnclose = ()=>
+    {
+        this.setState(
+            {
+                NewOrderDialog:false
+            })
+    }
+   createnewOrderFromPopUp = () =>
+   {
+       sessionStorage.clear()
+       this.setState({
+           createnewOrderFromPopUp:true,
+           NewOrderDialog:false
+       })
+       window.location.reload()
+   }
 
-
+   processPreviousOrder = ()=>
+   {
+    this.props.history.goBack();
+   }
 
 
     render() {
@@ -292,7 +342,7 @@ export class RestaurantLanding extends Component {
                                     <MenuItem >Log Out<Link to= {"/"} /></MenuItem>
                                 </SubMenu>}
                                 
-                                {this.state.view_id == "Customer"?<MenuItem style={{marginRight : "22px"}}><center> <CustomizedDialogs del_type={this.state.del_type}></CustomizedDialogs><p>{this.state.cartnumber}</p></center  > </MenuItem>:<div></div>}
+                                {this.state.view_id == "Customer"?<MenuItem style={{marginRight : "22px"}}><center> <CustomizedDialogs del_type={this.state.del_type} r_name = {this.state.r_name}></CustomizedDialogs><p>{this.state.cartnumber}</p></center  > </MenuItem>:<div></div>}
                             </Menu>
                         </ProSidebar>
                                
@@ -351,7 +401,25 @@ export class RestaurantLanding extends Component {
                             </div>
                         </div>
                     </div>
-
+                {this.state.NewOrderDialog == true?<div>
+                    <Dialog  open={this.state.NewOrderDialog} onClose={this.handleOnclose} fullWidth={true}>
+                     <DialogTitle>
+                            
+                     </DialogTitle>
+                     <DialogContent>
+                     <center><h5>Do You want to drop the contents of the previous Order and Create a new one?</h5></center>
+                     <center>
+                         <button className="btn btn-primary" style={{marginRight:"75px"}} onClick={this.createnewOrderFromPopUp} >Create New Order</button>
+                         <button className="btn btn-primary"  onClick={this.processPreviousOrder}  >Process Previous Order?</button>
+                    </center>
+                     
+                     </DialogContent>
+                    </Dialog>
+                </div>:
+                <div>
+                      
+                </div>
+                }
 
 
                 

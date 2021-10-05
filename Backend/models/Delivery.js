@@ -82,22 +82,17 @@ exports.fetchingCustNumber= async function(req,res)
 ///Adding order into database table
 exports.placingOrder =async function(req,res)
 {
-    console.log(req.body.d_list)
+    // console.log(req.body.d_list)
 //   let row = JSON.stringify(req.body.d_list)
 // console.log(req.body)
-
+      console.log("in Place Order")
      let row = JSON.stringify(req.body.d_list)
-     console.log(row)
-    db.query("INSERT INTO orders(c_id,r_id,d_list,del_type,del_id) VALUES(?,?,?,?,?)",[req.body.c_id,req.body.r_id,row,req.body.del_type,req.body.del_id])
+    //  console.log(row)
+    console.log(req.body)
+    db.query("INSERT INTO orders(c_id,r_id,d_list,del_type,del_id,o_date,o_time,r_name) VALUES(?,?,?,?,?,?,?,?)",[req.body.c_id,req.body.r_id,row,req.body.del_type,req.body.del_id,req.body.o_date,req.body.o_time,req.body.r_name])
     .then
-    (
-
-        
-        resp=>
-       
+    (resp=>
         {
-            // console.log(resp[0])
-            
             res.json
             (
                 {
@@ -108,7 +103,7 @@ exports.placingOrder =async function(req,res)
     )
     .catch(err=>
         {
-            // console.log(err)
+            console.log(err)
          res.json
          (
              {

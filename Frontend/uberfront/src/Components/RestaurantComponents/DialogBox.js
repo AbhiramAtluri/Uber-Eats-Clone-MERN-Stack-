@@ -168,7 +168,7 @@ export default function CustomizedDialogs(props) {
                         <DialogActions>
 
                         {CartData !=null && c_id !=null && CartData.length>0?
-                          <Link className="btn btn-primary" to ={{pathname:"/Checkout",state:{checkoutList : CartData,c_id:c_id,del_type:props.del_type}}}>
+                          <Link className="btn btn-primary" to ={{pathname:"/Checkout",state:{checkoutList : CartData,c_id:c_id,del_type:props.del_type,r_name:props.r_name}}}>
                               Checkout
                           </Link>:""}                                     
                                 

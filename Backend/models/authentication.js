@@ -1,11 +1,11 @@
 const db = require("../database/db")
 const path = require('path')
-
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 ///Restaurant Signup page registration
 exports.restregister = async function (req, res) {
-
+   
     let rest_details =
     {
         email: req.body.r_email,
@@ -43,13 +43,34 @@ exports.restregister = async function (req, res) {
 ///Reciving res from above function so that we can response back to front end
 resterauntRegisterInsert = (data, res) => {
     //Inserting Resteraunt register data in the database
-    db.query('INSERT INTO res_reg(r_name,r_password,r_state,r_email) VALUES(?,?,?,?)', [data.name, data.password, data.location, data.email])
-        .then(
-            ret => {
-                console.log("User registered successfulyy")
-                res.send("Success")
+    // const salt = bcrypt.genSaltSync(saltRounds)
+    // const hash = bcrypt.hashSync(data.c_password,salt)
+    // console.log(hash)
+//    bcrypt.hash(data.c_password,saltRounds,function(err,hash)
+//     {
+//         console.log("in Bcrypt")
+//         console.log(hash)
+    bcrypt.genSalt(saltRounds,(err,salt)=>
+    { 
+        console.log("ininn")
+        bcrypt.hash(data.c_password,salt,(err,hash)=>
+        {
+            console.log(hash)
+            console.log(err)
+        })
+    }
+    )   
+    db.query('INSERT INTO res_reg(r_name,r_password,r_state,r_email) VALUES(?,?,?,?)', [data.name,hash, data.location, data.email])
+    .then(
+        ret => {
+            console.log("User registered successfulyy")
+            res.send("Success")
 
-            }).catch(err => { console.log(err) })
+        }).catch(err => { console.log(err) })
+
+
+//    }
+
 
 }
 

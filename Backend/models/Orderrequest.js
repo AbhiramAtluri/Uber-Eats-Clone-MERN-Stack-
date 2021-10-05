@@ -58,13 +58,33 @@ let c_id = req.body.c_id
 db.query("SELECT t2.c_name,t1.* FROM uber_eats.orders t1 inner join cust_reg t2 on t1.c_id=t2.c_id where t1.c_id=?",[c_id])
 .then(resp =>
     {
-          res.json(resp[0])
+        //   res.json(resp[0])
+        resp = Object.values(JSON.parse(JSON.stringify(resp)));
+         res.json(resp[0])
+    //     for(a in resp[0])
+    //     {
+    //       db.query("SELECT r_name from res_reg where r_id =?",[resp[0][a].r_id])
+    //         .then(response=>
+    //             {
+    //                 response = Object.values(JSON.parse(JSON.stringify(response)));
+    //                 // console.log(response[0])
+    //                 resp[0][a].r_name = response[0][0].r_name
+    //                 console.log("dta")
+    //                 console.log(resp[0][a])
+    //             }
+    //         )
+    //     }
+
+    //   console.log(x)
     }
     )
 .catch(err=>{res.json(err)})
 
 
 }
+
+
+
 
 ///Fetching rest name from rest id
 

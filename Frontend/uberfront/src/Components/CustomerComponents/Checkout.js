@@ -43,7 +43,9 @@ export default class Checkout extends Component {
             r_id:"",
             Selected_Address:"",
             open_dialog:false,
-            redirect:false
+            redirect:false,
+            r_name:""
+            
         }
     }
 
@@ -70,7 +72,8 @@ export default class Checkout extends Component {
             {
                 checkoutList: checkoutList,
                 c_id: c_id,
-                del_type: this.props.location.state.del_type
+                del_type: this.props.location.state.del_type,
+                r_name:this.props.location.state.r_name
             }
         )
         //Fetching delivery address     
@@ -176,6 +179,14 @@ export default class Checkout extends Component {
       console.log("inp")
       let cartData = JSON.parse(sessionStorage.getItem("cartData"))
       console.log(cartData)
+      let date = new Date()
+
+      let idate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+   
+      var hours = date.getHours()
+      var min = date.getMinutes()
+      var sec = date.getSeconds()
+      var time = hours+":"+min+":"+sec
       axios.post("http://localhost:3030/customer/PlaceOrder",
       {
             
@@ -183,7 +194,10 @@ export default class Checkout extends Component {
           r_id:this.state.r_id,
           d_list:cartData,
           del_type:this.state.del_type,
-          del_id:data.s_address
+          del_id:data.s_address,
+          o_date:idate,
+        o_time: time,
+        r_name:this.state.r_name
       }
       )
       .then(res=>
@@ -242,7 +256,7 @@ export default class Checkout extends Component {
 
 
 
-
+////Handle add address and pay
     handleAddressSubmit = (e) => {
         // e.preventDefault()
         console.log(e)
@@ -288,7 +302,7 @@ export default class Checkout extends Component {
     let cartData = JSON.parse(sessionStorage.getItem("cartData"))
     console.log(cartData)
 
-
+     
     if(this.state.del_type == "s_both")
     {
        await this.setState(
@@ -298,8 +312,14 @@ export default class Checkout extends Component {
         )
         sessionStorage.clear()
     }
+   let date = new Date()
 
+   let idate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
 
+   var hours = date.getHours()
+   var min = date.getMinutes()
+   var sec = date.getSeconds()
+   var time = hours+":"+min+":"+sec
 
 
     axios.post("http://localhost:3030/customer/PlaceOrder",
@@ -309,7 +329,10 @@ export default class Checkout extends Component {
         r_id:this.state.r_id,
         d_list:cartData,
         del_type:this.state.del_type,
-        del_id:del_id
+        del_id:del_id,
+        o_date:idate,
+        o_time: time,
+        r_name:this.state.r_name
     }
     )
     .then(res=>
@@ -347,6 +370,13 @@ export default class Checkout extends Component {
                 }
             )
         }
+        let date = new Date()
+        let idate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+   
+        var hours = date.getHours()
+        var min = date.getMinutes()
+        var sec = date.getSeconds()
+        var time = hours+":"+min+":"+sec
     
         axios.post("http://localhost:3030/customer/PlaceOrder",
         {
@@ -355,7 +385,10 @@ export default class Checkout extends Component {
             r_id:this.state.r_id,
             d_list:cartData,
             del_type:this.state.del_type,
-            del_id:null
+            del_id:null,
+            o_date:idate,
+            o_time: time,
+            r_name:this.state.r_name
         }
         )
         .then(res=>

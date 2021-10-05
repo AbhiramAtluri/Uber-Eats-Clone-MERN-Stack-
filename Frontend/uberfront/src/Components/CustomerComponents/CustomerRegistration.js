@@ -12,7 +12,9 @@ import axios from 'axios'
 
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
-
+// import bcrypt from 'bcrypt'
+//  const bcrypt = require('bcrypt');
+//  var bcrypt = require('bcryptjs');
 
 export class CustomerRegistration extends Component {
 
@@ -71,6 +73,10 @@ export class CustomerRegistration extends Component {
                                             console.log(data)
                                                 if(data.c_password == data.c_password1)
                                                 {
+                                                    // var salt = bcrypt.genSaltSync(10);
+                                                    // var hash = bcrypt.hashSync(, salt); 
+                                                    
+
                                                     axios.post("http://localhost:3030/customer/custreg",
                                                     {
                                                            c_name :data.c_name,

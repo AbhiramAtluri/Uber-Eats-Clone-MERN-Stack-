@@ -152,7 +152,7 @@ exports.AddRestaurantToFavourites = async function(req,res)
 
 exports.GetAllTheFavRestaurants = async function(req,res)
 {
-   db.query("SELECT * FROM res_reg WHERE r_id IN(SELECT `r_id` FROM c_fav WHERE c_id = ?)",[req.body.c_id])
+   db.query("SELECT  t1.r_name, t1.r_state,t1.r_email,t1.r_county,t1.r_opentime,t1.r_closetime,t1.r_id,t1.r_picture FROM res_reg t1 INNER JOIN  c_fav t2 ON t1.r_id=t2.r_id WHERE t2.c_id=? GROUP BY t2.r_id  ",[req.body.c_id])
    .then(resp=>
     {
        res.json(resp[0])

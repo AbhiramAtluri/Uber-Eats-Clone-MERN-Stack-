@@ -73,20 +73,26 @@ export default class CustomerLandingPage extends Component {
        }
        )
        .then(res=>{
-            // console.log(res)
+         console.log(res.data)
          this.setState(
              {
                 favList:res.data
              }
              )
-            
-
-
-
         }
         )
 
+    //   axios.post("http://localhost:3030/Restaurant/GetFavRest",
+    //   {
+    //      c_id:this.props.location.state.c_id 
+    //   })
+    //   .then(res=>{
+    //     this.setState(
+    //         {
+    //            favList:res.data
+    //         })
 
+    //   })
 
 
        console.log(this.state.c_county + "Before component")
@@ -301,7 +307,10 @@ changeLandingPageFilteredWithDishOnChange=(e)=>
    } 
 
 
-handleAddToFav =(r_id)=>{
+handleAddToFav =(r_id,e)=>{
+
+   console.log(e.target.style.backgroundColor)
+   e.target.style.color ="red"
     console.log(r_id)
   
     axios.post("http://localhost:3030/Restaurant/AddRestToFav",
@@ -321,7 +330,27 @@ handleAddToFav =(r_id)=>{
 } 
 handleFavOnload=()=>
 {
-    console.log("in onload")
+    // console.log("in onload")
+
+
+
+}
+FetchColour = (r_id)=>
+{
+ 
+let flist = this.state.favList
+const found = flist.find(element =>{return element.r_id == r_id})
+console.log(found)
+ if(found)
+ {
+     return "error"
+ }
+ else
+ {
+     return ""
+ }
+
+
 }
 
 
@@ -395,7 +424,7 @@ handleFavOnload=()=>
                                                     <img style={{ width: '100%', height: '200px' }} class="card-img-top" src={value.r_picture} />
                                                     <div className="card-body">
                                                     <div ><Link to ={{ pathname: "/RestaurantLanding" ,state:{r_email:value.r_email,view_id:"Customer",c_id:this.state.c_id}  }}  ><h5 className="card-title" id="name">{value.r_name}
-                                                    </h5></Link><FavoriteBorderIcon  style={{height:"28px",width:"20px"}}  onClick = {()=>this.handleAddToFav(value.r_id)} /></div>
+                                                </h5></Link><FavoriteBorderIcon  style={{height:"28px",width:"20px"}}  color={this.FetchColour(value.r_id)} onClick = {(e)=>this.handleAddToFav(value.r_id,e)} /></div>
                                                         <p className="card-text" id="county">Location:{value.r_county}</p>
                                                         <p className="card-test" id = "opentime">OpenTime : {value.r_opentime}</p>
                                                         <p className = "card-test" id ="closetime">CloseTime : {value.r_closetime}</p>

@@ -15,7 +15,9 @@ constructor(props) {
 
         c_id:"",
         order_details:[],
-        testOrder:[]
+        testOrder:[],
+        filter:"",
+        MasterOrderDetails:[]
          
     }
 }
@@ -23,33 +25,66 @@ constructor(props) {
 
 componentDidMount(props)
 {
-console.log("in did mount-parent")
-    const c_id= this.props.location.state.c_id
-    console.log(c_id)
 
-axios.post("http://localhost:3030/customer/FetchCustomerDetailsById",
-{
-c_id:c_id
+    axios.post("http://localhost:3030/customer/FetchCustomerDetailsById",
+    {
+    c_id:this.props.location.state.c_id
+    
+    })
+    .then(res=>{
+        this.setState(
+            {
+                order_details:res.data,
+                MasterOrderDetails:res.data,
+                c_id:this.props.location.state.c_id
+            }
+            )
+            
 
-})
-.then(res=>{
-   
-this.setState({
-    order_details:res.data
-})
-console.log(res.data)
-this.setState({
-
-    testOrder:res.data[3]
-})
+    })
+  
 }
-)
+
+OnChangeFilter = (e)=>
+{
+
+   console.log(e.target.value)
+//  console.log(this.state.order_details[1].o_status)
+if(e.target.value!="Order Received" && e.target.value!="All Orders")
+{
+  let Norder_details = this.state.MasterOrderDetails.filter(order=>{return order.o_status == e.target.value})
+console.log(Norder_details)
 this.setState(
     {
-       c_id:c_id
+        order_details:Norder_details
     }
-    )   
+)
 }
+else if(e.target.value=="Order Received")
+{
+    let Norder_details = this.state.MasterOrderDetails.filter(order=>{return order.o_status == null})
+    console.log(Norder_details)
+    this.setState(
+        {
+            order_details:Norder_details
+        }
+    )
+}
+else{
+     console.log("asll")
+     this.setState(
+        {
+            order_details:this.state.MasterOrderDetails
+        }
+    )
+}
+
+
+
+}
+
+
+
     render() {  
     console.log(this.state)
         return (<div>
@@ -59,7 +94,35 @@ this.setState(
                     <center>
                     <div className="col-md-8">
                     <ul className="list-group">
-                        <ListItem testOrder={this.state.testOrder}></ListItem>   
+                     <li className="list-group-item">
+                     <div className = "row">
+                     <div className="col-md-8">
+                         <h5 style={{marginLeft:"265px"}}>Order History</h5>
+                         </div>
+                         <div className="col-md-4">
+                           <select name= "filter" onChange={e=>{this.OnChangeFilter(e)}} >
+                           <option value = "All Orders">All Orders</option>
+                            <option value = "Order Received">Order Received</option>   
+                            <option value = "On the way">On the way</option>
+                            <option value = "Order Delivered">Delivered</option>
+                            <option value = "Pick up ready">Pick up Ready</option>
+                            <option value = "Picked up">Picked up</option>
+                            </select>  
+                         </div>
+                     </div>
+                     </li>   
+                        {this.state.order_details.length >0?
+                         this.state.order_details.map((order,key)=>
+                         {
+                            
+                            return(<ListItem order = {order} r_name = {order.r_name} ></ListItem>)
+
+
+                         }
+                         )
+                         
+                        :"" 
+                       }  
                      </ul>   
                     </div>
                     </center>
