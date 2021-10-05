@@ -6,7 +6,7 @@ import axios from 'axios'
 import "./Uber.css"
 import config from "../S3upload"
 import S3 from 'react-aws-s3';
-
+import NavbarRest from './RestaurantNavBar';
 
 
 export default class EditDish extends Component {
@@ -126,13 +126,16 @@ handlepicupload = (e)=>
        
 
         return (
-            <div>
+            <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
+              <NavbarRest/> 
+
+             <center> <h5>Edit Dish</h5> </center>
             <Formik initialValues ={initialValues}   
             onSubmit = {(e)=>{this.handleonSubmit(e)}}
             validationSchema ={validationSchema}
             >
               
-              <Form className="form-group">
+              <Form className="form-group" style={{marginTop:"30px"}}>
             <div className = "container">
             <div className="row">
             <div className = "col-md-6">
@@ -179,7 +182,7 @@ handlepicupload = (e)=>
            <option value = "Beverages">Beverages</option>
            </Field>
            </div>
-          <center> <button type = "submit" className ="btn btn-primary">Save Edit</button></center>
+          <center > <button type = "submit" className ="btn btn-primary"    >Save Edit</button></center>
             </div>
               
 

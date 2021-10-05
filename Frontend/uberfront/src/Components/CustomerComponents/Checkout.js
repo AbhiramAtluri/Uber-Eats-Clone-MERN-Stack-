@@ -22,6 +22,9 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
+import NavbarCust from './CustomerNavBar';
+
+
 export default class Checkout extends Component {
 
 
@@ -527,7 +530,8 @@ export default class Checkout extends Component {
 
 
         return (
-            <div>
+            <div className="container-fluid" style={{ margin: 0, padding: 0 }} >
+                <NavbarCust></NavbarCust>
                 <div className="container-fluid" style={{ margin: 0, padding: 0 }} >
                     <div className="row">
                         <div className="col-md-6 " >

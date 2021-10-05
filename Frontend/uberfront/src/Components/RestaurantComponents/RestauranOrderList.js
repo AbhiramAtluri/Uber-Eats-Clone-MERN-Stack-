@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import RestaurantOrderlistItems from './RestaurantOrderlistItems'
+import NavbarRest from './RestaurantNavBar'
 
 
 
@@ -60,14 +61,15 @@ export default class RestauranOrderList extends Component {
 
         console.log(this.state)
         return (
-            <div>               
-                <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
+            <div className="container-fluid" style={{ margin: 0, padding: 0 }}> 
+                <NavbarRest></NavbarRest>              
+                <div className="container-fluid" >
                  
                 <div className = "row">
                    
                     <div className = "col-md-12">  
                     <center>
-                    <div className="col-md-8">
+                    <div className="col-md-8" style={{marginTop:"20px"}}>
 
                     <ul className="list-group">
                      <li className="list-group-item">< h5>Order List</h5></li>

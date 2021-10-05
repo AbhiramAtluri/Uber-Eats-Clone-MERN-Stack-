@@ -6,6 +6,7 @@ import "./Uber.css";
 import axios from "axios"
 import config from "../S3upload"
 import S3 from 'react-aws-s3';
+import NavbarRest from './RestaurantNavBar';
 
 export default class RestaurantProfile extends Component {
 
@@ -145,7 +146,8 @@ export default class RestaurantProfile extends Component {
 
         
         return (
-            <div>
+            <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
+                <NavbarRest></NavbarRest>
                 <h1></h1>
                 
                

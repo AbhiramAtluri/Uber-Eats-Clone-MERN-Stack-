@@ -32,6 +32,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import {useHistory} from "react-router-dom";
 
+import Customerinit from '../CustomerComponents/Customerinit';
+import NavbarRest from './RestaurantNavBar';
+
 
 
 
@@ -322,16 +325,16 @@ export class RestaurantLanding extends Component {
     render() {
         console.log(this.state)
         return (
-            <div>
-                
+            <div  className="container-fluid" style={{ margin: 0, padding: 0 }}>
+              <NavbarRest></NavbarRest>
                     {/* <h1>{this.props.location.state.message}</h1>  */}
                     <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
-                        <div className="row">
+                        <div className="row"  style={{ margin: 0, padding: 0 }} >
                             {/* Code for the side bar */}
                             <div className="col-md-1" style={{ padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
                                
                                
-                        <ProSidebar  style={{ height: "1500px",width:"100%" }} collapsed = {true} >
+                        <ProSidebar image="" style={{ height: "1000px",width:"100%" }} collapsed = {true} >
                             <Menu iconShape="circle" style={{marginTop:"250px"}}>
 
                             {this.state.view_id == "Customer"?<div></div>:<SubMenu icon={<ElectricBikeIcon/>} >
@@ -353,7 +356,7 @@ export class RestaurantLanding extends Component {
                                     <div className="row border-bottom" style={{ height: '357px', width: '100%'}}>
                                         {/* <center><h1>{this.state.r_name}</h1></center> */}
                                         {/* <center> < ImageGallery items={images} /></center> */}
-                                          <center><img src ={this.state.r_picture} style={{width : "100%",height :"357px"}}/></center> 
+                                          <center><img src ={this.state.r_picture} style={{width : "102%",height :"357px"}}/></center> 
                                     </div>
                                     {/* <div className = "row"> */}
                                     <div className ="col-md-12" style ={{paddingBottom :"20px"}} >   
@@ -370,9 +373,9 @@ export class RestaurantLanding extends Component {
                                     {/* <center> <h1>Restaurant items</h1></center> */}
                                     {/* </div> */}
                                     {/*Code for the restaurant item boxes  */}
-                                    <div className="row flex-row flex-nowrap overflow-auto">
+                                    <div className="row flex-row flex-nowrap overflow-auto" style={{ margin: 0, padding: 0 }}>
                                         {this.state.dishlist.map((dish, index) => {
-                                            return <div className="col-3 offset-1">
+                                            return <div className="col-3 " style={{ marginRight:"100px"}} >
                                                 <div className="card card-block mx-2" style={{ width: '20rem' }}>
                                                     <img style={{ width: '100%', height: '200px' }} class="card-img-top" src={dish.d_picture} />
                                                     <div className="card-body">

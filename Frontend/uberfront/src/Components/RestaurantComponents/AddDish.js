@@ -5,6 +5,7 @@ import axios from 'axios'
 import "./Uber.css"
 import config from "../S3upload"
 import S3 from 'react-aws-s3';
+import NavbarRest from './RestaurantNavBar';
 
 
 
@@ -107,7 +108,9 @@ export default class AddDish extends Component {
 
 
         return (
-            <div>
+            <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
+                <NavbarRest></NavbarRest>
+                
                 <Formik initialValues ={initialValues}   
                 onSubmit = {(e)=>{this.handleonSubmit(e)}}
                 validationSchema ={validationSchema}

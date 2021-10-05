@@ -28,6 +28,8 @@ import axios from 'axios'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import HistoryIcon from '@mui/icons-material/History';
+import NavbarCust from './CustomerNavBar';
+// import NavbarRest from './CustomerNavBar';
 
 export default class CustomerLandingPage extends Component {
 
@@ -369,7 +371,8 @@ console.log(found)
 
         return (
             <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
-                <div className="row">
+              <NavbarCust></NavbarCust>
+                <div className="row" style={{ margin: 0, padding: 0 }} >
                     <div className="col-md-1" style={{ padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
 
 
@@ -388,8 +391,8 @@ console.log(found)
                     </div>
 
                     {/* SEARCH BAR CODE */}
-                    <div className="col-md-11" style={{ margin: 0, padding: 0 }}>
-                        <div className="row" style={{ margin: 0, padding: 0, height: "250px" }} >
+                    <div className="col-md-11" >
+                        <div className="row" style={{height: "250px" }} >
                             <form onSubmit = {(e)=>this.handleFormOnSubmit(e)}>
                             <center> <div class="input-group" style={{ width: "500px", marginTop: "100px" }}>
                                 <select name = "s_filter"  onChange = {this.handleSearchBarFilterChange} className="selectpicker" >

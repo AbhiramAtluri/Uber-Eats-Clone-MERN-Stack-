@@ -8,7 +8,7 @@ import StateList from './States';
 import axios from 'axios';
 import config from "../S3upload"
 import S3 from 'react-aws-s3';
-
+import NavbarCust from './CustomerNavBar';
 
 export class CustomerProfile extends Component {
 
@@ -162,7 +162,8 @@ export class CustomerProfile extends Component {
 
 
         return (
-            <div>
+            <div className="container-fluid" style={{ margin: 0, padding: 0 }} >
+                <NavbarCust></NavbarCust>
                 <div>
                     <h1></h1>
 

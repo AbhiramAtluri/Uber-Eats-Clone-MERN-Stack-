@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Link } from "react-router-dom"
-
+import NavbarCust from './CustomerNavBar';
 
 
 export default class Favourites extends Component {
@@ -44,14 +44,15 @@ export default class Favourites extends Component {
 
     render() {
         return (
-            <div className="container-fluid">
+            <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
+                <NavbarCust></NavbarCust>
                 {/* <h5>Welcome to Favourites</h5> */}
                 <div className="col-md-12">
                   
                     <center>
                     <h5>Favourite Restaurants</h5>  
                         <div className="col-md-12" style={{margin:"0px",padding:"0px"}}>
-                            <div className = "row">    
+                            <div className = "row"style={{margin:"0px",padding:"0px"}} >     
                             {this.state.FavList.length > 0 ?
                                 this.state.FavList.map((data, key) => {
                                     return <div className="col-md-3"style={{paddingBottom:"40px"}} >

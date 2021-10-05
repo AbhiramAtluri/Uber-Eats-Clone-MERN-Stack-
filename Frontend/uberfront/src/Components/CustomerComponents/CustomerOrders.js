@@ -5,7 +5,7 @@ import Bouncer from 'react-data-bouncer'
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import ListItem from './ListItem';
-
+import NavbarCust from './CustomerNavBar';
 export default class CustomerOrders extends Component {
 
 constructor(props) {
@@ -87,7 +87,8 @@ else{
 
     render() {  
     console.log(this.state)
-        return (<div>
+        return (<div className="container-fluid" style={{ margin: 0, padding: 0 }}>
+              <NavbarCust></NavbarCust>
                 <div className="container-fluid" style={{ margin: 0, padding: 0 }}>               
                 <div className = "row">
                     <div className = "col-md-12">

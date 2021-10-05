@@ -11,6 +11,8 @@ import {
 } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
+import Navbar from '../Navbar';
+
 
 export class Customerinit extends Component {
    
@@ -57,8 +59,10 @@ export class Customerinit extends Component {
 
 
         return (
-            <div>
-                <div className="container">
+            <div className="container-fluid" style={{margin:"0px",padding:"0px"}}>
+                <Navbar></Navbar>
+                <div className="container"  >
+                
                     <div className="row">
                         <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                             <div className="card border-0 shadow rounded-3 my-5">

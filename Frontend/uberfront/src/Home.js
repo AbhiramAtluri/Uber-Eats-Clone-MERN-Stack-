@@ -1,5 +1,9 @@
+import { height } from '@mui/system';
 import React, { Component } from 'react'
 import {Helmet} from 'react-helmet'
+import Navbar from './Components/Navbar';
+// import backgroundImage from "./UberEats.jpg"
+import UberEatspic from './images/UberEatspic.jpg'
 // import {
 //     BrowserRouter as Router,
 //     Switch,
@@ -15,17 +19,17 @@ import {Helmet} from 'react-helmet'
     render() {
         return (
             
+            
+            <div className="container-fluid" style={{margin:"0px",padding:"0px", height:"500px%",backgroundImage:`url(${UberEatspic})` }} > 
+              <Navbar>
+              </Navbar>
+              <div style={{ height:"1000px",backgroundImage:`url(${UberEatspic})` }} >
+
+              </div>
          
-            <div >  
-               <Helmet>
-                <style>{'body{ background-color :azure}'}</style>
-                </Helmet>
-            <div>
-             <center>  
-            <h1 style ={{marginTop : '17%'}}>Welcome to Uber eats</h1>
-            </center>
             </div>
-            </div>
+          
+            
         )
     }
 }
