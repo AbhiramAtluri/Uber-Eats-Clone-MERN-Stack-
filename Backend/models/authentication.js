@@ -1,7 +1,9 @@
 const db = require("../database/db")
 const path = require('path')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
+var cookieParser = require('cookie-parser');
+
 
 ///Restaurant Signup page registration
 exports.restregister = async function (req, res) {
@@ -18,6 +20,8 @@ exports.restregister = async function (req, res) {
     // console.log(rest_details)
     // res.send("Invalid Email")
 
+
+   
     db.query("SELECT * from res_reg where r_email = ?", [rest_details.email])
         .then(resp => {
             if (resp[0].length > 0) {
@@ -41,26 +45,11 @@ exports.restregister = async function (req, res) {
 
 
 ///Reciving res from above function so that we can response back to front end
-resterauntRegisterInsert = (data, res) => {
-    //Inserting Resteraunt register data in the database
-    // const salt = bcrypt.genSaltSync(saltRounds)
-    // const hash = bcrypt.hashSync(data.c_password,salt)
-    // console.log(hash)
-//    bcrypt.hash(data.c_password,saltRounds,function(err,hash)
-//     {
-//         console.log("in Bcrypt")
-//         console.log(hash)
-    bcrypt.genSalt(saltRounds,(err,salt)=>
-    { 
-        console.log("ininn")
-        bcrypt.hash(data.c_password,salt,(err,hash)=>
-        {
-            console.log(hash)
-            console.log(err)
-        })
-    }
-    )   
-    db.query('INSERT INTO res_reg(r_name,r_password,r_state,r_email) VALUES(?,?,?,?)', [data.name,hash, data.location, data.email])
+resterauntRegisterInsert = async (data, res) => {
+
+    const hash= await bcrypt.hash(data.password,5)
+
+  await db.query('INSERT INTO res_reg(r_name,r_password,r_state,r_email,del_type) VALUES(?,?,?,?,?)', [data.name,hash, data.location, data.email,"s_both"])
     .then(
         ret => {
             console.log("User registered successfulyy")
@@ -84,27 +73,30 @@ exports.resterauntLogin = async function (req, res) {
         pass: req.body.r_password
     }
 
-    //  let email = req.body.r_email;
-    // //  let email = "atluriabhiram45@gmail.com";
-    // //  let pass = "sasidhaR1!";
-    //  let pass = req.body.r_password;
     console.log(req.body + "reqbody")
     console.log("in")
     console.log(r_log_details)
     console.log(r_log_details.email + "" + r_log_details.pass)
-    db.query('select * from res_reg where res_reg.r_email = ? and res_reg.r_password = ?', [r_log_details.email, r_log_details.pass])
-        .then(resp => {
-            console.log(resp[0])
-            if (resp[0].length > 0) {
+   let resp= await  db.query('select r_password from res_reg where r_email = ?', [r_log_details.email])
 
-                res.send("Login successfull")
+   resp = Object.values(JSON.parse(JSON.stringify(resp)));
+   const validPass = await bcrypt.compare(r_log_details.pass,(resp[0])[0].r_password)
+   console.log(validPass)
+  
 
 
-            } else {
-                res.send("Invalid credentials")
-            }
-        })
+   if(validPass)
+       {
 
+    //    res.cookie('cookie',r_log_details.email)
+          res.cookie('cookie','admin',{maxAge: 900000, httpOnly: false, path : '/'})
+          req.session.user = user
+         res.send("Login successfull")
+
+
+     } else {
+         res.send("Invalid credentials")
+     }
 
 }
 
@@ -127,13 +119,14 @@ exports.resterauntProfile = async function (req, res) {
         r_pictures : req.body.r_pictures,
         r_contact: req.body.r_contact,
         r_description: req.body.r_description,
-        d_type:req.body.d_type
+        d_type:req.body.d_type,
+        r_address:req.body.r_address
     }
     console.log(profileDetails)
     res.send('hello')
 
-    db.query('INSERT INTO r_profile(rid,r_name,r_location,r_description,r_pictures,r_contact,d_type) VALUES(?,?,?,?,?,?,?)',
-        [profileDetails.rid, profileDetails.r_name, profileDetails.r_location, profileDetails.r_description,profileDetails.r_pictures, profileDetails.r_contact,profileDetails.d_type]).then(
+    db.query('INSERT INTO r_profile(rid,r_name,r_location,r_description,r_pictures,r_contact,d_type,r_address) VALUES(?,?,?,?,?,?,?,?)',
+        [profileDetails.rid, profileDetails.r_name, profileDetails.r_location, profileDetails.r_description,profileDetails.r_pictures, profileDetails.r_contact,profileDetails.d_type,profileDetails.r_address]).then(
 
             resp => {
                 //    console.log(resp)
@@ -157,8 +150,8 @@ exports.customerRegistration = async function (req, res)
         c_password: req.body.c_password
     }
     console.log(cust_details)
-    db.query("SELECT * from cust_reg where c_email = ?", [cust_details.c_email])
-        .then(resp => {
+    let resp = await db.query("SELECT c_password from cust_reg where c_email = ?", [cust_details.c_email])
+        
             if (resp[0].length > 0) {
               ///Invalid is sent if email is already in use
                 res.send('Invalid')
@@ -166,7 +159,10 @@ exports.customerRegistration = async function (req, res)
             }
             else
             {
-                db.query('INSERT INTO cust_reg(c_name,c_email,c_password) VALUES(?,?,?)', [cust_details.c_name, cust_details.c_email, cust_details.c_password])
+               const hash = await bcrypt.hash(cust_details.c_password,5)
+
+
+               await db.query('INSERT INTO cust_reg(c_name,c_email,c_password) VALUES(?,?,?)', [cust_details.c_name, cust_details.c_email, hash])
                 .then((resp) => {
                        console.log(resp)
                        res.send("success")
@@ -174,12 +170,6 @@ exports.customerRegistration = async function (req, res)
 
 
             }
-           
-
-        })
-    
-
-            
     }
 /////Customer login Authentication
     exports.customerLogin = async function(req,res)
@@ -192,16 +182,21 @@ exports.customerRegistration = async function (req, res)
         }
         console.log("login")
         console.log(cust_details)
-        db.query('select * from cust_reg where cust_reg.c_email = ? and cust_reg.c_password = ?', [cust_details.c_email, cust_details.c_password])
-        .then(resp => {
+     let resp = await db.query('select c_password ,c_id,c_email from cust_reg where cust_reg.c_email = ?', [cust_details.c_email])
+    
            
             if (resp[0].length > 0) {
+                  
                 resp = Object.values(JSON.parse(JSON.stringify(resp)));
+
+                const validpass = await bcrypt.compare(cust_details.c_password,(resp[0])[0].c_password)
                  console.log(resp[0])
                  console.log((resp[0])[0].c_id)
                  let num = (resp[0])[0].c_id
                  let c_email = (resp[0])[0].c_email
                 // res.send("Login successfull")
+                if(validpass)
+                {
                 res.json(
                     {
                         message:"Login successfull",
@@ -209,12 +204,17 @@ exports.customerRegistration = async function (req, res)
                         c_email:c_email
                     }
                 )
+            }
+            else
+            {
+                res.json("Invalid credentials")
+            }
 
 
             } else {
                 res.send("Invalid credentials")
             }
-        })
+    
 
 
 
@@ -226,9 +226,11 @@ exports.customerRegistration = async function (req, res)
      let   r_id = req.body.r_id
       
         console.log(req.body.r_id)
+        
        db.query('SELECT * from res_reg where r_id = ?',[r_id])
        .then(resp=>
-        {
+        { 
+            console.log(resp[0])
               res.json(resp[0])
         }
         ).catch(err=>{console.log(err)})
@@ -252,9 +254,10 @@ exports.customerRegistration = async function (req, res)
         let r_picture = req.body.r_picture
         let r_id = req.body.r_id
         let del_type =req.body.del_type
+        let r_address = req.body.r_address
          console.log(req.body)
         
-     db.query("UPDATE res_reg SET r_name = ? ,r_state = ?, r_email = ?,r_description = ?,r_number = ?,r_opentime = ?,r_closetime = ?,r_county = ?,r_picture =?,del_type = ? where r_id = ?",[r_name,r_state,r_email,r_description,r_number,r_opentime,r_closetime,r_county,r_picture,del_type,r_id] )
+     db.query("UPDATE res_reg SET r_name = ? ,r_state = ?, r_email = ?,r_description = ?,r_number = ?,r_opentime = ?,r_closetime = ?,r_county = ?,r_picture =?,del_type = ?,r_address =? where r_id = ?",[r_name,r_state,r_email,r_description,r_number,r_opentime,r_closetime,r_county,r_picture,del_type,r_address,r_id] )
      .then(resp =>{
          console.log(resp)
          res.send("Success")
@@ -281,6 +284,24 @@ exports.customerRegistration = async function (req, res)
 
 
     }
+
+   exports.getCustomerProfileBasedOnCid = async function(req,res)
+   
+   {
+       console.log("sdasdasd")
+     console.log(req.body)
+
+    db.query('SELECT c_id,c_email,c_name,c_dob,c_city,c_state,c_country,c_number,c_profilepic,c_nickname,c_county,c_description from cust_reg where c_id = ?',[req.body.c_id] )
+    .then(resp =>{
+        console.log("hi")
+     resp = Object.values(JSON.parse(JSON.stringify(resp)));
+        res.json(resp[0])
+    })
+
+
+   } 
+
+
 
 
     exports.updateCustomerProfile = async function(req,res)

@@ -87,6 +87,7 @@ export class Customerinit extends Component {
                                     console.log(res)
                                    if(res.data.message === 'Login successfull')
                                    {
+                                    sessionStorage.setItem("isAuthenticated","true")
                                        console.log()
                                        this.setState(
                                            {   

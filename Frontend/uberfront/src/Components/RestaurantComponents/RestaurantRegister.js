@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom';
+import * as Yup from "yup";
+import { Formik, Form, Field, ErrorMessage } from "formik"
+import StateList from './Rstates';
+import Navbar from '../Navbar';
 
 import {
     BrowserRouter as Router,
@@ -33,90 +37,30 @@ export class RestaurantRegister extends Component {
         }
     }
 
-
-
-
-
-    handleResterauntNameChange = (event) => {
-
-        this.setState(
-            {
-                r_name: event.target.value
-            }
-        )
-
-    }
-    handlePasswordChange = (event) => {
-         
-       
-       
-           
-            this.setState(
-                {
-    
-                    r_password: event.target.value
-                }
-            )
-          
-
-            
-           
         
-    }
-
-    handleStateChange = (event) => {
-        this.setState(
-            {
-                r_state: event.target.value
-            }
-        )
-    }
-
-    handleEmailChange = (event) => {
-
-        this.setState(
-            {
-                r_email: event.target.value
-            }
-        )
-
-    }
     handleFormSubmit = (event) => {
-        // let history = useHistory()
-        event.preventDefault()
-        ///Regular expression to check if the password is strong
-        //DONT FORGET TO ADD VALIDATIONS FOR THE REST OF THE FIELDS ALSO only password field added
+      
         const regex = new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$')
-        // console.log(regex.test)
-        // if(this.state.r_name.length > 40)
-        // {
-
-        // }
-        
-
-        // if(regex.test(this.state.r_password) == true)
-        // {
-        //     console.log("inside")
+  
         
         axios.post("http://localhost:3030/Restaurant/resreg", {
 
-            r_email: this.state.r_email,
-            r_name: this.state.r_name,
-            r_password: this.state.r_password,
-            r_state: this.state.r_state
+            r_email: event.r_email,
+            r_name: event.r_name,
+            r_password: event.r_password,
+            r_state: event.r_state
            
 
         }).then(res => { 
+            // console.log(object)
             console.log(res)
               if(res.data =="Invalid")
                {
-                   this.setState({
-                       r_message: "Email already in use"
-                   })
+                    alert("Regsistration unsuccessfull")
                }
                else{
                 console.log("Hello");
-              
+               alert("Registration Successfull")
                 this.setState(
                     {
                         redirect : true
@@ -132,22 +76,35 @@ export class RestaurantRegister extends Component {
             console.log(err) 
         })
     }
-    // else{
-    // this.setState(
-    //     {
-    //         r_passwordmessage :"Password must contain atleast one special character and a mixture of letters and numbers"
-    //     }
-    // )
-    // }
-        // axios.post("http://localhost:3030/register/resreg")
 
-        // alert(this.state.r_email +""+ this.state.r_password+this.state.r_state+this.state.r_name)
-
-    // }
-
+  
 
 
     render() {
+         
+
+        const initialValues = 
+        {
+            r_name:"",
+            r_email:"",
+            r_password:"",
+            r_state:"CA"
+
+        }
+
+
+        
+        const validationSchema = Yup.object(
+            {
+
+                r_email: Yup.string().email("Please Enter the Email in correct format").required("Email is required"),
+                r_password: Yup.string().required("Please enter the password").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,"Must have atleast 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"),
+                r_name:Yup.string().max(20,"Please limit your Restaurant Name to 30 characters").required("Please enter your Restaurant Name"),
+                
+
+
+            }
+        )
 
           if(this.state.redirect == true)
           {
@@ -157,36 +114,51 @@ export class RestaurantRegister extends Component {
 
 
             <div>
-                <div className="container">
+                <div className="container-fluid" style={{margin:"0px",padding:"0px"}}>
+                    <Navbar></Navbar>
                 <div className="row">
                     <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                         <div className="card border-0 shadow rounded-3 my-5">
                             <div className="card-body p-4 p-sm-5"></div>
                             <h5 className ="card-title text-center mb-4 fw-dark fs-3">Enter your details   </h5>
                            <center> <p>{this.state.r_message}</p></center>
-                            <form onSubmit ={this.handleFormSubmit} >
+                            <Formik onSubmit ={(data)=>{this.handleFormSubmit(data)}} initialValues={initialValues} validationSchema={validationSchema}>
+                            <Form  >
                             <div className="form-floating mb-3">
-                            <input type="text" className="form-control" id="r_name" placeholder="Enter resteraunt name" onChange = {this.handleResterauntNameChange} />
+                            <Field type="text" className="form-control" name="r_name" placeholder="Enter resteraunt name"  />
                             <label for="r_name">Enter the name of the resteraunt</label>
+                            <ErrorMessage name="r_name">
+                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                            </ErrorMessage>
                             </div>
                             <div className="form-floating mb-3">
-                            <input type="email" className="form-control" id="r_email" placeholder="Enter your email id" onChange = {this.handleEmailChange} />
+                            <Field type="email" className="form-control" name="r_email" placeholder="Enter your email id"  />
                             <label for="r_email">Enter your email id</label>
+                            <ErrorMessage name="r_email">
+                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                            </ErrorMessage>
                             </div>
                             <div className="form-floating mb-3">
-                            <input type="password" className="form-control" id="r_password" placeholder="Enter your password"  onChange = {this.handlePasswordChange} />
+                            <Field type="password" className="form-control" name="r_password" placeholder="Enter your password"/>
                             <label for="r_password">Enter your password</label>
-                            <p>{this.state.r_passwordmessage}</p>
+                            <ErrorMessage name="r_password">
+                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                            </ErrorMessage>
+                            {/* <p>{this.state.r_passwordmessage}</p> */}
                             </div>
                             <div className="form-floating mb-3">
-                            <input type="text" className="form-control" id="r_state" placeholder="Enter your location" onChange = {this.handleStateChange} />
+                            <Field as="select" className="form-control" name="r_state" placeholder="Select you state" >
+                            {StateList.map((value, key) => {
+                                                    return (<option value={value.abbreviation}>{value.abbreviation}</option>)
+                                                })}</Field>
                             <label for="r_state">Enter your State</label>
                             </div>
                             <div className="d-grid">
                             <button className="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Register</button>
                             </div>
 
-                            </form>
+                            </Form>
+                            </Formik>
                         </div>
                     </div>
                 </div>

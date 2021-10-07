@@ -29,6 +29,9 @@ import Favourites from './Components/CustomerComponents/Favourites';
 import Checkout from './Components/CustomerComponents/Checkout';
 import CustomerOrders from './Components/CustomerComponents/CustomerOrders';
 import RestauranOrderList from './Components/RestaurantComponents/RestauranOrderList';
+import ProtectedRoute from './ProtectedRoute';
+// import { resterauntProfile } from '../../../Backend/models/authentication';
+
 // const BrowserHistory = require('react-router/lib/BrowserHistory').default;
 function App() {
 
@@ -59,30 +62,31 @@ function App() {
         <Route exact path ="/Customerregister">
           <CustomerRegistration></CustomerRegistration>
         </Route>
-        <Route exact path = "/RestaurantLanding" render = {(props) =><RestaurantLanding  {...props}/> }  >
+        <ProtectedRoute exact path = "/RestaurantLanding" component={RestaurantLanding}  />
+        {/* <Route exact path = "/RestaurantLanding" render = {(props) =><RestaurantLanding  {...props}/> }  > */}
           {/* <RestaurantLanding></RestaurantLanding> */}
-        </Route>
-        <Route exact path = "/RestProfile" render = {(props) =><RestaurantProfile  {...props}/> } >
-         
+        {/* </Route> */}
+        <ProtectedRoute exact path = "/RestProfile" component={RestaurantProfile}  />
+        {/* render = {(props) =><RestaurantProfile  {...props}/> }  */}
       {/* <RestaurantProfile></RestaurantProfile> */}
    
-        </Route>
-        <Route exact path = "/CustomerProfile" component = {CustomerProfile}>
+        {/* </Route> */}
+        <ProtectedRoute exact path = "/CustomerProfile" component = {CustomerProfile} />
            
        
-        </Route>
-        <Route exact path ="/EditDish/" component = {EditDish}>
+        {/* </Route> */}
+        <ProtectedRoute exact path ="/EditDish/" component = {EditDish}/>
          {/* <EditDish></EditDish>         */}
-        </Route>
+        {/* </Route> */}
         <Route exact path = "/AddDishes" component = {AddDish}>
 
         </Route>
-        <Route exact path = "/Orders" component = {Orders}></Route>
-        <Route exact path ="/Customerlanding"  component ={CustomerLandingPage}></Route>
-        <Route exact path ="/Favourites"  component ={Favourites}></Route>
-        <Route exact path = "/Checkout" component = {Checkout}></Route>
-        <Route exact path = "/CustomerOrder" component = {CustomerOrders}  />
-        <Route  exact path = "/RestaurantOrders" component={RestauranOrderList}   />
+        <ProtectedRoute exact path = "/Orders" component = {Orders}/>
+        <ProtectedRoute exact path ="/Customerlanding"  component ={CustomerLandingPage}/>
+        <ProtectedRoute exact path ="/Favourites"  component ={Favourites}/>
+        <ProtectedRoute exact path = "/Checkout" component = {Checkout}/>
+        <ProtectedRoute exact path = "/CustomerOrder" component = {CustomerOrders}  />
+        <ProtectedRoute exact path = "/RestaurantOrders" component={RestauranOrderList}   />
         </Switch>
       </Router>
       </div>

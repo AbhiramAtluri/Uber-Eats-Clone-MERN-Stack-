@@ -143,10 +143,10 @@ export default function CustomizedDialogs(props) {
                                                     <h5>{cartItem.d_name}</h5>
                                                 </div>
                                                 <div className="col-md-3" style={{ paddingInline: "20px" }}  >
-                                                    <h5>{cartItem.d_price}$</h5>
+                                                    <h5>{cartItem.i_price}$</h5>
                                                 </div >
                                                 <div className="col-md-2">
-                                                    <h5>{cartItem.d_quantity}</h5>
+                                                    <h5>X {cartItem.d_quantity}</h5>
                                                 </div>
                                                 <div className="col-md-1" style={{ display: "inline-flex" }}>
                                                     {/* <button className="btn btn-primary" style={{ height: "50%" }} >+</button ><button className="btn btn-primary" style={{ height: "50%" }} >-</button> */}

@@ -65,7 +65,7 @@ export default class RestaurantOrderlistItems extends Component {
                      
                         <div className="row">
                             <div className="col-md-2 ">
-                                <h5 style={{marginTop:"20px"}}><Link to={{pathname:"/CustomerProfile",state:{c_id:this.props.order.c_id}}}>Order Id:{this.props.order.o_id}</Link></h5>
+                                <h5 style={{marginTop:"20px"}}><Link to={{pathname:"/CustomerProfile",state:{c_id:this.props.order.c_id,view:"Rest"}}}>Order Id:{this.props.order.o_id}</Link></h5>
                             </div>
                             <div className="col-md-1">
                                 <h5 style={{marginTop:"20px"}}>Cid:{this.props.order.c_id}</h5>

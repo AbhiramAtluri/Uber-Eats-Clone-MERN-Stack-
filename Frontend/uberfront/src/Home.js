@@ -20,7 +20,7 @@ import UberEatspic from './images/UberEatspic.jpg'
         return (
             
             
-            <div className="container-fluid" style={{margin:"0px",padding:"0px", height:"500px%",backgroundImage:`url(${UberEatspic})` }} > 
+            <div className="container-fluid" style={{margin:"0px",padding:"0px"}} > 
               <Navbar>
               </Navbar>
               <div style={{ height:"1000px",backgroundImage:`url(${UberEatspic})` }} >

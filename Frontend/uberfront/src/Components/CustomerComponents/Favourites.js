@@ -50,7 +50,7 @@ export default class Favourites extends Component {
                 <div className="col-md-12">
                   
                     <center>
-                    <h5>Favourite Restaurants</h5>  
+                    <h5 style={{marginTop:"13px",marginBottom:"106px",fontSize:"30px  "}} >Favourite Restaurants</h5>  
                         <div className="col-md-12" style={{margin:"0px",padding:"0px"}}>
                             <div className = "row"style={{margin:"0px",padding:"0px"}} >     
                             {this.state.FavList.length > 0 ?

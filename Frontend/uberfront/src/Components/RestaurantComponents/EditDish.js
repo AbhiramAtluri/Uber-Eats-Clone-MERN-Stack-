@@ -126,10 +126,10 @@ handlepicupload = (e)=>
        
 
         return (
-            <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
+            <div className="container-fluid" style={{ margin: 0, padding: 0,fontFamily:"sans-serif" }}  >
               <NavbarRest/> 
 
-             <center> <h5>Edit Dish</h5> </center>
+             <center> <h5 style={{fontSize:"25px"}}>Edit Dish</h5> </center>
             <Formik initialValues ={initialValues}   
             onSubmit = {(e)=>{this.handleonSubmit(e)}}
             validationSchema ={validationSchema}
@@ -154,7 +154,7 @@ handlepicupload = (e)=>
                 </ErrorMessage>  
                 
              </div>
-             <div className = "col-md-6">
+             <div className = "col-md-6" style={{marginTop:"18px"}} >
              
             <div style ={{marginTop : "108px"}}> 
             <div className = "formc" id = "AD">

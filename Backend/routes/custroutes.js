@@ -8,7 +8,17 @@ var Order = require('../models/Orderrequest')
 
 router.post('/custreg',auth.customerRegistration)
 router.post('/custlog',auth.customerLogin)
+
+//Fetching Customer Profile
 router.post('/CustomerProfileFetch',auth.getCustomerProfileDetails)
+
+
+
+
+/// get Profile based on Id
+router.post('/CustomerProfileBasedOnId',auth.getCustomerProfileBasedOnCid)
+
+
 router.post('/CustomerProfileUpdate',auth.updateCustomerProfile)
 
 ///Adding addresses

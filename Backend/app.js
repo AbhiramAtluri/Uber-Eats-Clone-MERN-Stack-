@@ -6,7 +6,7 @@ var bodyparser = require('body-parser')
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors')
-
+var session = require('express-session');
 var indexRouter = require('./routes/index');
 ///Router for resteraunt
 var RestRouter = require('./routes/RestaurantRoutes');
@@ -25,6 +25,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(fileupload())
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'cmpe273uber',
+  resave:false,
+  saveUninitialized:false
+}))
+
+
 
 app.use('/', indexRouter);
 app.use('/Restaurant', RestRouter);
@@ -50,7 +58,7 @@ app.use(function(err, req, res, next) {
 
 
 
-
+var session = require('express-session');
 app.listen(3030,()=>{console.log("listening on 3030")})
 
 

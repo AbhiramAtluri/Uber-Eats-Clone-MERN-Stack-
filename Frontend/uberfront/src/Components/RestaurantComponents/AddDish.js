@@ -51,6 +51,7 @@ export default class AddDish extends Component {
            
         }).then(res =>
             {alert("Dish added Successfully")
+            
               window.location.reload()
              }
             )
@@ -126,7 +127,7 @@ export default class AddDish extends Component {
                 
                 <Field className="form-control"
                 type="file" name="d_picture"
-                placeholder="Upload pictures" onChange ={(e)=>this.handlepicupload(e)} ></Field>
+                placeholder="Upload pictures" onChange ={(e)=>this.handlepicupload(e)} style={{marginTop:"46px"}} ></Field>
                  <label>Dish description</label>
                     <Field className = "form-control" name = "d_description" as="textarea" 
                      placeholder = "Enter a small description of the dish" ></Field>

@@ -23,12 +23,7 @@ export default class RestauranOrderList extends Component {
    componentDidMount(props) 
    {
    let r_id = this.props.location.state.r_id
-//    console.log(r_id)
-//    this.setState({
 
-//      r_id:r_id
-
-//    })
 
     axios.post("http://localhost:3030/customer/FetchRestaurantDetailsById",
    
@@ -79,7 +74,7 @@ export default class RestauranOrderList extends Component {
                       this.state.FetchedOrderList.map((data,key)=>{
                         return <RestaurantOrderlistItems key={key}  order={data} style={{marginTop:"10px"}} ></RestaurantOrderlistItems>
                        }
-                       ):""
+                       ):<div style={{marginTop:"10px"}}><h5> No Orders Placed Yet  </h5></div>
                     }
                      </ul>   
                     </div>

@@ -392,7 +392,7 @@ console.log(found)
 
                     {/* SEARCH BAR CODE */}
                     <div className="col-md-11" >
-                        <div className="row" style={{height: "250px" }} >
+                        <div className="row" style={{height: "250px",margin:"0px",padding:"0px" }} >
                             <form onSubmit = {(e)=>this.handleFormOnSubmit(e)}>
                             <center> <div class="input-group" style={{ width: "500px", marginTop: "100px" }}>
                                 <select name = "s_filter"  onChange = {this.handleSearchBarFilterChange} className="selectpicker" >

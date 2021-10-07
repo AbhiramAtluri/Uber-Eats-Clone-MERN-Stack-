@@ -13,7 +13,7 @@ exports.getRestaurantDetails = async function(req,res)
         resp =>
         {  
             resp = Object.values(JSON.parse(JSON.stringify(resp)));
-             
+             console.log(resp[0])
             console.log((resp[0])[0])
             res.send(
                 {
@@ -21,7 +21,12 @@ exports.getRestaurantDetails = async function(req,res)
                     "r_id" : (resp[0])[0].r_id,
                     "r_picture" : (resp[0])[0].r_picture,
                     "r_description": (resp[0])[0].r_description,
-                    "del_type":(resp[0])[0].del_type
+                    "del_type":(resp[0])[0].del_type,
+                    "r_address":(resp[0])[0].r_address,
+                    "r_opentime":(resp[0])[0].r_opentime,
+                    "r_closetime":(resp[0])[0].r_closetime,
+                    "r_email":(resp[0])[0].r_email,
+                    "r_number":(resp[0])[0].r_number
                 }
             )
         }

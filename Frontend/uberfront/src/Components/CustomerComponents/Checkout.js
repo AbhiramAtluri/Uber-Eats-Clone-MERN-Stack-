@@ -409,29 +409,9 @@ export default class Checkout extends Component {
             )       
 
     }
-    // PlaceOrderHandler= ()=>
-    // {
-    //     let cartData = JSON.parse(sessionStorage.getItem("cartData"))
-    //     console.log(cartData)
-    //     axios.post("http://localhost:3030/customer/PlaceOrder",
-    //     {
-              
-    //         c_id:this.state.c_id,
-    //         r_id:this.state.r_id,
-    //         d_list:cartData,
-    //         del_type:this.state.del_type
-    //     }
-    //     )
-    //     .then(res=>
-    //         {
-    //            if(res.data.message == "Successful")
-    //            {
-    //                alert("Add Success")
-    //            }
-    //         }
-    //         )       
 
-    // }
+    
+
 
 
 
@@ -508,7 +488,7 @@ export default class Checkout extends Component {
 
         const initialValues = {
             d_name: this.state.c_name,
-            d_email: this.state.c_email,
+            d_email: this.state.c_email==null?"":this.state.c_email,
             d_number: this.state.c_number
         }
         const initailValues2 = {
@@ -517,6 +497,14 @@ export default class Checkout extends Component {
             d_zipcode: ""
 
         }
+
+        const ValidationSchemaOne = Yup.object(
+        {
+            d_number:Yup.string().required("Please Enter Contact Number").max(10,"Invalid Phone Number"),
+            // d_email:Yup.string().email("Please Enter Email in proper format")
+
+        })
+
         const CartData = {
             d_name: "Hyderabad Dum Biryani",
             d_price: "22$",
@@ -525,6 +513,7 @@ export default class Checkout extends Component {
 
     if(this.state.redirect == true)
     {
+        sessionStorage.setItem("isAuthenticated","true")
         return(<Redirect to ={{pathname:"/CustomerOrder", state:{c_id:this.state.c_id}}}></Redirect>)
     }
 
@@ -533,20 +522,32 @@ export default class Checkout extends Component {
             <div className="container-fluid" style={{ margin: 0, padding: 0 }} >
                 <NavbarCust></NavbarCust>
                 <div className="container-fluid" style={{ margin: 0, padding: 0 }} >
-                    <div className="row">
+                    <div className="row" style={{ margin: 0, padding: 0 }} >
                         <div className="col-md-6 " >
                             <div className="container-fluid" style={{ margin: 0, padding: 0 }} >
                                 <center><h5>Delivery Checkout</h5></center>
                                 <div className="form-floating mb-3">
-                                    <Formik initialValues={initialValues}>
+                                    <Formik initialValues={initialValues} validationSchema={ValidationSchemaOne}>
 
                                         <Form>
-
-                                            {/* <label for = "d_name">Delivered to</label> */}
                                             <Field name="d_name" type="input" placeholder="Delivery name" className="form-control" style={{ marginBottom: "20px" }} value={this.state.c_name} />
+
+                                            <ErrorMessage name="d_name">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
+
+
                                             <Field name="d_email" type="email" placeholder="Delivery email" className="form-control" style={{ marginBottom: "20px" }} value={this.state.c_email} />
+
+                                            <ErrorMessage name="d_email">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
+
                                             <Field className="form-control" type="number" name="d_number" placeholder="Enter phone number" style={{ marginBottom: "20px" }} value={this.state.c_number}    >
                                             </Field>
+                                            <ErrorMessage name="d_number">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
                                              
                                             {this.state.del_type=="s_delivery" ||this.state.selected_delivery_type=="s_delivery"?
                                             <center><button className="btn btn-primary" style={{ marginRight: "100px", width: "170px" }} onClick={this.handleAddAddress} >Add Address</button><button className="btn btn-primary" onClick={this.handleOnSelectAddress}  >Have a previous address?</button></center>

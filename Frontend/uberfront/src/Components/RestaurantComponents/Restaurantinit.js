@@ -84,6 +84,7 @@ export class Restaurantinit extends Component {
                                                 console.log(res)
                                                if(res.data === 'Login successfull')
                                                {
+                                                   sessionStorage.setItem("isAuthenticated","true")
                                                    this.setState(
                                                        {
                                                            redirect : true,

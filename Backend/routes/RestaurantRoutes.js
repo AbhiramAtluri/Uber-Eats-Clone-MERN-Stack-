@@ -13,6 +13,7 @@ router.post('/addish',dishrequests.AddDish)
 router.post('/GetDish',dishrequests.getDish)
 router.post('/EditDish',dishrequests.editDish)
 router.post('/RestProfUpdate',auth.updateRestaurantProfile)
+router.get('/ProfileBasedOnCid',auth.getCustomerProfileBasedOnCid)
 //Restaurant get requests listing
 router.get('/details/:r_email',restget.getRestaurantDetails)
 router.get('/GetAllDishes',dishrequests.getAllDishes)

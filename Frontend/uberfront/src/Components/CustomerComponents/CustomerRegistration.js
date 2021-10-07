@@ -9,7 +9,8 @@ import {
     useParams
 } from "react-router-dom";
 import axios from 'axios'
-
+// import NavbarCust from './CustomerNavBar'
+import Navbar from '../Navbar';
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 // import bcrypt from 'bcrypt'
@@ -58,7 +59,8 @@ export class CustomerRegistration extends Component {
            
             <div>
                 <div>
-                    <div class="container">
+                    <div class="container-fluid" style={{margin:"0px",padding:"0px"}} >
+                        <Navbar></Navbar>
                         <div className="row">
                             <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                                 <div className="card border-0 shadow rounded-3 my-5">
@@ -97,6 +99,7 @@ export class CustomerRegistration extends Component {
                                                        }
                                                        else
                                                        {
+                                                           alert("Registration Successful")
                                                            this.setState(
                                                                {
                                                                    redirect:true
