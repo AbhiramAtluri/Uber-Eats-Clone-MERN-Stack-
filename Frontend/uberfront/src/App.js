@@ -38,12 +38,12 @@ function App() {
 
   return (
     <div className="container-fluid" style={{margin:"0px",padding:"0px"}}>
-      {/* <div className="row" style={{margin:"0px",padding:"0px"}}> */}
+     
       <Helmet>
                 <style>{'body{ background-color :azure}'}</style>
       </Helmet>
       <Router >
-      {/* <Navbar></Navbar> */}
+  
       <Switch>
         <Route exact path = "/">
         

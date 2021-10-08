@@ -12,6 +12,9 @@ import {
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import Navbar from '../Navbar';
+import { withCookies, Cookies } from "react-cookie";
+import { instanceOf } from "prop-types";
+
 
 
 export class Customerinit extends Component {
@@ -26,7 +29,9 @@ export class Customerinit extends Component {
                c_id:""
         }
     }
-
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+      };
     
 
 
@@ -87,8 +92,10 @@ export class Customerinit extends Component {
                                     console.log(res)
                                    if(res.data.message === 'Login successfull')
                                    {
-                                    sessionStorage.setItem("isAuthenticated","true")
+                                   
+                                    const { cookies } = this.props
                                        console.log()
+                                       cookies.set("uber","isAuth",{expires:0})
                                        this.setState(
                                            {   
                                                c_email:res.data.c_email,
@@ -97,6 +104,10 @@ export class Customerinit extends Component {
                                                
                                            }
                                        )
+
+                                       
+
+
                                    }
                                    else
                                    {
@@ -151,4 +162,4 @@ export class Customerinit extends Component {
 }  
 }
 
-export default Customerinit
+export default  withCookies(Customerinit)

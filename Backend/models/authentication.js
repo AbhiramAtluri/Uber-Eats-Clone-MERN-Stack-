@@ -89,8 +89,8 @@ exports.resterauntLogin = async function (req, res) {
        {
 
     //    res.cookie('cookie',r_log_details.email)
-          res.cookie('cookie','admin',{maxAge: 900000, httpOnly: false, path : '/'})
-          req.session.user = user
+          res.cookie('cookie',"admin",{maxAge: 900000, httpOnly: false, path : '/'})
+          req.session.user = r_log_details.email
          res.send("Login successfull")
 
 

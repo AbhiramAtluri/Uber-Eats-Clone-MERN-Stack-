@@ -131,6 +131,24 @@ exports.getRestaurantsBasedOnDish = async function(req,res)
     ).catch(err=>{console.log(err)})
 }
 
+exports.getRestaurantsBasedonVegFilter = async function(req,res)
+{
+    console.log(req.body.d_type)
+
+    let d_type = req.body.d_type
+    db.query("select  r_id from res_reg where r_id IN(SELECT r_id from dishes where d_type = ?)",[d_type])
+    .then(resp=>
+        {
+            console.log(resp)
+            res.json
+            (
+                    resp[0]
+            )
+        }
+        )
+        .catch(err=>{console.log(err)})
+}
+
 
 ///ADDING RESTAURANT TO FAVOURITES
 

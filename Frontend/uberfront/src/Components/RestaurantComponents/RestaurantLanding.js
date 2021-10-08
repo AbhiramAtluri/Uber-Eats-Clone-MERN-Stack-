@@ -21,7 +21,7 @@ import KitchenIcon from '@mui/icons-material/Kitchen';
 import ElectricBikeIcon from '@mui/icons-material/ElectricBike';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CustomizedDialogs from './DialogBox'
-
+import LabelIcon from '@mui/icons-material/Label';
 import { margin } from '@mui/system';
 import { connect } from 'react-redux'
 import shopReducer from '../../Redux/Shopping/Shop-reducer';
@@ -30,11 +30,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import { useHistory } from "react-router-dom";
-
 import Customerinit from '../CustomerComponents/Customerinit';
 import NavbarRest from './RestaurantNavBar';
-
+import { withCookies, Cookies } from "react-cookie";
+import { instanceOf } from "prop-types";
+import { Redirect } from 'react-router-dom';
 
 
 
@@ -64,16 +64,29 @@ export class RestaurantLanding extends Component {
             r_closetime: "",
             r_number: "",
             r_address: "",
-            r_email: ""
+            r_email: "", 
+            handleLogoff:false
         }
+
     }
 
-
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+      };
 
 
     componentDidMount(props) {
+
         ///Calling the res_reg table and fetching the details through below request
+
         console.log("in mount")
+
+        window.addEventListener("beforeunload", (e) => {
+           
+            Cookies.remove("user");
+         });
+
+
         if (this.props.location.state.view_id == "Customer") {
 
 
@@ -95,10 +108,9 @@ export class RestaurantLanding extends Component {
 
                 )
             }
-
-
-
         }
+
+    
         axios.get(`http://localhost:3030/Restaurant/details/${this.props.location.state.r_email}`)
             .then(
                 res => {
@@ -158,7 +170,7 @@ export class RestaurantLanding extends Component {
                                 dishlist: [...(res.data)]
                             }
                         )
-                        // console.log(this.state.dishlist[0])
+                      
                     }
                 )
 
@@ -315,9 +327,23 @@ export class RestaurantLanding extends Component {
         this.props.history.goBack();
     }
 
+    handleOnLogoff = ()=>
+    {
+        console.log("In Logoff")
+        const { cookies } = this.props
+        cookies.remove("uber")
+
+       this.setState(
+        {
+                handleLogoff:true
+       })
+    }
+
 
     render() {
         console.log(this.state)
+        if(this.state.handleLogoff ==false)
+        {
         return (
             <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
                 <NavbarRest></NavbarRest>
@@ -336,7 +362,7 @@ export class RestaurantLanding extends Component {
                                         <MenuItem icon={<FastfoodIcon />}>Orders<Link to={{ pathname: "/RestaurantOrders", state: { r_id: this.state.r_id, r_name: this.state.r_name } }} /></MenuItem>
                                         <MenuItem icon={<KitchenIcon />}>Add Dishes<Link to={{ pathname: "/AddDishes", state: { r_id: this.state.r_id, r_name: this.state.r_name } }} />   </MenuItem>
 
-                                        <MenuItem >Log Out<Link to={"/"} /></MenuItem>
+                                        <MenuItem onClick={this.handleOnLogoff} >Log Out</MenuItem>
                                     </SubMenu>}
 
                                     {this.state.view_id == "Customer" ? <MenuItem style={{ marginRight: "22px" }}><center> <CustomizedDialogs del_type={this.state.del_type} r_name={this.state.r_name}></CustomizedDialogs><p>{this.state.cartnumber}</p></center  > </MenuItem> : <div></div>}
@@ -378,7 +404,7 @@ export class RestaurantLanding extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <h5>Closing  Time:{this.state.r_closetime}</h5>
+                                            <h5>Closing Time:{this.state.r_closetime}</h5>
                                         </div>
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
                                             <h5>Email:{this.state.r_email}</h5>
@@ -457,6 +483,11 @@ export class RestaurantLanding extends Component {
             </div>
         )
     }
+    else{
+        <Redirect to="/" ></Redirect>
+    }
 }
 
-export default RestaurantLanding
+}
+
+export default withCookies(RestaurantLanding)

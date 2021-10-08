@@ -13,6 +13,8 @@ import {
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import Navbar from '../Navbar';
+import { instanceOf } from "prop-types";
+import { withCookies, Cookies } from "react-cookie";
 
 
 export class Restaurantinit extends Component {
@@ -28,6 +30,9 @@ export class Restaurantinit extends Component {
 
         }
     }
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+      };
 
 
 
@@ -58,7 +63,7 @@ export class Restaurantinit extends Component {
         return (
             <div className="container-fluid" style={{margin:"0px",padding:"0px"}} >
                 <Navbar></Navbar>
-                <div className="container">
+                <div className="container" data-testid="Rest_init">
                     <div className="row">
                         <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                             <div className="card border-0 shadow rounded-3 my-5">
@@ -84,7 +89,10 @@ export class Restaurantinit extends Component {
                                                 console.log(res)
                                                if(res.data === 'Login successfull')
                                                {
-                                                   sessionStorage.setItem("isAuthenticated","true")
+                                                   const { cookies } = this.props
+                                                //    sessionStorage.setItem("isAuthenticated","true")
+                                                   cookies.set("uber","isAuth",{expires:0})
+
                                                    this.setState(
                                                        {
                                                            redirect : true,
@@ -153,4 +161,4 @@ export class Restaurantinit extends Component {
 }
 
 
-export default Restaurantinit
+export default  withCookies(Restaurantinit)

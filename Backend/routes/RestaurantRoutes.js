@@ -21,6 +21,7 @@ router.get('/GetAllRestaurants',restget.getAllRestaurants)
 router.post('/GetAllNearestRestaurants',restget.getAllnearestRestaurants)
 router.post('/GetFarAwayRestaurants',restget.getFarAwayRestaurants)
 router.post('/GetRestaurantsBasedOnDish',restget.getRestaurantsBasedOnDish)
+router.post('/GetRestarantsBasedonDishTypeFilter',restget.getRestaurantsBasedonVegFilter)
 //Adding Restaurant to favourites
 
 router.post('/AddRestToFav',restget.AddRestaurantToFavourites)

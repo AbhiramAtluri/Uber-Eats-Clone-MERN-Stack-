@@ -41,7 +41,7 @@ export default class Checkout extends Component {
             c_email: "",
             c_name: "",
             total_price: "",
-            selected_delivery_type:"s_pickup",
+            selected_delivery_type:"",
             del_type:"",
             r_id:"",
             Selected_Address:"",
@@ -104,7 +104,7 @@ export default class Checkout extends Component {
                 c_id: c_id
             })
             .then(res => {
-                console.log(res.data[0].c_number)
+                console.log(res.data[0])
                 this.setState(
                     {
                         c_number: res.data[0].c_number,
@@ -262,6 +262,7 @@ export default class Checkout extends Component {
 ////Handle add address and pay
     handleAddressSubmit = (e) => {
         // e.preventDefault()
+        console.log("Hellow")
         console.log(e)
         console.log("hi")
         let del_id =null
@@ -488,7 +489,7 @@ export default class Checkout extends Component {
 
         const initialValues = {
             d_name: this.state.c_name,
-            d_email: this.state.c_email==null?"":this.state.c_email,
+            d_email: this.state.c_email,
             d_number: this.state.c_number
         }
         const initailValues2 = {
@@ -501,7 +502,7 @@ export default class Checkout extends Component {
         const ValidationSchemaOne = Yup.object(
         {
             d_number:Yup.string().required("Please Enter Contact Number").max(10,"Invalid Phone Number"),
-            // d_email:Yup.string().email("Please Enter Email in proper format")
+            d_email:Yup.string().email("Please Enter Email in proper format")
 
         })
 
@@ -527,31 +528,31 @@ export default class Checkout extends Component {
                             <div className="container-fluid" style={{ margin: 0, padding: 0 }} >
                                 <center><h5>Delivery Checkout</h5></center>
                                 <div className="form-floating mb-3">
-                                    <Formik initialValues={initialValues} validationSchema={ValidationSchemaOne}>
+                                    <Formik initialValues={initialValues}  enableReinitialize validationSchema={ValidationSchemaOne}>
 
                                         <Form>
-                                            <Field name="d_name" type="input" placeholder="Delivery name" className="form-control" style={{ marginBottom: "20px" }} value={this.state.c_name} />
+                                            <Field name="d_name" type="input" placeholder="Delivery name" className="form-control" style={{ marginBottom: "20px" }}  />
 
                                             <ErrorMessage name="d_name">
                                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                                 </ErrorMessage>
 
 
-                                            <Field name="d_email" type="email" placeholder="Delivery email" className="form-control" style={{ marginBottom: "20px" }} value={this.state.c_email} />
+                                            <Field name="d_email" type="email" placeholder="Delivery email" className="form-control" style={{ marginBottom: "20px" }}  />
 
                                             <ErrorMessage name="d_email">
                                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                                 </ErrorMessage>
 
-                                            <Field className="form-control" type="number" name="d_number" placeholder="Enter phone number" style={{ marginBottom: "20px" }} value={this.state.c_number}    >
+                                            <Field className="form-control" type="number" name="d_number" placeholder="Enter phone number" style={{ marginBottom: "20px" }}    >
                                             </Field>
                                             <ErrorMessage name="d_number">
                                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
                                                 </ErrorMessage>
                                              
                                             {this.state.del_type=="s_delivery" ||this.state.selected_delivery_type=="s_delivery"?
-                                            <center><button className="btn btn-primary" style={{ marginRight: "100px", width: "170px" }} onClick={this.handleAddAddress} >Add Address</button><button className="btn btn-primary" onClick={this.handleOnSelectAddress}  >Have a previous address?</button></center>
-                                            :<center><button className="btn btn-primary" onClick={this.PlaceOrderPickup}  >Pay and pickup?</button></center>
+                                            <center><button className="btn btn-primary" type="button" style={{ marginRight: "100px", width: "170px" }} onClick={this.handleAddAddress} >Add Address</button><button className="btn btn-primary" onClick={this.handleOnSelectAddress}  >Have a previous address?</button></center>
+                                            :<center><button className="btn btn-primary" type="button" onClick={this.PlaceOrderPickup}  >Pay and pickup?</button></center>
                                            }
                                         </Form>
 
@@ -559,7 +560,7 @@ export default class Checkout extends Component {
                                 </div>
                                 {/* Add Address Form*/}
                                 {this.state.addaddress == true && this.state.del_type!="s_pickup" &&this.state.selected_delivery_type!="s_pickup" ?
-                                    <Formik initialValues={initailValues2} onSubmit={(e) => { this.handleAddressSubmit(e) }}  >
+                                    <Formik initialValues={initailValues2} onSubmit={(e) => { this.handleAddressSubmit(e) }} enableReinitialize  >
                                         <Form >
                                             <Field name="d_add_1" type="input" placeholder="Address line 1" className="form-control" style={{ marginBottom: "20px" }} />
                                             <Field name="d_add_2" type="input" placeholder="Address line 2" className="form-control" style={{ marginBottom: "20px" }} />
@@ -572,7 +573,7 @@ export default class Checkout extends Component {
                                 }
                                 {this.state.selectAddress == true && this.state.del_type!="s_pickup"&&this.state.selected_delivery_type!="s_pickup" ?
                                     <div>
-                                        <Formik initialValues={{s_address:""}} onSubmit = {(e)=>{this.PlaceOrderHandler(e)}}  >
+                                        <Formik initialValues={{s_address:""}} onSubmit = {(e)=>{this.PlaceOrderHandler(e)}} enableReinitialize  >
                                             <Form>
                                         <Field style={{ width: "100%", height: "50px" }} as ="select" name="s_address" >
                                             {this.state.addresslist != null ?

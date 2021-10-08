@@ -11,7 +11,6 @@
     "@mui/material": "^5.0.1",
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
@@ -21,6 +20,8 @@
     "react-aws-s3": "^1.5.0",
     "react-bootstrap": "^2.0.0-beta.6",
     "react-bootstrap-toggle": "^2.3.2",
+    "react-cookie": "^4.1.1",
+    "react-cookies": "^0.1.1",
     "react-data-bouncer": "^2.0.0",
     "react-dom": "^17.0.2",
     "react-icons": "^4.2.0",
@@ -54,5 +55,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/react": "^11.2.7"
   }
 }

@@ -90,7 +90,7 @@ else{
         return (<div className="container-fluid" style={{ margin: 0, padding: 0 }}>
               <NavbarCust></NavbarCust>
                 <div className="container-fluid" style={{ margin: 0, padding: 0 }}>               
-                <div className = "row">
+                <div className = "row" style={{margin:0,padding:0}}>
                     <div className = "col-md-12">
                     <center>
                     <div className="col-md-8">
@@ -108,6 +108,7 @@ else{
                             <option value = "Order Delivered">Delivered</option>
                             <option value = "Pick up ready">Pick up Ready</option>
                             <option value = "Picked up">Picked up</option>
+                            <option value ="Order Preparing">Order Preparing</option>
                             </select>  
                          </div>
                      </div>
