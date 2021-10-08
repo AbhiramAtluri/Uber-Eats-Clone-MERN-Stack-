@@ -371,14 +371,14 @@ export class RestaurantLanding extends Component {
 
                         </div>
                         {/* Code for the restaurant picture carousel */}
-                        <div className="col-md-11" style={{ padding: 0 }} >
+                        <div className="col-md-11" style={{ padding: 0,fontFamily:"fangsong" }} >
                             <div className="conatiner-fluid" style={{ margin: 0, padding: 0 }} >
                                 <div className="row border-bottom" style={{ height: '357px', width: '100%' }}>
                                     {/* <center><h1>{this.state.r_name}</h1></center> */}
                                     {/* <center> < ImageGallery items={images} /></center> */}
                                     <center><img src={this.state.r_picture} style={{ width: "102%", height: "357px" }} /></center>
                                 </div>
-                                <div className="row" style={{ margin: 0, padding: 0, height: "200px" }}>
+                                <div className="row" style={{ margin: 0, padding: 0, height: "200px",fontFamily:"fangsong" }}>
                                     <div className="row" style={{ margin: 0, padding: 0 }}>
                                         <div className="col-md-12"  >
                                             {/* <div className ="row" style ={{height: '700px'}}> */}
@@ -398,21 +398,21 @@ export class RestaurantLanding extends Component {
                                         </div>
 
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
-                                            <h5>Phone Number:{this.state.r_number}</h5>
+                                            <h5>Phone Number:- {this.state.r_number}</h5>
                                         </div>
 
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <h5>Closing Time:{this.state.r_closetime}</h5>
+                                            <h5>Closing Time :  {this.state.r_closetime}</h5>
                                         </div>
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
-                                            <h5>Email:{this.state.r_email}</h5>
+                                            <h5>Email:- {this.state.r_email}</h5>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <h5>Located at:{this.state.r_address}</h5>
+                                            <h5>Address :-{this.state.r_address}</h5>
                                         </div>
                                     </div>
 

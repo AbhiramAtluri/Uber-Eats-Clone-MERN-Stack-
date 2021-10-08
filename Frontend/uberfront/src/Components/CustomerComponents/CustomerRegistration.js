@@ -66,7 +66,7 @@ export class CustomerRegistration extends Component {
                                 <div className="card border-0 shadow rounded-3 my-5">
                                     <div className="card-body p-4 p-sm-5"></div>
                                     <h5 className="card-title text-center mb-4 fw-dark fs-3">Enter your details   </h5>
-                                   <center> <p>{this.state.emailval}</p></center>
+                                   <center style={{color:"red"}}> <p>{this.state.emailval}</p></center>
                                     <Formik
                                         initialValues={initialValues}
                                         validationSchema={validationSchema}
