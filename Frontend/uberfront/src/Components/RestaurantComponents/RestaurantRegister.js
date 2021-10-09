@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import StateList from './Rstates';
 import Navbar from '../Navbar';
+import server from '../WebConfig';
+
 
 import {
     BrowserRouter as Router,
@@ -43,7 +45,7 @@ export class RestaurantRegister extends Component {
         const regex = new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$')
   
         
-        axios.post("http://localhost:3030/Restaurant/resreg", {
+        axios.post(`${server}/Restaurant/resreg`, {
 
             r_email: event.r_email,
             r_name: event.r_name,

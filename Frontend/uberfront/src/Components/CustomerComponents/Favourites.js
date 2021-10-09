@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Link } from "react-router-dom"
 import NavbarCust from './CustomerNavBar';
-
+import server from '../WebConfig';
 
 export default class Favourites extends Component {
 
@@ -18,7 +18,7 @@ export default class Favourites extends Component {
     componentDidMount(props) {
 
         //  axios.pos
-        axios.post("http://localhost:3030/Restaurant/GetFavRest",
+        axios.post(`${server}/Restaurant/GetFavRest`,
             {
                 c_id: this.props.location.state.c_id
             })

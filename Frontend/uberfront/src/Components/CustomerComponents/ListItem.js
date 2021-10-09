@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-
+import server from '../WebConfig';
 
 
 
@@ -70,7 +70,7 @@ FetchDelAdd=()=>
   let add =""
  if(this.props.order.del_id!=null)
  {
-  axios.post("http://localhost:3030/customer/FetchDelAddressInCustomerOrders",
+  axios.post(`${server}/customer/FetchDelAddressInCustomerOrders`,
   {
     del_id:this.props.order.del_id
   }).then(res=>

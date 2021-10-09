@@ -35,7 +35,7 @@ import NavbarRest from './RestaurantNavBar';
 import { withCookies, Cookies } from "react-cookie";
 import { instanceOf } from "prop-types";
 import { Redirect } from 'react-router-dom';
-
+import server from '../WebConfig';
 
 
 export class RestaurantLanding extends Component {
@@ -111,7 +111,7 @@ export class RestaurantLanding extends Component {
         }
 
     
-        axios.get(`http://localhost:3030/Restaurant/details/${this.props.location.state.r_email}`)
+        axios.get(`${server}/Restaurant/details/${this.props.location.state.r_email}`)
             .then(
                 res => {
                     //Setting the name of the restaurant after successfully fetching the data
@@ -157,7 +157,7 @@ export class RestaurantLanding extends Component {
                 })
             ///Fetching Dish data after r_id has been set
             .then(res => {
-                axios.post("http://localhost:3030/Restaurant/GetDish",
+            axios.post(`${server}/Restaurant/GetDish`,
                     {
                         r_id: this.state.r_id
                     }
@@ -186,8 +186,11 @@ export class RestaurantLanding extends Component {
 
 
         let cartData = JSON.parse(sessionStorage.getItem("cartData"))
-        let index = cartData.findIndex((item) => { return item.d_id == d_id })
-
+        
+       
+        if(cartData!=null)
+        {
+            let index = cartData.findIndex((item) => { return item.d_id == d_id })
         if (this.state.cartnumber != 0 && index >= 0) {
             await this.setState(
                 {
@@ -215,6 +218,7 @@ export class RestaurantLanding extends Component {
             }
 
         }
+    }
 
 
         console.log(this.state.cartnumber)

@@ -8,7 +8,7 @@ import config from "../S3upload"
 import S3 from 'react-aws-s3';
 import NavbarRest from './RestaurantNavBar';
 import StateList from './Rstates';
-
+import server from '../WebConfig';
 export default class RestaurantProfile extends Component {
 
     constructor(props) {
@@ -38,7 +38,7 @@ export default class RestaurantProfile extends Component {
         const r_email = this.props.location.state.r_name
         // console.log(r_id,r_email)
 
-        axios.post("http://localhost:3030/Restaurant/getRestaurantProfileDetails",
+        axios.post(`${server}/Restaurant/getRestaurantProfileDetails`,
         { 
             r_id:r_id
            
@@ -96,7 +96,7 @@ export default class RestaurantProfile extends Component {
     {
         console.log(e)
         console.log(e.del_type+"Delivery type")
-        axios.post("http://localhost:3030/Restaurant/RestProfUpdate",
+        axios.post(`${server}/Restaurant/RestProfUpdate`,
         {   
             r_id:this.props.location.state.r_id,
             r_name :e.r_name,

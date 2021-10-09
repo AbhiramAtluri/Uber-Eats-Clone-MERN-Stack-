@@ -9,7 +9,7 @@ import axios from 'axios';
 import config from "../S3upload"
 import S3 from 'react-aws-s3';
 import NavbarCust from './CustomerNavBar';
-
+import server from '../WebConfig';
 export class CustomerProfile extends Component {
 
 
@@ -55,7 +55,7 @@ export class CustomerProfile extends Component {
             this.FetchProfileDetails(c_email)
 
         } else {
-            axios.post("http://localhost:3030/customer/CustomerProfileBasedOnId",
+            axios.post(`${server}/customer/CustomerProfileBasedOnId`,
                 {
                     c_id: c_id,
 
@@ -102,7 +102,7 @@ export class CustomerProfile extends Component {
 
 
     FetchProfileDetails = (c_email) => {
-        axios.post("http://localhost:3030/customer/CustomerProfileFetch",
+        axios.post(`${server}/customer/CustomerProfileFetch`,
             {
                 c_email: c_email,
 
@@ -160,8 +160,8 @@ export class CustomerProfile extends Component {
     }
 
     handleOnSubmit = (e) => {
-        console.log("heyyy")
-        axios.post("http://localhost:3030/customer/CustomerProfileUpdate",
+        
+        axios.post(`${server}/customer/CustomerProfileUpdate`,
             {
                 c_id: this.state.c_id,
                 c_email: e.c_email,
@@ -214,7 +214,7 @@ export class CustomerProfile extends Component {
             {
                 c_name: Yup.string("Please enter the name").max(25, "Maximum of 25 charachters").required("Username is required"),
                 c_description: Yup.string("Please Enter the description").max(255, "maximum of 255 characters"),
-                c_email: Yup.string("Please Enter your Email").email("Please enter in email format"),
+                c_email: Yup.string("Please Enter your Email").email("Please enter in email format").max(30,"Please enter a maximum of 30 characters"),
                 c_county: Yup.string("Please Enter your County details").max(30, "Maximum of 30 characters").required("Please enter your County"),
                 c_nickname: Yup.string("Please enter the nickname").max(10, "Maximum of 10 letters"),
                 c_number:Yup.string().max(10,"Enter Valid Number").matches(/^[0-9]*$/,"Enter Valid Number").min(10,"Enter Valid Number"),
@@ -245,7 +245,7 @@ export class CustomerProfile extends Component {
                                                 style={{ height: "300px", width: "354px" }} />
 
                                             {this.state.view != "Rest" ? <div>
-                                                <label>Upload your profile pictures</label>
+                                                <label>Upload your profile picture</label>
                                                 <Field className="form-control"
                                                     type="file" name="c_picture"
                                                     placeholder="Upload pictures" disabled={this.verifyDisabled()} onChange={(e) => { this.handleOnPicUpload(e) }}    ></Field></div>

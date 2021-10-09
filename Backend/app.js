@@ -12,11 +12,13 @@ var indexRouter = require('./routes/index');
 var RestRouter = require('./routes/RestaurantRoutes');
 var custrouter = require('./routes/custroutes')
 var app = express();
-
+const ipaddress = "52.14.50.14"
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-app.use(cors())
+
+
+
+app.use(cors({origin:`http://${ipaddress}:3000`,credentials:true}))
 app.use(logger('dev'));
 app.use(express.json());
 // app.use(bodyparser.json())
@@ -26,11 +28,11 @@ app.use(fileupload())
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
-  secret: 'cmpe273uber',
-  resave:false,
-  saveUninitialized:false
-}))
+// app.use(session({
+//   secret: 'cmpe273uber',
+//   resave:false,
+//   saveUninitialized:false
+// }))
 
 
 

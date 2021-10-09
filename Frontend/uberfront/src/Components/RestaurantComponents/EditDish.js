@@ -6,6 +6,7 @@ import axios from 'axios'
 import "./Uber.css"
 import config from "../S3upload"
 import S3 from 'react-aws-s3';
+import server from '../WebConfig';
 import NavbarRest from './RestaurantNavBar';
 
 
@@ -55,7 +56,7 @@ export default class EditDish extends Component {
   handleonSubmit = (e)=>
   {
     console.log(e)
-    axios.post("http://localhost:3030/Restaurant/EditDish",
+    axios.post(`${server}/Restaurant/EditDish`,
     { 
         r_id:this.state.r_id,
         d_name:e.d_name,

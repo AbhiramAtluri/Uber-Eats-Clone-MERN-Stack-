@@ -15,6 +15,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik"
 import Navbar from '../Navbar';
 import { instanceOf } from "prop-types";
 import { withCookies, Cookies } from "react-cookie";
+import server from '../WebConfig';
 
 
 export class Restaurantinit extends Component {
@@ -72,11 +73,11 @@ export class Restaurantinit extends Component {
                                    <center> <p style={{ color: 'red' }}>{this.state.loginvalid}</p></center>
                                     <Formik initialValues={initialValues}
                                         validationSchema={validationSchema}
-
+                                        enableReinitialize
                                         onSubmit={(datasend) => {
                                             console.log(datasend)
                                            
-                                            axios.post("http://localhost:3030/Restaurant/reslog", {
+                                            axios.post(`${server}/Restaurant/reslog`, {
 
                                                 r_email:datasend.r_email,
                                                 r_password:datasend.r_password,
@@ -88,11 +89,11 @@ export class Restaurantinit extends Component {
                                                 // console.log("hi")
                                                 console.log(res)
                                                if(res.data === 'Login successfull')
-                                               {
+                                               { console.log("sdad")
                                                    const { cookies } = this.props
                                                 //    sessionStorage.setItem("isAuthenticated","true")
                                                    cookies.set("uber","isAuth",{expires:0})
-
+                                                 
                                                    this.setState(
                                                        {
                                                            redirect : true,
@@ -102,6 +103,7 @@ export class Restaurantinit extends Component {
                                                }
                                                else
                                                {
+                                                   console.log("Invalid")
                                                       
                                                 this.setState(
                                                     {

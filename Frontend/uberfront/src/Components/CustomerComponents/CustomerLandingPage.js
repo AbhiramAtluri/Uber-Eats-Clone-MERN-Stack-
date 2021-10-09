@@ -31,7 +31,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import NavbarCust from './CustomerNavBar';
 import { withCookies, Cookies } from "react-cookie";
 import { instanceOf } from "prop-types";
-
+import server from '../WebConfig';
 // import NavbarRest from './CustomerNavBar';
 
  class CustomerLandingPage extends Component {
@@ -80,7 +80,7 @@ import { instanceOf } from "prop-types";
 
 
         ////Getting Customer Favs
-        axios.post("http://localhost:3030/Restaurant/GetFavRestID",
+        axios.post(`${server}/Restaurant/GetFavRestID`,
             {
                 c_id: c_id
             }
@@ -98,7 +98,7 @@ import { instanceOf } from "prop-types";
 
         console.log(this.state.c_county + "Before component")
         if (this.state.c_county === "") {
-            axios.post("http://localhost:3030/customer/CustomerProfileFetch", { c_email: c_email })
+            axios.post(`${server}/customer/CustomerProfileFetch`, { c_email: c_email })
                 .then(res =>
 
 
@@ -136,8 +136,8 @@ import { instanceOf } from "prop-types";
     loadLandingPageRestaurantList(c_county) {
         console.log(this.state)
         ////Fetching the nearest and farthest restaurants  
-        let nearbyrestaurants = "http://localhost:3030/Restaurant/GetAllNearestRestaurants"
-        let restallrestaurants = "http://localhost:3030/Restaurant/GetFarAwayRestaurants"
+        let nearbyrestaurants = `${server}/Restaurant/GetAllNearestRestaurants`
+        let restallrestaurants = `${server}/Restaurant/GetFarAwayRestaurants`
 
 
         const responseOne = axios.post(nearbyrestaurants,
@@ -200,7 +200,7 @@ import { instanceOf } from "prop-types";
         console.log(e.target.s_data.value)
         let s_data = e.target.s_data.value
 
-        axios.post("http://localhost:3030/Restaurant/GetRestaurantsBasedOnDish",
+        axios.post(`${server}/Restaurant/GetRestaurantsBasedOnDish`,
             {
                 s_dish: s_data
             }
@@ -280,7 +280,7 @@ import { instanceOf } from "prop-types";
                 Dish_Type: e.target.value
             }
         )
-      await  axios.post("http://localhost:3030/Restaurant/GetRestarantsBasedonDishTypeFilter", {
+      await  axios.post(`${server}/Restaurant/GetRestarantsBasedonDishTypeFilter`, {
             d_type: e.target.value
         })
             .then(
@@ -358,7 +358,7 @@ import { instanceOf } from "prop-types";
         e.target.style.color = "red"
         console.log(r_id)
 
-        axios.post("http://localhost:3030/Restaurant/AddRestToFav",
+        axios.post(`${server}/Restaurant/AddRestToFav`,
             {
                 r_id: r_id,
                 c_id: this.state.c_id

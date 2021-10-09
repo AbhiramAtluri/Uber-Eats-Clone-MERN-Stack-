@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import RestaurantOrderlistItems from './RestaurantOrderlistItems'
 import NavbarRest from './RestaurantNavBar'
-
+import server from '../WebConfig'
 
 
 
@@ -25,7 +25,7 @@ export default class RestauranOrderList extends Component {
    let r_id = this.props.location.state.r_id
 
 
-    axios.post("http://localhost:3030/customer/FetchRestaurantDetailsById",
+    axios.post(`${server}/customer/FetchRestaurantDetailsById`,
    
       {
           r_id:r_id 

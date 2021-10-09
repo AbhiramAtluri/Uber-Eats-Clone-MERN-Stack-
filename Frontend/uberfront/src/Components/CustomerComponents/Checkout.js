@@ -23,7 +23,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import NavbarCust from './CustomerNavBar';
-
+import server from '../WebConfig';
 
 export default class Checkout extends Component {
 
@@ -80,7 +80,7 @@ export default class Checkout extends Component {
             }
         )
         //Fetching delivery address     
-        axios.post("http://localhost:3030/customer/FetchDelAddress",
+        axios.post(`${server}/customer/FetchDelAddress`,
             {
                 c_id: c_id
 
@@ -99,7 +99,7 @@ export default class Checkout extends Component {
 
             })
         ///Fetching customer number
-        axios.post("http://localhost:3030/customer/FetchCustNumber",
+        axios.post(`${server}/customer/FetchCustNumber`,
             {
                 c_id: c_id
             })
@@ -134,7 +134,7 @@ export default class Checkout extends Component {
 ////fUNCTION TO PULL THE ADDRESS LISTS AFTER ADDING
     pullfreshAddressList = () => {
 
-        axios.post("http://localhost:3030/customer/FetchDelAddress",
+        axios.post(`${server}/customer/FetchDelAddress`,
             {
                 c_id: this.state.c_id
 
@@ -190,7 +190,7 @@ export default class Checkout extends Component {
       var min = date.getMinutes()
       var sec = date.getSeconds()
       var time = hours+":"+min+":"+sec
-      axios.post("http://localhost:3030/customer/PlaceOrder",
+      axios.post(`${server}/customer/PlaceOrder`,
       {
             
           c_id:this.state.c_id,
@@ -266,7 +266,7 @@ export default class Checkout extends Component {
         console.log(e)
         console.log("hi")
         let del_id =null
-        axios.post("http://localhost:3030/customer/AddDeliveryAddress",
+        axios.post(`${server}/customer/AddDeliveryAddress`,
             {
 
                 c_id: this.state.c_id,
@@ -326,7 +326,7 @@ export default class Checkout extends Component {
    var time = hours+":"+min+":"+sec
 
 
-    axios.post("http://localhost:3030/customer/PlaceOrder",
+    axios.post(`${server}/customer/PlaceOrder`,
     {
           
         c_id:this.state.c_id,
@@ -382,7 +382,7 @@ export default class Checkout extends Component {
         var sec = date.getSeconds()
         var time = hours+":"+min+":"+sec
     
-        axios.post("http://localhost:3030/customer/PlaceOrder",
+        axios.post(`${server}/customer/PlaceOrder`,
         {
               
             c_id:this.state.c_id,
@@ -498,10 +498,19 @@ export default class Checkout extends Component {
             d_zipcode: ""
 
         }
+        const ValidationSchemaTwo = Yup.object
+        (
+           {
+            d_add_1:Yup.string("Please enter the address").required("Address line one is required"),
+            d_add_2:Yup.string("Please enter the address").required("Address line one is required"),
+            d_zipcode:Yup.string("Enter the Zipcode").max(6,"Enter Valid ZipCode").matches(/^[0-9]*$/,"Enter valid Zipcode").min(10,"Enter valid Zipcode").required("Zipcode is required")
+        
+           }            
+        )
 
         const ValidationSchemaOne = Yup.object(
         {
-            d_number:Yup.string().required("Please Enter Contact Number").max(10,"Invalid Phone Number"),
+            d_number:Yup.string().required("Please Enter Contact Number").max(10,"Invalid Phone Number").matches(/^[0-9]*$/,"Enter valid phone number"),
             d_email:Yup.string().email("Please Enter Email in proper format")
 
         })
@@ -560,11 +569,20 @@ export default class Checkout extends Component {
                                 </div>
                                 {/* Add Address Form*/}
                                 {this.state.addaddress == true && this.state.del_type!="s_pickup" &&this.state.selected_delivery_type!="s_pickup" ?
-                                    <Formik initialValues={initailValues2} onSubmit={(e) => { this.handleAddressSubmit(e) }} enableReinitialize  >
+                                    <Formik initialValues={initailValues2} onSubmit={(e) => { this.handleAddressSubmit(e) }} enableReinitialize validationSchema={ValidationSchemaTwo} >
                                         <Form >
                                             <Field name="d_add_1" type="input" placeholder="Address line 1" className="form-control" style={{ marginBottom: "20px" }} />
+                                            <ErrorMessage name="d_add_1">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
                                             <Field name="d_add_2" type="input" placeholder="Address line 2" className="form-control" style={{ marginBottom: "20px" }} />
-                                            <Field name="d_zipcode" type="input" placeholder="d_zipcode" className="form-control" style={{ marginBottom: "20px" }} />
+                                            <ErrorMessage name="d_add_2">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
+                                            <Field name="d_zipcode" type="input" placeholder="Enter the zipcode" className="form-control" style={{ marginBottom: "20px" }} />
+                                            <ErrorMessage name="d_zipcode">
+                                                    {msg => <div style={{ color: 'red' }}>{msg}</div>}
+                                                </ErrorMessage>
                                             <center>  <button type="submit" className="btn btn-primary">Add Address & place order</button></center>
                                         </Form>
                                     </Formik>
@@ -650,8 +668,7 @@ export default class Checkout extends Component {
                                                     </li>
                                                 })
                                                 }
-                                                {/* <li class="list-group-item"></li>
-                                        <li class="list-group-item"></li> */}
+                                   
                                             </ul>
                                             <div className="col-md-12" style={{ display: "inline-flex", backgroundColor: "lightgrey" }} >
                                                 <div className="col-md-4">

@@ -80,23 +80,34 @@ exports.resterauntLogin = async function (req, res) {
    let resp= await  db.query('select r_password from res_reg where r_email = ?', [r_log_details.email])
 
    resp = Object.values(JSON.parse(JSON.stringify(resp)));
+   console.log(resp)
+   if((resp[0]).length>0)
+   {
    const validPass = await bcrypt.compare(r_log_details.pass,(resp[0])[0].r_password)
    console.log(validPass)
-  
-
 
    if(validPass)
-       {
+   {
 
-    //    res.cookie('cookie',r_log_details.email)
-          res.cookie('cookie',"admin",{maxAge: 900000, httpOnly: false, path : '/'})
-          req.session.user = r_log_details.email
-         res.send("Login successfull")
+     res.send("Login successfull")
 
 
-     } else {
-         res.send("Invalid credentials")
-     }
+ } else {
+     res.send("Invalid credentials")
+ }
+
+
+   }
+   else
+   {
+       res.send("Invalid")
+   }
+   
+
+
+
+
+
 
 }
 

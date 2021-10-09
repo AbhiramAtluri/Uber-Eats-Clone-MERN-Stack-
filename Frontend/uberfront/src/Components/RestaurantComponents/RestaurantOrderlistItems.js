@@ -11,6 +11,9 @@ import {
     useParams
   } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik"
+import server from '../WebConfig';
+
+
 export default class RestaurantOrderlistItems extends Component {
 
 
@@ -27,7 +30,7 @@ export default class RestaurantOrderlistItems extends Component {
     
     {
 
-     axios.post("http://localhost:3030/customer/UpdateOrderStatus",
+     axios.post(`${server}/customer/UpdateOrderStatus`,
      {
          o_id:this.props.order.o_id,
          r_id:this.props.order.r_id,

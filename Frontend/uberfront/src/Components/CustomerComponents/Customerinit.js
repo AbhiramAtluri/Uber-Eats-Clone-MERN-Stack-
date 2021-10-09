@@ -14,7 +14,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik"
 import Navbar from '../Navbar';
 import { withCookies, Cookies } from "react-cookie";
 import { instanceOf } from "prop-types";
-
+import server from '../WebConfig';
 
 
 export class Customerinit extends Component {
@@ -79,7 +79,7 @@ export class Customerinit extends Component {
                               onSubmit={(data) => {
                                 console.log(data)
                             
-                                axios.post("http://localhost:3030/customer/custlog", {
+                                axios.post(`${server}/customer/custlog`, {
 
                                     c_email:data.c_email,
                                     c_password:data.c_password,

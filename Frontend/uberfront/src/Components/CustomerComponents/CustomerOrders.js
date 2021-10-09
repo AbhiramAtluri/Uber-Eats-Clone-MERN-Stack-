@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import ListItem from './ListItem';
 import NavbarCust from './CustomerNavBar';
+import server from '../WebConfig';
 export default class CustomerOrders extends Component {
 
 constructor(props) {
@@ -26,7 +27,7 @@ constructor(props) {
 componentDidMount(props)
 {
 
-    axios.post("http://localhost:3030/customer/FetchCustomerDetailsById",
+    axios.post(`${server}/customer/FetchCustomerDetailsById`,
     {
     c_id:this.props.location.state.c_id
     
