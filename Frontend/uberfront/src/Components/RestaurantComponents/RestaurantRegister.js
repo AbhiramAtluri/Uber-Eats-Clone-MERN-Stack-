@@ -118,7 +118,7 @@ export class RestaurantRegister extends Component {
             <div>
                 <div className="container-fluid" style={{margin:"0px",padding:"0px"}}>
                     <Navbar></Navbar>
-                <div className="row">
+                <div className="row" style={{margin:"0px"}}>
                     <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                         <div className="card border-0 shadow rounded-3 my-5">
                             <div className="card-body p-4 p-sm-5"></div>
@@ -128,7 +128,7 @@ export class RestaurantRegister extends Component {
                             <Form  >
                             <div className="form-floating mb-3">
                             <Field type="text" className="form-control" name="r_name" placeholder="Enter resteraunt name"  />
-                            <label for="r_name">Enter the name of the resteraunt</label>
+                            <label for="r_name">Enter the name of the Restaurant</label>
                             <ErrorMessage name="r_name">
                                     {msg => <div style={{ color: 'red' }}>{msg}</div>}
                             </ErrorMessage>

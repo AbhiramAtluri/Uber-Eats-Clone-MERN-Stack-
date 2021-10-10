@@ -213,13 +213,13 @@ export class CustomerProfile extends Component {
         const validationSchema = Yup.object(
             {
                 c_name: Yup.string("Please enter the name").max(25, "Maximum of 25 charachters").required("Username is required"),
-                c_description: Yup.string("Please Enter the description").max(255, "maximum of 255 characters"),
+                c_description: Yup.string("Please Enter the description").max(255, "maximum of 255 characters").nullable(),
                 c_email: Yup.string("Please Enter your Email").email("Please enter in email format").max(30,"Please enter a maximum of 30 characters"),
-                c_county: Yup.string("Please Enter your County details").max(30, "Maximum of 30 characters").required("Please enter your County"),
-                c_nickname: Yup.string("Please enter the nickname").max(10, "Maximum of 10 letters"),
-                c_number:Yup.string().max(10,"Enter Valid Number").matches(/^[0-9]*$/,"Enter Valid Number").min(10,"Enter Valid Number"),
-                c_city: Yup.string("Please enter the City name").max(30, "Please limit the name to 30 characters"),
-                c_dob: Yup.date().max(today, "Please enter a valid Date")
+                c_county: Yup.string("Please Enter your County details").max(30, "Maximum of 30 characters").required("Please enter your County").nullable(),
+                c_nickname: Yup.string("Please enter the nickname").max(10, "Maximum of 10 letters").nullable(),
+                c_number:Yup.string("Please enter the contact number").max(10,"Enter Valid Number").matches(/^[0-9]*$/,"Enter Valid Number").min(10,"Enter Valid Number").nullable(),
+                c_city: Yup.string("Please enter the City name").max(30, "Please limit the name to 30 characters").nullable(),
+                c_dob: Yup.date("Please Enter the date").max(today, "Please enter a valid Date").nullable()
 
             }
         )

@@ -73,34 +73,34 @@ exports.resterauntLogin = async function (req, res) {
         pass: req.body.r_password
     }
 
-    console.log(req.body + "reqbody")
-    console.log("in")
-    console.log(r_log_details)
-    console.log(r_log_details.email + "" + r_log_details.pass)
+    // console.log(req.body + "reqbody")
+    // console.log("in")
+    // console.log(r_log_details)
+    // console.log(r_log_details.email + "" + r_log_details.pass)
    let resp= await  db.query('select r_password from res_reg where r_email = ?', [r_log_details.email])
 
    resp = Object.values(JSON.parse(JSON.stringify(resp)));
-   console.log(resp)
+//    console.log(resp)
    if((resp[0]).length>0)
    {
    const validPass = await bcrypt.compare(r_log_details.pass,(resp[0])[0].r_password)
-   console.log(validPass)
+//    console.log(validPass)
 
    if(validPass)
    {
 
-     res.send("Login successfull")
+     res.json({message:"Login successfull"})
 
 
  } else {
-     res.send("Invalid credentials")
+     res.json( { message:  "Invalid credentials"})
  }
 
 
    }
    else
    {
-       res.send("Invalid")
+       res.json({message:"Invalid"})
    }
    
 
@@ -185,14 +185,14 @@ exports.customerRegistration = async function (req, res)
 /////Customer login Authentication
     exports.customerLogin = async function(req,res)
     {
-
+        // console.log(req.body)
         let cust_details =
         {
             c_email: req.body.c_email,
             c_password: req.body.c_password
         }
-        console.log("login")
-        console.log(cust_details)
+        // console.log("login")
+        // console.log(cust_details)
      let resp = await db.query('select c_password ,c_id,c_email from cust_reg where cust_reg.c_email = ?', [cust_details.c_email])
     
            
@@ -201,10 +201,10 @@ exports.customerRegistration = async function (req, res)
                 resp = Object.values(JSON.parse(JSON.stringify(resp)));
 
                 const validpass = await bcrypt.compare(cust_details.c_password,(resp[0])[0].c_password)
-                 console.log(resp[0])
-                 console.log((resp[0])[0].c_id)
-                 let num = (resp[0])[0].c_id
-                 let c_email = (resp[0])[0].c_email
+                //  console.log(resp[0])
+                //  console.log((resp[0])[0].c_id)
+                  let num = (resp[0])[0].c_id
+                  let c_email = (resp[0])[0].c_email
                 // res.send("Login successfull")
                 if(validpass)
                 {
@@ -218,12 +218,15 @@ exports.customerRegistration = async function (req, res)
             }
             else
             {
-                res.json("Invalid credentials")
+                res.json(
+                    {
+                    message:"Invalid credentials"
+                    })
             }
 
 
             } else {
-                res.send("Invalid credentials")
+                res.json({message:"Invalid credentials"})
             }
     
 

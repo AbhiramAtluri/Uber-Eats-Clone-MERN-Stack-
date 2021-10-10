@@ -168,7 +168,7 @@ handlepicupload = (e)=>
             </div>
                 <label>Dish price</label>
                 <div className = "formc" id = "AD">  
-            <Field className = "form-control" name = "d_price" type = "number" placeholder = "Enter price of the dish" id = "AD"  ></Field>
+            <Field className = "form-control" name = "d_price" type = "number" step="0.01" placeholder = "Enter price of the dish" id = "AD"  ></Field>
             <ErrorMessage name="d_price">
             {msg => <div style={{ color: 'red' }}>{msg}</div>}
             </ErrorMessage>

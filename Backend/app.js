@@ -12,7 +12,8 @@ var indexRouter = require('./routes/index');
 var RestRouter = require('./routes/RestaurantRoutes');
 var custrouter = require('./routes/custroutes')
 var app = express();
-const ipaddress = "52.14.50.14"
+const ipaddress = "18.222.154.155"
+app.set('view engine', 'jade');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 
@@ -21,8 +22,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(cors({origin:`http://${ipaddress}:3000`,credentials:true}))
 app.use(logger('dev'));
 app.use(express.json());
-// app.use(bodyparser.json())
-// app.use(bodyparser.urlencoded({extended: true}));
+app.use(bodyparser.json())
+app.use(bodyparser.urlencoded({extended: true}));
 app.use(express.urlencoded({ extended: false }));
 app.use(fileupload())
 app.use(cookieParser());
@@ -64,4 +65,4 @@ var session = require('express-session');
 app.listen(3030,()=>{console.log("listening on 3030")})
 
 
-// module.exports = app;
+ module.exports = app;

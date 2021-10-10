@@ -63,7 +63,7 @@ export class CustomerRegistration extends Component {
                 <div>
                     <div class="container-fluid" style={{margin:"0px",padding:"0px"}} >
                         <Navbar></Navbar>
-                        <div className="row">
+                        <div className="row" style={{margin:"0px"}}>
                             <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
                                 <div className="card border-0 shadow rounded-3 my-5">
                                     <div className="card-body p-4 p-sm-5"></div>

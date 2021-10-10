@@ -1,12 +1,13 @@
 const mysql = require("mysql2")
 
-const pool = mysql.createPool(
+const conn = mysql.createConnection(
     {
        host:"uber-1.cgufr2o7hllp.us-east-2.rds.amazonaws.com",
        user:"admin",
        database:"uber_eats",
        password:"qwertyui",
-       port:3307
+       port:3307,
+       
 
     }
 )
@@ -16,4 +17,4 @@ const pool = mysql.createPool(
 
 // console.log()
 
-module.exports = pool.promise();
+module.exports = conn.promise();

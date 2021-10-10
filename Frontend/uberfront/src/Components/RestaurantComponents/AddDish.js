@@ -93,7 +93,7 @@ export default class AddDish extends Component {
             d_name: "",
             d_description : "",
             d_category :"Appetizer",
-            d_price :0,
+            d_price :"",
             d_type:"NV"
         }
 
@@ -103,7 +103,8 @@ export default class AddDish extends Component {
                 d_description : Yup.string().required("Description of the dish is required").max(120,"maximum of 120 words"),
                 d_category : Yup.string().required("Dish Category is required"),
                 d_type:Yup.string().required("Type of dish is required"),
-                d_price :Yup.number().max(1001,"Maximum price is 1000$").required("Price of dish is required")
+                 d_price :Yup.number().max(1001,"Maximum price is 1000$").required("Price of dish is required")
+                
             }
         )
 
@@ -149,7 +150,7 @@ export default class AddDish extends Component {
                 </div>
                     <label>Dish price</label>
                     <div className = "formc" id = "AD">  
-                <Field className = "form-control" name = "d_price" type = "number" placeholder = "Enter price of the dish" id = "AD"  ></Field>
+                <Field className = "form-control" name = "d_price" type = "number" step="0.01" placeholder = "Enter price of the dish" id = "AD"  ></Field>
                 <ErrorMessage name="d_price">
                 {msg => <div style={{ color: 'red' }}>{msg}</div>}
                 </ErrorMessage>

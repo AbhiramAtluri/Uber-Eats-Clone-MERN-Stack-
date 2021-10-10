@@ -88,7 +88,7 @@ export class Restaurantinit extends Component {
                                             {
                                                 // console.log("hi")
                                                 console.log(res)
-                                               if(res.data === 'Login successfull')
+                                               if(res.data.message === 'Login successfull')
                                                { console.log("sdad")
                                                    const { cookies } = this.props
                                                 //    sessionStorage.setItem("isAuthenticated","true")

@@ -60,6 +60,7 @@ export default class RestaurantOrderlistItems extends Component {
     }
 
         console.log(this.props.order)
+        console.log(initialValues2)
         return (
             <div>
                 <li className="list-group-item">
@@ -103,7 +104,7 @@ export default class RestaurantOrderlistItems extends Component {
                         <div className="col-md-3" style={{padding:"0px"}}>
                             {this.props.order.del_type == "s_pickup" ?
                                 <div>
-                                    <Formik initialValues={initialValues} onSubmit={e=>{this.handleOnUpdate(e)}}   >
+                                    <Formik initialValues={initialValues} enableReinitialize onSubmit={e=>{this.handleOnUpdate(e)}}   >
                                      <Form style={{marginTop:"20px",display:"flex"}}>   
                                     <Field as="select" style={{width:"133px"}}  name="o_status"  >
                                         <option value="Order Received">Order Received</option>
@@ -115,7 +116,7 @@ export default class RestaurantOrderlistItems extends Component {
                                     </Form>
                                  </Formik>
                                 </div> :  <div>
-                                    <Formik initialValues={initialValues2} onSubmit={(e=>{this.handleOnUpdate(e)})}>
+                                    <Formik initialValues={initialValues2} enableReinitialize onSubmit={(e=>{this.handleOnUpdate(e)})}>
                                      <Form style={{marginTop:"20px",display:"flex"}} >   
                                     <Field  style={{width:"133px"}}  as="select" name="o_status"  >
                                     <option value ="Order Received">Order Received</option>

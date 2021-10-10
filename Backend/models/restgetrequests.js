@@ -196,8 +196,8 @@ exports.GetAllTheFavRestaurants = async function(req,res)
 
 exports.GetFavResterauntIds = async function(req,res)
 {
-console.log("in fav rest")
-  console.log(req.body.c_id)  
+// console.log("in fav rest")
+//   console.log(req.body.c_id)  
   db.query("SELECT r_id FROM c_fav WHERE c_id =?",[req.body.c_id])
   .then(resp=>{res.json(resp[0])})
   .catch(err=>{res.json(err)})

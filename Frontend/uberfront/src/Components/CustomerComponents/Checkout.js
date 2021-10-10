@@ -140,6 +140,7 @@ export default class Checkout extends Component {
 
             }
         ).then(res => {
+            console.log(res)
             this.setState(
                 {
                     addresslist: res.data
@@ -190,6 +191,7 @@ export default class Checkout extends Component {
       var min = date.getMinutes()
       var sec = date.getSeconds()
       var time = hours+":"+min+":"+sec
+      console.log(data.s_address)
       axios.post(`${server}/customer/PlaceOrder`,
       {
             
@@ -239,6 +241,8 @@ export default class Checkout extends Component {
         for (let a in templist) {
 
             Total_price = Total_price + templist[a].d_price
+            Total_price = Total_price.toFixed(2)
+            Total_price = parseFloat(Total_price)
 
         }
         this.setState
@@ -503,7 +507,7 @@ export default class Checkout extends Component {
            {
             d_add_1:Yup.string("Please enter the address").required("Address line one is required"),
             d_add_2:Yup.string("Please enter the address").required("Address line one is required"),
-            d_zipcode:Yup.string("Enter the Zipcode").max(6,"Enter Valid ZipCode").matches(/^[0-9]*$/,"Enter valid Zipcode").min(10,"Enter valid Zipcode").required("Zipcode is required")
+            d_zipcode:Yup.string("Enter the Zipcode").max(6,"Enter Valid ZipCode").matches(/^[0-9]*$/,"Enter valid Zipcode").min(5,"Enter valid Zipcode").required("Zipcode is required")
         
            }            
         )

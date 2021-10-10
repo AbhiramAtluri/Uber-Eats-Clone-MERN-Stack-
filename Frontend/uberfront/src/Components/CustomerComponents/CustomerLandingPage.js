@@ -118,7 +118,7 @@ import server from '../WebConfig';
 
                     }
                     else {
-                        this.loadLandingPageRestaurantList("Santa Clara County")
+                        this.loadLandingPageRestaurantList("Santa Clara")
                     }
                 }
 

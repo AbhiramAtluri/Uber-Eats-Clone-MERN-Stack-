@@ -14,7 +14,8 @@ export default class RestauranOrderList extends Component {
        this.state = {
               
       r_id:"",
-      FetchedOrderList:[]
+      FetchedOrderList:[],
+      MasterOrderList:[]
 
        }
    }
@@ -38,7 +39,8 @@ export default class RestauranOrderList extends Component {
      console.log(resp.data)
      this.setState(
          {
-           FetchedOrderList:resp.data
+           FetchedOrderList:resp.data,
+           MasterOrderList:resp.data
          }
          )
 
@@ -49,6 +51,47 @@ export default class RestauranOrderList extends Component {
      console.log(this.state.r_id)
 
    }
+   OnChangeFilter = (e)=>
+   {
+       console.log(e.target.value)
+       if(e.target.value == "New Order")
+       {
+       let Norder_details = this.state.MasterOrderList.filter(order=>{return order.o_status == null || order.o_status =="On the way" || order.o_status=="Order Received" })
+       console.log(Norder_details)
+       this.setState(
+           {
+               FetchedOrderList:Norder_details
+           }
+       )
+       }
+
+       if(e.target.value == "Order Delivered")
+       {
+       let Norder_details = this.state.MasterOrderList.filter(order=>{return order.o_status == "Order Delivered"  })
+       console.log(Norder_details)
+       this.setState(
+           {
+               FetchedOrderList:Norder_details
+           }
+       )
+        }
+
+
+
+       if(e.target.value =="All Orders")
+        {
+            this.setState(
+                {
+                    FetchedOrderList:this.state.MasterOrderList
+                }
+            )
+
+        }
+
+
+
+    }
+
 
 
     render()
@@ -67,7 +110,18 @@ export default class RestauranOrderList extends Component {
                     <div className="col-md-8" style={{marginTop:"20px"}}>
 
                     <ul className="list-group">
-                     <li className="list-group-item">< h5>Order List</h5></li>
+                     <li className="list-group-item">
+                     < h5>Order List</h5>
+                     <div className="col-md-4">
+                           <select name= "filter" onChange={e=>{this.OnChangeFilter(e)}} >
+                           <option value = "All Orders">All Orders</option>
+                            <option value = "Order Delivered">Order Delivered</option>
+                            <option value = "New Order">New Order</option>
+                            <option value ="Cancelled Order">Cancelled order</option>
+                            </select>  
+                         </div>
+                     
+                     </li>
 
                       {this.state.FetchedOrderList.length >0?
                      
