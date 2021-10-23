@@ -12,7 +12,7 @@ var indexRouter = require('./routes/index');
 var RestRouter = require('./routes/RestaurantRoutes');
 var custrouter = require('./routes/custroutes')
 var app = express();
-const ipaddress = "18.222.154.155"
+const ipaddress = "localhost"
 app.set('view engine', 'jade');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

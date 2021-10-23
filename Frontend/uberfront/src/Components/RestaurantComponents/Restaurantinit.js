@@ -16,6 +16,9 @@ import Navbar from '../Navbar';
 import { instanceOf } from "prop-types";
 import { withCookies, Cookies } from "react-cookie";
 import server from '../WebConfig';
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { login } from '../../Redux/RestaurantloginandReg/RestaurantActions';
 
 
 export class Restaurantinit extends Component {
@@ -34,6 +37,16 @@ export class Restaurantinit extends Component {
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
       };
+
+
+      static mapStateToProps = state =>
+      {
+          return {Rest: state.values}
+      }
+      static mapDispatchtoProps = dispatch =>
+      {
+          return bindActionCreators({login},dispatch)
+      }
 
 
 
@@ -163,4 +176,4 @@ export class Restaurantinit extends Component {
 }
 
 
-export default  withCookies(Restaurantinit)
+export default  withCookies( connect(Restaurantinit.mapStateToProps,Restaurantinit.mapDispatchtoProps)(Restaurantinit))

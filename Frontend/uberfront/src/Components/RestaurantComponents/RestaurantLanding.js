@@ -21,11 +21,7 @@ import KitchenIcon from '@mui/icons-material/Kitchen';
 import ElectricBikeIcon from '@mui/icons-material/ElectricBike';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CustomizedDialogs from './DialogBox'
-import LabelIcon from '@mui/icons-material/Label';
-import { margin } from '@mui/system';
-import { connect } from 'react-redux'
-import shopReducer from '../../Redux/Shopping/Shop-reducer';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -36,7 +32,14 @@ import { withCookies, Cookies } from "react-cookie";
 import { instanceOf } from "prop-types";
 import { Redirect } from 'react-router-dom';
 import server from '../WebConfig';
-
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { login } from '../../Redux/RestaurantloginandReg/RestaurantActions';
+import { logoff } from '../../Redux/RestaurantloginandReg/RestaurantActions';
+import { addCart } from '../../Redux/CartReducerfile/Cartactions';
+import { removeCart } from '../../Redux/CartReducerfile/Cartactions';
+import { addRname } from '../../Redux/CartReducerfile/Cartactions';
+import { removeRname,addDelType,removeDelType } from '../../Redux/CartReducerfile/Cartactions';
 
 export class RestaurantLanding extends Component {
 
@@ -73,7 +76,14 @@ export class RestaurantLanding extends Component {
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
       };
-
+      static mapStateToProps = state =>
+      {
+          return {Rest: state.values}
+      }
+      static mapDispatchtoProps = dispatch =>
+      {
+          return bindActionCreators({login,logoff,addCart,removeCart,addRname,removeRname,addDelType,removeDelType},dispatch)
+      }
 
     componentDidMount(props) {
 
@@ -117,7 +127,7 @@ export class RestaurantLanding extends Component {
                     //Setting the name of the restaurant after successfully fetching the data
                     let cartData = JSON.parse(sessionStorage.getItem("cartData"))
                     let seshstorage_rid = 0
-                    if (cartData != null && cartData != undefined) {
+                    if (cartData != null && cartData != undefined && cartData.length >0) {
                         console.log(seshstorage_rid)
                         console.log(cartData[0].r_id)
                         seshstorage_rid = cartData[0].r_id
@@ -146,6 +156,10 @@ export class RestaurantLanding extends Component {
 
                             }
                         )
+                        let values ={r_name:res.data.r_name,
+                                    r_email:res.data.r_email,
+                                    r_id:res.data.r_id               }
+                        this.props.login(values)
                     }
                     else {
                         this.setState(
@@ -197,8 +211,14 @@ export class RestaurantLanding extends Component {
                     cartnumber: this.state.cartnumber - 1
                 }
             )
+            this.props.removeCart();
             let cartvalue = JSON.parse(sessionStorage.getItem("cartValue"))
             cartvalue.value = cartvalue.value - 1
+            if(cartvalue.value ==0)
+            {
+                this.props.removeRname()
+                this.props.removeDelType()
+            }
             sessionStorage.setItem("cartValue", JSON.stringify(cartvalue))
             let cartData = JSON.parse(sessionStorage.getItem("cartData"))
             let index = cartData.findIndex((item) => { return item.d_id == d_id })
@@ -231,7 +251,9 @@ export class RestaurantLanding extends Component {
 
     handleAddToCartClick = async (e, d_name, d_price, d_picture, d_id) => {
 
-
+        this.props.addCart()
+        this.props.addRname(this.state.r_name)
+        this.props.addDelType(this.state.del_type)
         let i_price = d_price
         e.preventDefault()
         console.log("Before enter" + this.state.cartnumber)
@@ -243,24 +265,24 @@ export class RestaurantLanding extends Component {
                         cartnumber: 1
                     }
                 )
+                
         }
-
+        
         ////IF CART VALUE IS NULL INITIALIZE IT TO ONE ON FIRST CLICK
         let cartvalue = JSON.parse(sessionStorage.getItem("cartValue"))
-        if (cartvalue == null) {
+        if (cartvalue == null ) {
             sessionStorage.setItem("cartValue", JSON.stringify({
                 value: 1
             }))
 
-            // this.setState(
-            //     {
-            //         cartnumber:1
-            //     }
-            //     )
+        
 
-
+           
+           
         } else {
             cartvalue.value = cartvalue.value + 1
+            
+            // this.props.addRname(this.state.r_name)
             sessionStorage.setItem("cartValue", JSON.stringify(cartvalue))
             await this.setState(
                 {
@@ -336,7 +358,7 @@ export class RestaurantLanding extends Component {
         console.log("In Logoff")
         const { cookies } = this.props
         cookies.remove("uber")
-
+        this.props.logoff();
        this.setState(
         {
                 handleLogoff:true
@@ -494,4 +516,4 @@ export class RestaurantLanding extends Component {
 
 }
 
-export default withCookies(RestaurantLanding)
+export default withCookies(connect(RestaurantLanding.mapStateToProps,RestaurantLanding.mapDispatchtoProps)(RestaurantLanding) )

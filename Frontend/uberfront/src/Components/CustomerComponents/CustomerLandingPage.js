@@ -32,6 +32,13 @@ import NavbarCust from './CustomerNavBar';
 import { withCookies, Cookies } from "react-cookie";
 import { instanceOf } from "prop-types";
 import server from '../WebConfig';
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { c_logoff } from '../../Redux/CustomerLoginandReg/CustomerActions';
+import NavbarCustland from './CustLandNavBar'
+import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
+
+
 // import NavbarRest from './CustomerNavBar';
 
  class CustomerLandingPage extends Component {
@@ -61,6 +68,20 @@ import server from '../WebConfig';
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
       };
+
+      static mapStateToProps = state =>
+      {
+          return {Cust: state.values}
+      }
+      static mapDispatchtoProps = dispatch =>
+      {
+          return bindActionCreators({c_logoff,clearCart},dispatch)
+      }
+
+
+
+
+
     componentDidMount(props) {
         const c_id = this.props.location.state.c_id
         const c_email = this.props.location.state.c_email
@@ -397,7 +418,9 @@ import server from '../WebConfig';
     {
         const { cookies } = this.props
         cookies.remove("uber")
-
+        
+        this.props.c_logoff()
+        this.props.clearCart()
        this.setState(
         {
                 handleLogoff:true
@@ -425,7 +448,7 @@ import server from '../WebConfig';
         {
         return (
             <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
-                <NavbarCust></NavbarCust>
+                <NavbarCustland c_id ={this.state.c_id}></NavbarCustland>
                 <div className="row" style={{ margin: 0, padding: 0 }} >
                     <div className="col-md-1" style={{ padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
 
@@ -515,4 +538,4 @@ import server from '../WebConfig';
     }
 }
 
-export default  withCookies(CustomerLandingPage)
+export default  withCookies(connect(CustomerLandingPage.mapStateToProps,CustomerLandingPage.mapDispatchtoProps)(CustomerLandingPage))

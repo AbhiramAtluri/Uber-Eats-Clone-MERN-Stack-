@@ -15,6 +15,9 @@ import Navbar from '../Navbar';
 import { withCookies, Cookies } from "react-cookie";
 import { instanceOf } from "prop-types";
 import server from '../WebConfig';
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { c_login } from '../../Redux/CustomerLoginandReg/CustomerActions';
 
 
 export class Customerinit extends Component {
@@ -33,7 +36,14 @@ export class Customerinit extends Component {
         cookies: instanceOf(Cookies).isRequired
       };
     
-
+      static mapStateToProps = state =>
+    {
+        return {Cust: state.values}
+    }
+    static mapDispatchtoProps = dispatch =>
+    {
+        return bindActionCreators({c_login},dispatch)
+    }
 
 
 
@@ -104,6 +114,11 @@ export class Customerinit extends Component {
                                                
                                            }
                                        )
+                                       let values = {
+                                           c_email:res.data.c_email,
+                                           c_id:res.data.c_id
+                                       }
+                                       this.props.c_login(values)
 
                                        
 
@@ -162,4 +177,4 @@ export class Customerinit extends Component {
 }  
 }
 
-export default  withCookies(Customerinit)
+export default  withCookies(connect(Customerinit.mapStateToProps,Customerinit.mapDispatchtoProps)(Customerinit))

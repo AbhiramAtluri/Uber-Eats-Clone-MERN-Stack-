@@ -19,13 +19,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { clearCart } from '../../Redux/CartReducerfile/Cartactions';
 import NavbarCust from './CustomerNavBar';
 import server from '../WebConfig';
 
-export default class Checkout extends Component {
+ class Checkout extends Component {
 
 
     constructor(props) {
@@ -51,6 +51,17 @@ export default class Checkout extends Component {
             
         }
     }
+
+    static mapStateToProps = state =>
+    {
+        return {Cust: state.values}
+    }
+    static mapDispatchtoProps = dispatch =>
+    {
+        return bindActionCreators({clearCart},dispatch)
+    }
+
+
 
     componentDidMount(props) {
 
@@ -214,6 +225,7 @@ export default class Checkout extends Component {
                         open_dialog:true
                     }
                 )
+                this.props.clearCart()
                 sessionStorage.clear() 
              }
           }
@@ -318,6 +330,7 @@ export default class Checkout extends Component {
                 del_type:this.state.selected_delivery_type
             }
         )
+        this.props.clearCart()
         sessionStorage.clear()
     }
    let date = new Date()
@@ -408,6 +421,7 @@ export default class Checkout extends Component {
                            open_dialog:true
                        }
                    )
+                   this.props.clearCart()
                    sessionStorage.clear()
                }
             }
@@ -721,3 +735,5 @@ export default class Checkout extends Component {
         )
     }
 }
+
+export default   connect(Checkout.mapStateToProps,Checkout.mapDispatchtoProps)(Checkout)
