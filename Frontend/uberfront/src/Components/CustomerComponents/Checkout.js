@@ -22,6 +22,7 @@ import DialogActions from '@mui/material/DialogActions';
 import  { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { clearCart } from '../../Redux/CartReducerfile/Cartactions';
+import { placed_order } from '../../Redux/CustomerLoginandReg/CustomerActions';
 import NavbarCust from './CustomerNavBar';
 import server from '../WebConfig';
 
@@ -58,7 +59,7 @@ import server from '../WebConfig';
     }
     static mapDispatchtoProps = dispatch =>
     {
-        return bindActionCreators({clearCart},dispatch)
+        return bindActionCreators({clearCart,placed_order},dispatch)
     }
 
 
@@ -220,6 +221,16 @@ import server from '../WebConfig';
           {
              if(res.data.message == "Successful")
              {
+              let values = [{c_id:this.state.c_id,
+                r_id:this.state.r_id,
+                d_list:cartData,
+                del_type:this.state.del_type,
+                del_id:data.s_address,
+                o_date:idate,
+              o_time: time,
+              r_name:this.state.r_name}]
+                   this.props.placed_order(values)
+
                 this.setState(
                     {
                         open_dialog:true
@@ -366,6 +377,18 @@ import server from '../WebConfig';
                 }
                 
             )
+
+          let values = {    c_id:this.state.c_id,
+            r_id:this.state.r_id,
+            d_list:cartData,
+            del_type:this.state.del_type,
+            del_id:del_id,
+            o_date:idate,
+            o_time: time,
+            r_name:this.state.r_name}
+
+            this.props.placed_order(values)
+
             sessionStorage.clear()
            }
         }
@@ -416,6 +439,18 @@ import server from '../WebConfig';
             {
                if(res.data.message == "Successful")
                {console.log("hi")
+
+               let values = {c_id:this.state.c_id,
+                r_id:this.state.r_id,
+                d_list:cartData,
+                del_type:this.state.del_type,
+                del_id:null,
+                o_date:idate,
+                o_time: time,
+                r_name:this.state.r_name}
+                this.props.placed_order(values)
+
+
                    this.setState(
                        {
                            open_dialog:true

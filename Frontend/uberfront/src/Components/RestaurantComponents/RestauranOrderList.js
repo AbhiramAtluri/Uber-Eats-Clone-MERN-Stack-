@@ -3,10 +3,11 @@ import axios from 'axios'
 import RestaurantOrderlistItems from './RestaurantOrderlistItems'
 import NavbarRest from './RestaurantNavBar'
 import server from '../WebConfig'
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import {Set_R_Orders} from '../../Redux/RestaurantloginandReg/RestaurantActions';
 
-
-
-export default class RestauranOrderList extends Component {
+class RestauranOrderList extends Component {
 
    constructor(props) {
        super(props)
@@ -19,7 +20,14 @@ export default class RestauranOrderList extends Component {
 
        }
    }
-   
+   static mapStateToProps = state =>
+   {
+       return {Rest: state.values}
+   }
+   static mapDispatchtoProps = dispatch =>
+   {
+       return bindActionCreators({Set_R_Orders},dispatch)
+   }
 
    componentDidMount(props) 
    {
@@ -43,8 +51,8 @@ export default class RestauranOrderList extends Component {
            MasterOrderList:resp.data
          }
          )
-
-
+         let values = {orders:resp.data}
+       this.props.Set_R_Orders(values)
     }
     )
 
@@ -141,3 +149,5 @@ export default class RestauranOrderList extends Component {
 
     }
 }
+
+export default connect(RestauranOrderList.mapStateToProps,RestauranOrderList.mapDispatchtoProps)(RestauranOrderList)

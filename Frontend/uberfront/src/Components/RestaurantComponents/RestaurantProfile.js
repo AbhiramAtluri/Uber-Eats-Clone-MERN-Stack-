@@ -9,7 +9,13 @@ import S3 from 'react-aws-s3';
 import NavbarRest from './RestaurantNavBar';
 import StateList from './Rstates';
 import server from '../WebConfig';
-export default class RestaurantProfile extends Component {
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { updateRestProfile } from '../../Redux/RestaurantProfile/RestProfileActionTypes';
+
+
+
+class RestaurantProfile extends Component {
 
     constructor(props) {
         super(props)
@@ -31,6 +37,14 @@ export default class RestaurantProfile extends Component {
         }
     }
     
+    static mapStateToProps = state =>
+    {
+        return {Profile: state.values}
+    }
+    static mapDispatchtoProps = dispatch =>
+    {
+        return bindActionCreators({updateRestProfile},dispatch)
+    }
 
     componentDidMount(props)
     {
@@ -61,7 +75,7 @@ export default class RestaurantProfile extends Component {
                         r_address:res.data[0].r_address
                       }
                       )
-                
+                    
                     //  console.log(this.state)          
             }
             )
@@ -115,7 +129,18 @@ export default class RestaurantProfile extends Component {
             {
 
                     alert("Profile Update success")
-                   
+                    let values = {
+                        r_name :e.r_name,
+                        r_email: e.r_email,
+                        r_number:e.r_number,
+                        r_county:e.r_county,
+                        r_opentime:e.r_opentime,
+                        r_closetime:e.r_closetime,
+                        del_type:e.del_type,
+                        r_address:e.r_address
+
+                    }
+                   this.props.updateRestProfile(values)
             })
     }
 
@@ -144,7 +169,7 @@ export default class RestaurantProfile extends Component {
                 r_state:Yup.string("Enter the state").max(2,"Maximum of two characters"),
                 r_county:Yup.string("Enter the county").max(30,"Limit the county name to 30 characters"),
                 r_address:Yup.string("Enter the address").max(100,"Please limit the address to 100 characters"),
-                r_number:Yup.string("Enter the contact number").max(10,"Enter Valid Number").matches(/^[0-9]*$/,"Enter Valid Number").min(10,"Enter Valid Number")
+                r_number:Yup.string("Enter the contact number").max(10,"Enter Valid Number").matches(/^[0-9]*$/,"Enter Valid Number").min(10,"Enter Valid Number").required("Please enter your contact number")
             }
         )
 
@@ -268,3 +293,5 @@ export default class RestaurantProfile extends Component {
         )
     }
 }
+
+export default connect(RestaurantProfile.mapStateToProps,RestaurantProfile.mapDispatchtoProps)(RestaurantProfile)

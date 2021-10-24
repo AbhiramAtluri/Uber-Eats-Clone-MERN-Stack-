@@ -40,6 +40,7 @@ import { addCart } from '../../Redux/CartReducerfile/Cartactions';
 import { removeCart } from '../../Redux/CartReducerfile/Cartactions';
 import { addRname } from '../../Redux/CartReducerfile/Cartactions';
 import { removeRname,addDelType,removeDelType } from '../../Redux/CartReducerfile/Cartactions';
+import { setCurrentDishList } from '../../Redux/DishesReduxFile/DishActions';
 
 export class RestaurantLanding extends Component {
 
@@ -82,7 +83,7 @@ export class RestaurantLanding extends Component {
       }
       static mapDispatchtoProps = dispatch =>
       {
-          return bindActionCreators({login,logoff,addCart,removeCart,addRname,removeRname,addDelType,removeDelType},dispatch)
+          return bindActionCreators({login,logoff,addCart,removeCart,addRname,removeRname,addDelType,removeDelType,setCurrentDishList},dispatch)
       }
 
     componentDidMount(props) {
@@ -178,7 +179,11 @@ export class RestaurantLanding extends Component {
                     //Dish data gets collected in below then function
                 ).then(
                     res => {
-
+                           
+                         let values = {
+                             dishlist:[...(res.data)]
+                         }
+                         this.props.setCurrentDishList(values)
                         this.setState(
                             {
                                 dishlist: [...(res.data)]
@@ -186,6 +191,7 @@ export class RestaurantLanding extends Component {
                         )
                       
                     }
+
                 )
 
             }

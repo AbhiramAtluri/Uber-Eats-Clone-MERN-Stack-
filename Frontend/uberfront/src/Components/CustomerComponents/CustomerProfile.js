@@ -10,6 +10,11 @@ import config from "../S3upload"
 import S3 from 'react-aws-s3';
 import NavbarCust from './CustomerNavBar';
 import server from '../WebConfig';
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { updateCustProfile } from '../../Redux/CustomerProfile/CustomerProfileActions';
+
+
 export class CustomerProfile extends Component {
 
 
@@ -34,6 +39,15 @@ export class CustomerProfile extends Component {
 
 
         }
+    }
+
+    static mapStateToProps = state =>
+    {
+        return {CustomerProfile: state.values}
+    }
+    static mapDispatchtoProps = dispatch =>
+    {
+        return bindActionCreators({updateCustProfile},dispatch)
     }
 
 
@@ -177,10 +191,27 @@ export class CustomerProfile extends Component {
                 c_number: e.c_number
             }
         ).then(res => {
+            
+          let values = {
+            c_id: this.state.c_id,
+            c_email: e.c_email,
+            c_city: e.c_city,
+            c_name: e.c_name,
+            c_nickname: e.c_nickname,
+            c_profilepic: this.state.c_profilepic,
+            c_state: e.c_state,
+            c_county: e.c_county,
+            c_country: e.c_country,
+            c_description: e.c_description,
+            c_dob: e.c_dob,
+            c_number: e.c_number
+          }
+          
+          this.props.updateCustProfile(values)
 
             console.log(res)
             alert("Profile Updation Successfull")
-
+            
         })
     }
 
@@ -352,4 +383,4 @@ export class CustomerProfile extends Component {
     }
 }
 
-export default CustomerProfile
+export default  connect(CustomerProfile.mapStateToProps,CustomerProfile.mapDispatchtoProps)(CustomerProfile)

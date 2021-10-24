@@ -7,10 +7,11 @@ import config from "../S3upload"
 import S3 from 'react-aws-s3';
 import NavbarRest from './RestaurantNavBar';
 import server from '../WebConfig';
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import {NewAddedDish} from '../../Redux/DishesReduxFile/DishActions';
 
-
-
-export default class AddDish extends Component {
+ class AddDish extends Component {
 
     constructor(props) {
         super(props)
@@ -22,6 +23,18 @@ export default class AddDish extends Component {
              
         }
     }
+
+
+    static mapStateToProps = state =>
+    {
+        return {Rest: state.values}
+    }
+    static mapDispatchtoProps = dispatch =>
+    {
+        return bindActionCreators({NewAddedDish},dispatch)
+    }
+
+
 
     componentDidMount(props)
     {
@@ -51,8 +64,19 @@ export default class AddDish extends Component {
            
         }).then(res =>
             {alert("Dish added Successfully")
-            
-              window.location.reload()
+               
+            let value = {
+                dish:[{r_id:this.state.r_id,
+                    d_name:e.d_name,
+                    d_price:e.d_price,
+                    d_category:e.d_category,
+                    d_description:e.d_description,
+                    d_picture:this.state.d_picture,
+                    d_type:e.d_type}]
+            }
+            this.props.NewAddedDish(value)
+
+              
              }
             )
         .catch(err=>{console.log(err)})
@@ -186,3 +210,5 @@ export default class AddDish extends Component {
         )
     }
 }
+
+export default   connect(AddDish.mapStateToProps,AddDish.mapDispatchtoProps)(AddDish)

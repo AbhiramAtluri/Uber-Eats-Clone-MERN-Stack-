@@ -20,3 +20,14 @@ export const logoff = ()=>
   }
 
 }
+export const Set_R_Orders= (data)=>{
+
+   return{
+      type:actions.R_ORDERS,
+      payload:
+      {
+         values:data
+      }
+   }
+
+}
