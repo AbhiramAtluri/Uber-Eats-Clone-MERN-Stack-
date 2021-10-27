@@ -18,7 +18,6 @@ app.set('view engine', 'jade');
 app.set('views', path.join(__dirname, 'views'));
 
 
-
 app.use(cors({origin:`http://${ipaddress}:3000`,credentials:true}))
 app.use(logger('dev'));
 app.use(express.json());
@@ -35,11 +34,37 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   saveUninitialized:false
 // }))
 
-
+const mongoose = require('mongoose');
 
 app.use('/', indexRouter);
 app.use('/Restaurant', RestRouter);
 app.use('/customer',custrouter)
+
+
+
+const { mongoDB } = require('./config');
+
+
+
+
+var options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  maxPoolSize:500
+
+};
+
+
+mongoose.connect(mongoDB, options, (err, res) => {
+    if (err) {
+        console.log(err);
+        console.log(`MongoDB Connection Failed`);
+    } else {
+        console.log(`MongoDB Connected`);
+    }
+ 
+});
+
 
 
 // catch 404 and forward to error handler

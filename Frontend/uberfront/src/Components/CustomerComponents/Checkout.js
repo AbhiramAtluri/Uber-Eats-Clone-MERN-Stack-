@@ -22,9 +22,11 @@ import DialogActions from '@mui/material/DialogActions';
 import  { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { clearCart } from '../../Redux/CartReducerfile/Cartactions';
-import { placed_order } from '../../Redux/CustomerLoginandReg/CustomerActions';
+import { placed_order,add_Instructions } from '../../Redux/CustomerLoginandReg/CustomerActions';
 import NavbarCust from './CustomerNavBar';
 import server from '../WebConfig';
+
+
 
  class Checkout extends Component {
 
@@ -48,7 +50,9 @@ import server from '../WebConfig';
             Selected_Address:"",
             open_dialog:false,
             redirect:false,
-            r_name:""
+            r_name:"",
+            openAddInstructions:false,
+            instructions:""
             
         }
     }
@@ -537,8 +541,40 @@ import server from '../WebConfig';
         })
     }
 
+    handleAddInstructions = ()=>
+    {
+        this.setState(
+            {
+                openAddInstructions:true
+            }
+        )
+    }
+    handleOnAddClose = ()=>
+    {
+        this.setState(
+            {
+                openAddInstructions:false
+            })
+    }
+
+    handleAddInstSubmit = (e)=>
+       {
+          e.preventDefault()  
+         console.log(e.target.instructions.value)
+         this.setState(
+             {
+                 instructions:e.target.instructions.value
+             }
+         )
+         let values = {
+             instructions:e.target.instructions.value
+         }
+        this.props.add_Instructions(values)
+
+       }
 
     render() {
+        console.log(this.state)
 
         const initialValues = {
             d_name: this.state.c_name,
@@ -730,6 +766,9 @@ import server from '../WebConfig';
                                                 <div className="col-md-3"  >
                                                     <center>  <h5>{this.state.total_price}$</h5> </center>
                                                 </div>
+                                                <div className="col-md-5">
+                                                  <button style={{marginLeft:"92px",height:"35px"}} onClick={this.handleAddInstructions} className="btn btn-primary">Add Instructions</button> 
+                                                 </div>   
                                             </div>
                                             {this.state.del_type == "s_both"?
                                             <div className="col-md-12" style={{paddingTop:"15px"}} >
@@ -765,7 +804,24 @@ import server from '../WebConfig';
                    }
 
                 </div>
-                
+                {this.state.openAddInstructions == true?<div>
+                 <Dialog open={this.state.openAddInstructions} onClose={this.handleOnAddClose} fullWidth={true}  >
+                 <DialogTitle>
+                 <center> <h5>Add your instructions</h5></center>
+                 </DialogTitle>
+                 <DialogContent>
+                    <center>
+                        <form onSubmit={e=>{this.handleAddInstSubmit(e)}} >
+                        <textarea name="instructions" style={{width:"100%"}}></textarea>
+                         <button className="btn btn-primary" type="submit" >Add instructions</button> 
+                        </form>
+                    </center>                              
+
+                 </DialogContent>
+                 </Dialog>
+                </div>:""
+
+                }
             </div>
         )
     }

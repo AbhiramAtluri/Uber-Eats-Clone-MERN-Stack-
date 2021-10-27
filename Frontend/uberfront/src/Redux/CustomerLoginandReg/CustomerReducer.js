@@ -9,8 +9,8 @@ const INITIAL_C_LOGIN_STATE =
   c_id:null,
   FavoriteList:null,
   CustomerOrderList:null,
-  OrderPlacedInThisSession:[]
-
+  OrderPlacedInThisSession:[],
+  instructions:""
 
 }
 
@@ -45,6 +45,12 @@ case actions.ORDERS_PLACED_IN_CURRENT_SESSION:
   ...state,
   OrderPlacedInThisSession:[...state.OrderPlacedInThisSession,action.payload.values]
 }
+case actions.ADD_INSTRUCTIONS:
+return{
+  ...state,
+  instructions:action.payload.values.instructions
+}
+
 
 default:
         return state

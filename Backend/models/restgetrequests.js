@@ -1,6 +1,10 @@
 const db = require("../database/db")
 const path = require('path')
 const url = require('url')
+const Restaurant_Registration = require('../MongoModels/RestaurantModel');
+const Customer_Registration_Model = require("../MongoModels/CustomerModel");
+const FavouriteModel = require("../MongoModels/CustomerFavouritesModel");
+const DishModel = require("../MongoModels/Dishes");
 
 exports.getRestaurantDetails = async function(req,res)
 {
@@ -44,11 +48,19 @@ exports.getRestaurantDetails = async function(req,res)
 exports.getAllRestaurants = async function(req,res)
 {
 
-db.query("Select * from res_reg ").then(resp=>{
+// db.query("Select * from res_reg ").then(resp=>{
 
-  res.json(resp[0])
+//   res.json(resp[0])
 
+// })
+Restaurant_Registration.find({},(err,resp)=>
+{
+    if(resp)
+    {
+        res.json(resp)
+    }
 })
+
 }
 
 //GET ALL RESTAURANTS FROM NEAREST LOCATION
@@ -62,28 +74,51 @@ exports.getAllnearestRestaurants = async function(req,res)
   else
   {
    
-console.log(req.body.c_county)
-    db.query("select * from res_reg where r_county =?",[req.body.c_county])
-    .then(
-        resp=>{
-            if(resp[0].length>=1)
-            {
-            res.json(resp[0])
-            }
-            else
-            {
-                res.json(
-                    {
-                        message:"NoLoc"
-                    })
-            }
-        }
-        )
-    .catch(err=>{
-        console.log(err)
-    })
+// console.log(req.body.c_county)
+//     db.query("select * from res_reg where r_county =?",[req.body.c_county])
+//     .then(
+//         resp=>{
+//             if(resp[0].length>=1)
+//             {
+//             res.json(resp[0])
+//             }
+//             else
+//             {
+//                 res.json(
+//                     {
+//                         message:"NoLoc"
+//                     })
+//             }
+//         }
+//         )
+//     .catch(err=>{
+//         console.log(err)
+//     })
+ Restaurant_Registration.find({r_county:req.body.c_county},(err,rest)=>
+ {
+     if(rest)
+     {
+         console.log(rest)
+         res.json(rest)
+     }else
+     {
+         res.json({
+             message:"NoLoc"
+         })
+     }
+
+ })
+
+
 
 }
+
+
+
+
+
+
+
 } 
 
 //GET RESTERAUNTS AWAY FROM LOCATION
@@ -93,12 +128,21 @@ exports.getFarAwayRestaurants = async function(req,res)
 {
     console.log(req.body.c_county)
 
-    db.query("select * from res_reg where r_county !=?",[req.body.c_county])
-    .then(
-     resp=>
-     {
-         res.json(resp[0])
-     }
+    // db.query("select * from res_reg where r_county !=?",[req.body.c_county])
+    // .then(
+    //  resp=>
+    //  {
+    //      res.json(resp[0])
+    //  }
+    // )
+
+    Restaurant_Registration.find({r_county :{$ne:req.body.c_county}},(err,resp)=>
+    {     
+             if(resp)
+             {   console.log(resp)
+                 res.json(resp)
+             }
+    }
     )
 
 }
@@ -109,26 +153,45 @@ exports.getRestaurantsBasedOnDish = async function(req,res)
 
   {
       console.log(req.body.s_dish)
-      let s_dish = '%' + req.body.s_dish+ '%'
+      let s_dish = /req.body.s_dish/
 
-  db.query("SELECT  *  FROM res_reg WHERE r_id IN(SELECT r_id from dishes where d_name LIKE N?)",[s_dish] )
-  .then(resp=>
+//   db.query("SELECT  *  FROM res_reg WHERE r_id IN(SELECT r_id from dishes where d_name LIKE N?)",[s_dish] )
+//   .then(resp=>
+//     {
+
+//       if(resp[0].length>1)
+//       {  
+//       res.json(resp[0])
+//       }
+//       else
+//       {
+//           res.json({
+//               message : "NoDish"
+//           })
+//       }
+
+
+//     }
+//     ).catch(err=>{console.log(err)})
+
+var regex = new RegExp(req.body.s_dish)
+
+console.log(regex)
+    DishModel.find({d_name:regex},(err,resp)=>
     {
-
-      if(resp[0].length>1)
-      {  
-      res.json(resp[0])
-      }
-      else
-      {
-          res.json({
-              message : "NoDish"
-          })
-      }
+        console.log(resp)
+        if(resp)
+        {
+            res.json(resp)
+        }
+    })
 
 
-    }
-    ).catch(err=>{console.log(err)})
+
+
+
+
+
 }
 
 exports.getRestaurantsBasedonVegFilter = async function(req,res)
@@ -147,6 +210,13 @@ exports.getRestaurantsBasedonVegFilter = async function(req,res)
         }
         )
         .catch(err=>{console.log(err)})
+
+     DishModel.find({d_type:req.body.d_type},(err,resp)=>
+     {
+         console.log(resp)
+     })
+
+
 }
 
 
@@ -156,18 +226,44 @@ exports.getRestaurantsBasedonVegFilter = async function(req,res)
 exports.AddRestaurantToFavourites = async function(req,res)
 {
 
-    db.query("INSERT INTO c_fav(c_id,r_id) VALUES(?,?)",[req.body.c_id,req.body.r_id])
-    .then(resp=>
+    // db.query("INSERT INTO c_fav(c_id,r_id) VALUES(?,?)",[req.body.c_id,req.body.r_id])
+    // .then(resp=>
+    //     {
+    //         res.json(resp)
+    //     })
+    //  .catch
+    //  (
+    //      err=>{
+    //          res.json(err)
+    //      }
+    //  )   
+    var newFav = new FavouriteModel(
         {
-            res.json(resp)
-        })
-     .catch
-     (
-         err=>{
-             res.json(err)
-         }
-     )   
+            c_id:req.body.c_id,
+            r_id:req.body.r_id
 
+        }
+       
+        
+        )
+    //    FavouriteModel.findOne({},(err,fav)=>
+    //    {
+        newFav.save((err,data)=>
+        {  if(err)
+            {
+                res.send(err)
+            }else
+            {
+                console.log(data)
+                res.send(data)
+            }
+            
+        })
+
+
+       
+
+      
 
 }
 
@@ -175,18 +271,30 @@ exports.AddRestaurantToFavourites = async function(req,res)
 
 exports.GetAllTheFavRestaurants = async function(req,res)
 {
-   db.query("SELECT  t1.r_name, t1.r_state,t1.r_email,t1.r_county,t1.r_opentime,t1.r_closetime,t1.r_id,t1.r_picture FROM res_reg t1 INNER JOIN  c_fav t2 ON t1.r_id=t2.r_id WHERE t2.c_id=? GROUP BY t2.r_id  ",[req.body.c_id])
-   .then(resp=>
-    {
-       res.json(resp[0])
+//    db.query("SELECT  t1.r_name, t1.r_state,t1.r_email,t1.r_county,t1.r_opentime,t1.r_closetime,t1.r_id,t1.r_picture FROM res_reg t1 INNER JOIN  c_fav t2 ON t1.r_id=t2.r_id WHERE t2.c_id=? GROUP BY t2.r_id  ",[req.body.c_id])
+//    .then(resp=>
+//     {
+//        res.json(resp[0])
 
+//     }
+//     )
+//     .catch(err =>
+//         {
+//             res.json(err)
+//         }
+//         )
+console.log(req.body.c_id)
+FavouriteModel.find({c_id:req.body.c_id},(err,data)=>
+{  if(data)
+    {
+    res.json(data)
     }
-    )
-    .catch(err =>
-        {
-            res.json(err)
-        }
-        )
+    if(err)
+    {
+        console.log(err)
+    }
+}
+)
 
 
 }
@@ -198,9 +306,22 @@ exports.GetFavResterauntIds = async function(req,res)
 {
 // console.log("in fav rest")
 //   console.log(req.body.c_id)  
-  db.query("SELECT r_id FROM c_fav WHERE c_id =?",[req.body.c_id])
-  .then(resp=>{res.json(resp[0])})
-  .catch(err=>{res.json(err)})
+//   db.query("SELECT r_id FROM c_fav WHERE c_id =?",[req.body.c_id])
+//   .then(resp=>{res.json(resp[0])})
+//   .catch(err=>{res.json(err)})
+console.log("hey")
+  FavouriteModel.find({c_id:req.body.c_id},(err,data)=>
+{  if(data)
+    {
+        //console.log(data)
+    res.json(data)
+    }
+    if(err)
+    {
+        console.log(err)
+    }
+}
+)
 
 
 }

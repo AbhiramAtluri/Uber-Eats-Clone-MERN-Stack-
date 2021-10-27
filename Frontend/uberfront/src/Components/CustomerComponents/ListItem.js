@@ -110,9 +110,12 @@ console.log(this.state)
                     <div className = "col-md-4">
                     <p style={{marginTop:"7px"}}>Status: {this.props.order.o_status==null?"Order Received":this.props.order.o_status}</p>
                     </div>
-                    <div className = "col-md-4">
+                    <div className = "col-md-2">
                         <button className="btn btn-primary" onClick={this.handleOnClick}   >View Reciept</button>
                      </div>
+                     <div className="col-md-2">
+                     <button className="btn btn-primary" >Cancel</button>
+                      </div> 
                  </div>
                 {this.state.popup_display == true?
                <Dialog open={this.state.popup_display} onClose={this.handleOnclose} fullWidth={true} >

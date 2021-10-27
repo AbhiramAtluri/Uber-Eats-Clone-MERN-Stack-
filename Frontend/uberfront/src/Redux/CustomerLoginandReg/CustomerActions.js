@@ -61,6 +61,21 @@ return(
 
 }
 
+export const add_Instructions = (data)=>
+{
+
+return(
+  {
+    type:actions.ADD_INSTRUCTIONS,
+    payload:
+    {
+      values:data
+    }
+  }
+)
+
+}
+
 
 
 
