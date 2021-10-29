@@ -55,15 +55,15 @@ var options = {
 };
 
 
-mongoose.connect(mongoDB, options, (err, res) => {
-    if (err) {
-        console.log(err);
-        console.log(`MongoDB Connection Failed`);
-    } else {
-        console.log(`MongoDB Connected`);
-    }
+// mongoose.connect(mongoDB, options, (err, res) => {
+//     if (err) {
+//         console.log(err);
+//         console.log(`MongoDB Connection Failed`);
+//     } else {
+//         console.log(`MongoDB Connected`);
+//     }
  
-});
+// });
 
 
 
