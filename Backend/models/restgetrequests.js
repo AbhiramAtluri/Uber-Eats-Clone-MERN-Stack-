@@ -197,23 +197,32 @@ console.log(regex)
 exports.getRestaurantsBasedonVegFilter = async function(req,res)
 {
     console.log(req.body.d_type)
-
+    console.log("In Here")
     let d_type = req.body.d_type
-    db.query("select  r_id from res_reg where r_id IN(SELECT r_id from dishes where d_type = ?)",[d_type])
-    .then(resp=>
-        {
-            console.log(resp)
-            res.json
-            (
-                    resp[0]
-            )
-        }
-        )
-        .catch(err=>{console.log(err)})
+    
 
      DishModel.find({d_type:req.body.d_type},(err,resp)=>
-     {
+     {    console.log("sdad")
+         if(resp)
+         {
          console.log(resp)
+
+        let r_list = [];
+        for(let a in resp) 
+        {
+            r_list.push(resp[a].r_id)
+        }
+        
+        console.log(r_list)
+
+         }
+         else
+         {
+             console.log("Error")
+         }
+        // Restaurant_Registration.find({})
+        
+
      })
 
 

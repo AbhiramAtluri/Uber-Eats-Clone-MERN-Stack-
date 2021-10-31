@@ -28,11 +28,11 @@ app.use(fileupload())
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use(session({
-//   secret: 'cmpe273uber',
-//   resave:false,
-//   saveUninitialized:false
-// }))
+app.use(session({
+  secret: 'cmpe273uber',
+  resave:false,
+  saveUninitialized:false
+}))
 
 const mongoose = require('mongoose');
 
@@ -55,15 +55,15 @@ var options = {
 };
 
 
-// mongoose.connect(mongoDB, options, (err, res) => {
-//     if (err) {
-//         console.log(err);
-//         console.log(`MongoDB Connection Failed`);
-//     } else {
-//         console.log(`MongoDB Connected`);
-//     }
+mongoose.connect(mongoDB, options, (err, res) => {
+    if (err) {
+        console.log(err);
+        console.log(`MongoDB Connection Failed`);
+    } else {
+        console.log(`MongoDB Connected`);
+    }
  
-// });
+});
 
 
 

@@ -29,7 +29,13 @@ var GetAllRestaurants = require("./Services/GetAllRestaurants")
 var getRestaurantDetails = require("./Services/GetRestaurantDetailsFromEmail")
 var AddRestToFav = require("./Services/AddRestToFav")
 var GetFavRest = require("./Services/GetFavRest")
-var getAllnearestRestaurants = require('./Services/getAllnearestRestaurants')
+var GetAllNearestRestaurants1 = require('./Services/GetNearestRestaurants1')
+var GetFarAwayRestaurants = require('./Services/GetFarAwayRestaurants');
+var GetRestaurantsBasedOnDish = require('./Services/GetRestaurantsBasedOnDish');
+var GetRestaurantsBasedonVegFilter = require('./Services/GetRestarantsBasedonDishTypeFilter')
+var FetchCustomerDetailsById = require('./Services/FetchCustomerDetailsById')
+
+
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -90,27 +96,32 @@ var options = {
 //second argument is a function that will handle this topic request
  //handleTopicRequest("post_book",Books)
  handleTopicRequest("rest_reg",rest_reg);
- handleTopicRequest("cust_log",cust_log);
- handleTopicRequest("cust_reg",cust_reg);
- handleTopicRequest("rest_log",rest_log);
- handleTopicRequest("updateRestaurantProfile",updateRestaurantProfile);
- handleTopicRequest("getRestaurantProfile",getRestaurantProfile);
- handleTopicRequest("getCustomerProfileDetails",getCustomerProfileDetails);
- handleTopicRequest("updateCustomerProfile",updateCustomerProfile);
- handleTopicRequest("getCustomerProfileBasedOnCid",getCustomerProfileBasedOnCid);
- handleTopicRequest("AddDish",AddDish);
- handleTopicRequest("EditDish",EditDish);
- handleTopicRequest("AddDeliveryAddress",AddDeliveryAddress);
- handleTopicRequest("FetchDelAddress",FetchDelAddress);
- handleTopicRequest("FetchDelAddressInCustomerOrders",FetchDelAddressInCustomerOrders);
- handleTopicRequest("PlaceOrder",PlaceOrder);
- handleTopicRequest("FetchCustNumber",FetchCustNumber);
- handleTopicRequest("FetchOrders",fetchOrders);
- handleTopicRequest("UpdateOrderStatus",UpdateOrderStatus);
- handleTopicRequest("FetchRestaurantDetailsById",FetchRestaurantDetailsById);
- handleTopicRequest("FetchRestaurantNameFromCustId",FetchRestaurantNameFromCustId);
- handleTopicRequest("GetAllRestaurants",GetAllRestaurants);
- handleTopicRequest("GetRestaurantDetailsFromEmail",getRestaurantDetails);
- handleTopicRequest("AddRestToFav",AddRestToFav);
- handleTopicRequest("GetFavRest",GetFavRest);
- handleTopicRequest("getAllnearestRestaurants",getAllnearestRestaurants)
+  handleTopicRequest("cust_log",cust_log);
+  handleTopicRequest("cust_reg",cust_reg);
+  handleTopicRequest("rest_log",rest_log);
+  handleTopicRequest("updateRestaurantProfile",updateRestaurantProfile);
+  handleTopicRequest("getRestaurantProfile",getRestaurantProfile);
+  handleTopicRequest("getCustomerProfileDetails",getCustomerProfileDetails);
+  handleTopicRequest("updateCustomerProfile",updateCustomerProfile);
+  handleTopicRequest("getCustomerProfileBasedOnCid",getCustomerProfileBasedOnCid);
+  handleTopicRequest("AddDish",AddDish);
+  handleTopicRequest("EditDish",EditDish);
+  handleTopicRequest("AddDeliveryAddress",AddDeliveryAddress);
+   handleTopicRequest("FetchDelAddress",FetchDelAddress);
+   handleTopicRequest("FetchDelAddressInCustomerOrders",FetchDelAddressInCustomerOrders);
+   handleTopicRequest("PlaceOrder",PlaceOrder);
+   handleTopicRequest("FetchCustNumber",FetchCustNumber);
+   handleTopicRequest("FetchOrders",fetchOrders);
+   handleTopicRequest("UpdateOrderStatus",UpdateOrderStatus);
+   handleTopicRequest("FetchRestaurantDetailsById",FetchRestaurantDetailsById);
+   handleTopicRequest("FetchRestaurantNameFromCustId",FetchRestaurantNameFromCustId);
+   handleTopicRequest("GetAllRestaurants",GetAllRestaurants);
+   handleTopicRequest("GetRestaurantDetailsFromEmail",getRestaurantDetails);
+   handleTopicRequest("AddRestToFav",AddRestToFav);
+   handleTopicRequest("GetFavRest",GetFavRest);
+// handleTopicRequest("getAllnearestRestaurants",getAllnearestRestaurants);
+   handleTopicRequest("GetFarAwayRestaurants",GetFarAwayRestaurants);
+   handleTopicRequest("getAllNearestRestaurants1",GetAllNearestRestaurants1);
+   handleTopicRequest("GetRestaurantsBasedOnDish",GetRestaurantsBasedOnDish);
+   handleTopicRequest("GetRestarantsBasedonDishTypeFilter",GetRestaurantsBasedonVegFilter);
+   handleTopicRequest("FetchCustomerDetailsById",FetchCustomerDetailsById);

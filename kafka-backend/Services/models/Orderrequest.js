@@ -33,68 +33,50 @@ const OrderModel =require('../MongoModels/OrderModel')
 
 // }
 
-exports.fetchRestaurantDetailsbyId = async function(msg,callback)
+exports.fetchCustomerDetailsbyId = async function(msg,callback)
 
 {
-    let req = {body:{...msg}}
-
-let r_id = req.body.r_id
-
-// db.query("SELECT t2.r_name,t1.* FROM uber_eats.orders t1 inner join res_reg t2 on t1.r_id=t2.r_id where t1.r_id=?",[r_id])
-// .then(resp =>
-//     {
-//           res.json(resp[0])
-//     }
-//     )
-// .catch(err=>{res.json(err)})
-Restaurant_Registration.find({_id:r_id},(err,resp)=>
-{
-    if(resp)
-    {
-       // res.json(resp)
-        callback(null,resp)
-    }
-}
-)
-
-
-}
-
-
-
-exports.fetchCustomerDetailsbyId = async function(req,res)
-
-{
+console.log("In Cust by id")
+let req = {body:{...msg}};
 
 let c_id = req.body.c_id
 
-db.query("SELECT t2.c_name,t1.* FROM uber_eats.orders t1 inner join cust_reg t2 on t1.c_id=t2.c_id where t1.c_id=?",[c_id])
-.then(resp =>
-    {
-        //   res.json(resp[0])
-        resp = Object.values(JSON.parse(JSON.stringify(resp)));
-      //   res.json(resp[0])
-        for(a in resp[0])
-        {
-          db.query("SELECT r_name from res_reg where r_id =?",[resp[0][a].r_id])
-            .then(response=>
-                {
-                    response = Object.values(JSON.parse(JSON.stringify(response)));
-                    // console.log(response[0])
-                    resp[0][a].r_name = response[0][0].r_name
-                    console.log("dta")
-                    console.log(resp[0][a])
-                }
-            )
-        }
 
-      console.log(x)
+Customer_Registration_Model.findOne({c_id:c_id},(err,resp)=>
+{
+    if(resp)
+    {
+
+    console.log(resp)
+    OrderModel.find({c_id:resp._id}).lean().exec((err,respa)=>
+    {
+     if(respa)
+     {
+         console.log(respa);
+      
+
+     for(a in respa)
+     {
+         respa[a].c_name=resp.c_name;
+     }
+
+      //res.json(respa)
+      callback(null,respa)
+     }  
+      
     }
     )
-.catch(err=>{res.json(err)})
+    
+
+    }
+})
 
 
 }
+
+
+
+
 
 
 

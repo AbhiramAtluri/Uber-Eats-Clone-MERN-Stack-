@@ -73,10 +73,11 @@ exports.getAllnearestRestaurants = async function(msg,callback)
 {
   
   let req = {body:{...msg}}
-
+  console.log("In Nearest Restaurants");
   if(req.body.c_county.length <1)
   {
-      res.json("c_profile_update")
+     // res.json("c_profile_update")
+     callback(null,"c_profile_update");
   }
   else
   {
@@ -113,25 +114,19 @@ exports.getAllnearestRestaurants = async function(msg,callback)
 
 //GET RESTERAUNTS AWAY FROM LOCATION
 
-exports.getFarAwayRestaurants = async function(req,res)
+exports.getFarAwayRestaurants = async function(msg,callback)
 
 {
+   let req = {body:{...msg}};
+
     console.log(req.body.c_county)
 
-    // db.query("select * from res_reg where r_county !=?",[req.body.c_county])
-    // .then(
-    //  resp=>
-    //  {
-    //      res.json(resp[0])
-    //  }
-    // )
+ 
 
     Restaurant_Registration.find({r_county :{$ne:req.body.c_county}},(err,resp)=>
     {     
-             if(resp)
-             {   console.log(resp)
-                 res.json(resp)
-             }
+           
+             callback(null,resp)
     }
     )
 
@@ -139,30 +134,17 @@ exports.getFarAwayRestaurants = async function(req,res)
 
 //GET RESTAURANT BASED ON DISH
 
-exports.getRestaurantsBasedOnDish = async function(req,res)
+exports.getRestaurantsBasedOnDish = async function(msg,callback)
 
   {
+
+
+   let req = {body:{...msg}};
+
       console.log(req.body.s_dish)
       let s_dish = /req.body.s_dish/
 
-//   db.query("SELECT  *  FROM res_reg WHERE r_id IN(SELECT r_id from dishes where d_name LIKE N?)",[s_dish] )
-//   .then(resp=>
-//     {
 
-//       if(resp[0].length>1)
-//       {  
-//       res.json(resp[0])
-//       }
-//       else
-//       {
-//           res.json({
-//               message : "NoDish"
-//           })
-//       }
-
-
-//     }
-//     ).catch(err=>{console.log(err)})
 
 var regex = new RegExp(req.body.s_dish)
 
@@ -172,7 +154,20 @@ console.log(regex)
         console.log(resp)
         if(resp)
         {
-            res.json(resp)
+            //res.json(resp)
+            if(resp.lenght>0)
+            {
+            callback(null,resp);
+            }
+            else
+            {
+                callback(null,{message:"NoDish"});
+            }
+        }
+        else
+        {
+            //res.json({message:"NoDish"})
+            callback(null,{message:"NoDish"});
         }
     })
 
@@ -184,26 +179,40 @@ console.log(regex)
 
 }
 
-exports.getRestaurantsBasedonVegFilter = async function(req,res)
+exports.getRestaurantsBasedonVegFilter = async function(msg,callback)
 {
-    console.log(req.body.d_type)
 
+
+   let req = {body:{...msg}};
+
+    console.log(req.body.d_type)
+    console.log("In Here")
     let d_type = req.body.d_type
-    db.query("select  r_id from res_reg where r_id IN(SELECT r_id from dishes where d_type = ?)",[d_type])
-    .then(resp=>
-        {
-            console.log(resp)
-            res.json
-            (
-                    resp[0]
-            )
-        }
-        )
-        .catch(err=>{console.log(err)})
+    
 
      DishModel.find({d_type:req.body.d_type},(err,resp)=>
-     {
+     {    console.log("sdad")
+         if(resp)
+         {
          console.log(resp)
+
+        let r_list = [];
+        for(let a in resp) 
+        {
+            r_list.push(resp[a].r_id)
+        }
+        
+        console.log(r_list)
+        callback(null,r_list)
+
+         }
+         else
+         {
+             console.log("Error")
+         }
+        // Restaurant_Registration.find({})
+        
+
      })
 
 

@@ -290,7 +290,8 @@ router.post('/GetFavRest',(req,res)=>
 //router.post('/GetAllNearestRestaurants', restget.getAllnearestRestaurants)
 
 router.post('/GetAllNearestRestaurants', (req,res)=>{
-    kafka.make_request("GetAllNearestRestaurants",req.body,function(err,results)
+    console.log(req.body);
+    kafka.make_request("getAllNearestRestaurants1",req.body,function(err,results)
     {
         console.log("GetAllNearestRestaurants")
         if(err)
@@ -312,6 +313,92 @@ router.post('/GetAllNearestRestaurants', (req,res)=>{
     })
 
 })
+//router.post('/GetFarAwayRestaurants', restget.getFarAwayRestaurants)
+
+
+router.post('/GetFarAwayRestaurants',(req,res)=>
+{
+    console.log("Get Far Fav Restaurants")
+    console.log(req.body)
+    kafka.make_request("GetFarAwayRestaurants",req.body,function(err,results)
+    {
+        console.log("Get Far  Restaurants")
+        if(err)
+    {
+        console.log("Inside err");
+        res.json({
+            msg:"Err"
+        })
+    }else
+    {
+        console.log("Sending postman response Faraway")
+        res.json({
+            ...results
+        });
+        res.end();
+    }
+
+
+    })
+})
+//Get Restaurant based on dish
+// router.post('/GetRestaurantsBasedOnDish', restget.getRestaurantsBasedOnDish)
+router.post('/GetRestaurantsBasedOnDish', (req,res)=>
+{
+    console.log(req.body)
+    kafka.make_request("GetRestaurantsBasedOnDish",req.body,function(err,results)
+    {
+        console.log("Get Restaurants based on dish");
+        if(err)
+        {
+            console.log("Inside err");
+            res.json({
+                msg:"Err"
+            })
+        }else
+        {
+            console.log("Sending postman response after Get Restaurants based on dish")
+            res.json({
+                ...results
+            });
+            res.end();
+        }
+
+
+
+
+
+    })
+})
+
+//router.post('/GetRestarantsBasedonDishTypeFilter', restget.getRestaurantsBasedonVegFilter)
+
+router.post('/GetRestarantsBasedonDishTypeFilter', (req,res)=>
+{
+    console.log(req.body);
+    kafka.make_request("GetRestarantsBasedonDishTypeFilter",(req,res)=>
+    {
+        console.log("Get restaurant based  on dish type filter");
+
+        if(err)
+        {
+            console.log("Inside err");
+            res.json({
+                msg:"Err"
+            })
+        }else
+        {
+            console.log("Sending postman response after Get Restaurants based on dish")
+            res.json({
+                ...results
+            });
+            res.end();
+        }
+
+    })
+})
+
+
 
 
 
@@ -321,9 +408,9 @@ router.post('/GetAllNearestRestaurants', (req,res)=>{
 router.get('/GetAllDishes', dishrequests.getAllDishes)
 
 
-router.post('/GetFarAwayRestaurants', restget.getFarAwayRestaurants)
-router.post('/GetRestaurantsBasedOnDish', restget.getRestaurantsBasedOnDish)
-router.post('/GetRestarantsBasedonDishTypeFilter', restget.getRestaurantsBasedonVegFilter)
+// router.post('/GetFarAwayRestaurants', restget.getFarAwayRestaurants)
+
+
 //Adding Restaurant to favourites
 
 //router.post('/AddRestToFav', restget.AddRestaurantToFavourites)

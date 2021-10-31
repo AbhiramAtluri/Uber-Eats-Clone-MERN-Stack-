@@ -374,7 +374,32 @@ router.post('/FetchRestaurantNameFromCustId',(req,res)=>
     })
 })
 
+//router.post('/FetchCustomerDetailsById',Order.fetchCustomerDetailsbyId)
 
+router.post('/FetchCustomerDetailsById',(req,res)=>
+{
+ console.log("Fetch Customer details by id");
+ kafka.make_request("FetchCustomerDetailsById",req.body,function(err,results)
+ {
+    console.log(req.body)
+    if(err)
+    {
+        console.log("Inside err");
+        res.json({
+            msg:"Err"
+        })
+    }else
+    {
+        res.json({
+            results
+        });
+        
+    }
+
+ })
+
+}
+)
 
 
 
@@ -385,7 +410,7 @@ router.post('/FetchRestaurantNameFromCustId',(req,res)=>
 // router.post('/FetchOrdersForCustomer',Order.fetchOrdersForCustomerOrderPage)
 
 
- router.post('/FetchCustomerDetailsById',Order.fetchCustomerDetailsbyId)
+
 
 // router.post('/FetchRestaurantNameFromCustId',Order.FetchRestaurantNameFromCustId)
 
