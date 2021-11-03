@@ -97,6 +97,7 @@ const NavbarCustland = (props) =>
 
    const removeItemfromCart = async (d_name, d_price, d_id) => {
         console.log("hello")
+        d_price = parseFloat(d_price)
         let cartData = JSON.parse(sessionStorage.getItem("cartData"))
         console.log(cartData)
         let index = cartData.findIndex((item) => { return item.d_id == d_id })

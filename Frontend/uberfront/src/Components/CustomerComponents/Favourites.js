@@ -34,7 +34,7 @@ import { c_fav_list } from '../../Redux/CustomerLoginandReg/CustomerActions';
     componentDidMount(props) {
 
         //  axios.pos
-        axios.post(`${server}/Restaurant/GetFavRest`,
+        axios.post(`${server}/Restaurant/GetFavRestDetails`,
             {
                 c_id: this.props.location.state.c_id
             })
@@ -52,7 +52,7 @@ import { c_fav_list } from '../../Redux/CustomerLoginandReg/CustomerActions';
                }
 
                 this.props.c_fav_list(values)
-
+            console.log(values)
 
             }
             )

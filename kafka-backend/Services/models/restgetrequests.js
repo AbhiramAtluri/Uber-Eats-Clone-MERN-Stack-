@@ -8,42 +8,24 @@ const DishModel = require("../MongoModels/Dishes");
 
 exports.getRestaurantDetails = async function(msg,callback)
 {
-    
+    console.log("Get Restaurant Details by email service")
     console.log(msg) 
+    let r_email = msg.r_email;
 
 
-//     let r_email  = req.params['r_email']
+Restaurant_Registration.findOne({r_email:r_email},(err,resp)=>
+{
+  if(resp)
+  {
+   callback(null,resp);
+  }  
+
+}
+)
 
 
-//     db.query('SELECT * from res_reg where r_email = ?',[r_email]).then(
 
-//         resp =>
-//         {  
-//             resp = Object.values(JSON.parse(JSON.stringify(resp)));
-//              console.log(resp[0])
-//             console.log((resp[0])[0])
-//             res.send(
-//                 {
-//                     "r_name" :(resp[0])[0].r_name,
-//                     "r_id" : (resp[0])[0].r_id,
-//                     "r_picture" : (resp[0])[0].r_picture,
-//                     "r_description": (resp[0])[0].r_description,
-//                     "del_type":(resp[0])[0].del_type,
-//                     "r_address":(resp[0])[0].r_address,
-//                     "r_opentime":(resp[0])[0].r_opentime,
-//                     "r_closetime":(resp[0])[0].r_closetime,
-//                     "r_email":(resp[0])[0].r_email,
-//                     "r_number":(resp[0])[0].r_number
-//                 }
-//             )
-//         }
-//     ).catch(err=>{
-//         console.log(err)
-//     })
-    
-// //    console.log("hello rst details")
-// //     console.log(req.url)
-// //     console.log(req.params['r_email'])
+
 
 }
 
@@ -85,7 +67,7 @@ exports.getAllnearestRestaurants = async function(msg,callback)
 
  Restaurant_Registration.find({r_county:req.body.c_county},(err,rest)=>
  {
-     if(rest)
+     if(rest.length>0)
      {
          console.log(rest)
         // res.json(rest)
@@ -125,8 +107,15 @@ exports.getFarAwayRestaurants = async function(msg,callback)
 
     Restaurant_Registration.find({r_county :{$ne:req.body.c_county}},(err,resp)=>
     {     
-           
+            if(resp.length>0)
+            {
              callback(null,resp)
+            
+            }
+            else
+            {
+                callback({message:"NoLoc"})
+            }
     }
     )
 
@@ -154,15 +143,23 @@ console.log(regex)
         console.log(resp)
         if(resp)
         {
-            //res.json(resp)
-            if(resp.lenght>0)
+           
+            let r_idList = [];
+           if(resp.length>0)
+            {     
+           
+            for(a in resp)
             {
-            callback(null,resp);
+                r_idList.push(resp[a].r_id)
             }
-            else
+            console.log(r_idList)
+           
+            Restaurant_Registration.find({_id :{$in:r_idList}},(err,respa)=>
             {
-                callback(null,{message:"NoDish"});
-            }
+                callback(null,respa);
+            })
+        }
+
         }
         else
         {
@@ -182,13 +179,14 @@ console.log(regex)
 exports.getRestaurantsBasedonVegFilter = async function(msg,callback)
 {
 
-
+   
    let req = {body:{...msg}};
 
     console.log(req.body.d_type)
     console.log("In Here")
+    console.log(msg)
     let d_type = req.body.d_type
-    
+    console.log(d_type)
 
      DishModel.find({d_type:req.body.d_type},(err,resp)=>
      {    console.log("sdad")
@@ -203,7 +201,21 @@ exports.getRestaurantsBasedonVegFilter = async function(msg,callback)
         }
         
         console.log(r_list)
-        callback(null,r_list)
+
+        Restaurant_Registration.find({_id :{$in:r_list}},(err,respa)=>
+        {
+            if(respa)
+            {
+                console.log("rest details")
+                console.log(respa)
+             callback(null,respa)
+            }
+        })
+
+
+
+
+        // callback(null,r_list)
 
          }
          else
@@ -260,21 +272,33 @@ exports.AddRestaurantToFavourites = async function(msg,callback)
 
 //GETTING ALL THE FAVOURITE RESTAURANTS
 
-exports.GetAllTheFavRestaurants = async function(req,res)
+exports.GetAllTheFavRestaurantsDetails = async function(msg,callback)
 {
+console.log("In GetAllTheFavRestaurantsDetails ")
+let req = {body:{...msg}};
 
-console.log(req.body.c_id)
-FavouriteModel.find({c_id:req.body.c_id},(err,data)=>
-{  if(data)
+FavouriteModel.find({c_id:req.body.c_id}).lean().exec((err,data)=>
+{
+    if(data)
     {
-    res.json(data)
+        console.log(data)
+        let restlist = [];
+ 
+        for(a in data)
+      {
+          restlist.push(data[a].r_id)
+      }
+
+        Restaurant_Registration.find({_id:{$in:restlist}}).exec((err,dataa)=>
+        {
+        
+            // res.send(data)
+            callback(null,dataa)
+        })
+
+
     }
-    if(err)
-    {
-        console.log(err)
-    }
-}
-)
+})
 
 
 }

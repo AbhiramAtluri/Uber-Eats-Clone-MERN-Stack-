@@ -33,7 +33,7 @@ export default class ListItem extends Component {
     
 componentDidMount(props)
 {
-    console.log(this.props.order)
+    console.log(this.props.order.del_id)
     console.log(this.props.r_name)
 
     if(this.props.order !=null && this.props.order != undefined)
@@ -70,22 +70,26 @@ FetchDelAdd=()=>
   let add =""
  if(this.props.order.del_id!=null)
  {
+
   axios.post(`${server}/customer/FetchDelAddressInCustomerOrders`,
   {
     del_id:this.props.order.del_id
   }).then(res=>
     {
       console.log(res)
+      console.log(res.data)
       //  add = res.data[0].d_add_1
       //  if(res.data[0].d_add_1!=undefined && res.data[0].d_add_1!=undefined && res.data[0].d_zipcode!=undefined)
-      if(res.data!=undefined)
+      if(res.data[0]!=undefined)
        {
        this.setState(
          {
            del_add: res.data[0].d_add_1 +","+res.data[0].d_add_2+","+res.data[0].d_zipcode
          })
         }
+        // console.log(res.data[0].d_add_1 +","+res.data[0].d_add_2+","+res.data[0].d_zipcode)
     })
+    
   }
   else{
     this.setState({del_add:"This is a Pickup Order"})
@@ -127,9 +131,9 @@ console.log(this.state)
                    <div className ="row">
                    <div className="col-md-12" style={{fontFamily:"sans-serif"}}>
                    <div className = "row"> 
-                       <h4>Total : {this.props.order.d_list[0].checkoutprice}$</h4>
+                       <h4>Total : { JSON.parse(this.props.order.d_list)[0].checkoutprice}$</h4>
                        </div>
-                       {this.props.order.d_list.map((data,key)=>{
+                       { JSON.parse(this.props.order.d_list).map((data,key)=>{
                      
                      
                      return   <div className = "row"> 

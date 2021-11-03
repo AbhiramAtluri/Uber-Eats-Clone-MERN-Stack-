@@ -7,8 +7,8 @@ console.log("Inside Rest Profile Update");
 console.log(msg)
 
 //Order.UpdateOrderStatus(msg,callback)
-Order.fetchRestaurantDetailsbyId(msg,callback)
-
+ Order.fetchRestaurantDetailsbyId(msg,callback)
+// callback(null,"Success")
 
 }
 

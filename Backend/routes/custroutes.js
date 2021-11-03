@@ -180,9 +180,9 @@ kafka.make_request("FetchDelAddress",req.body,function(err,results)
          })
      }else
      {
-         res.json({
-             results
-         });
+        res.send(
+            Object.values(results)
+        );
          
      }
 
@@ -206,9 +206,9 @@ kafka.make_request("FetchDelAddressInCustomerOrders",req.body,function(err,resul
          })
      }else
      {
-         res.json({
-             results
-         });
+        res.send(
+            Object.values(results)
+        );
          
      }
 
@@ -320,8 +320,8 @@ router.post('/UpdateOrderStatus',(req,res)=>
 
 
 
-
-//Fetching restaurant name by id
+// router.post('/FetchRestaurantDetailsById',Order.fetchRestaurantDetailsbyId)
+// Fetching restaurant orders by id
 router.post('/FetchRestaurantDetailsById',(req,res)=>
 {
    console.log("Fest restarant details by id")
@@ -335,9 +335,9 @@ router.post('/FetchRestaurantDetailsById',(req,res)=>
             })
         }else
         {
-            res.json({
-                ...results
-            });
+            res.send(
+                Object.values(results)
+            );
             
         }
     })
@@ -390,9 +390,9 @@ router.post('/FetchCustomerDetailsById',(req,res)=>
         })
     }else
     {
-        res.json({
-            results
-        });
+        res.send(
+            Object.values(results)
+        );
         
     }
 

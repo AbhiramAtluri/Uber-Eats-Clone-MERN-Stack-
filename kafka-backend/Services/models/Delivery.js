@@ -70,7 +70,7 @@ exports.fetchingCustNumber= async function(msg,callback)
     let req = {body:{...msg}}
 
      console.log(req.body.c_id)
-    Customer_Registration_Model.findOne({c_id:req.body.c_id},(err,resp)=>
+    Customer_Registration_Model.findOne({_id:req.body.c_id},(err,resp)=>
     {
         if(resp)
         {

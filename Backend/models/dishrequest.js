@@ -57,7 +57,7 @@ console.log(req.body)
 exports.getDish = async function(req,res)
 
 {
-    
+    console.log("In Get dsish node backend")
    let r_id = req.body.r_id
 
    // db.query("SELECT * FROM dishes where dishes.r_id = ?",[r_id])

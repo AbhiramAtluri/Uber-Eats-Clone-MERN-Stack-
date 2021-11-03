@@ -49,6 +49,7 @@ class CustomerOrders extends Component {
 
             })
             .then(res => {
+                console.log(res)
                 this.setState(
                     {
                         order_details: res.data,
@@ -56,6 +57,9 @@ class CustomerOrders extends Component {
                         c_id: this.props.location.state.c_id
                     }
                 )
+
+               
+
                 this.setState({
                     noOfPages: Math.ceil(this.state.order_details.length / this.state.itemsPerPage)
                 })

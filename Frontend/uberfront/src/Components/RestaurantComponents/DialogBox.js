@@ -82,7 +82,7 @@ export default function CustomizedDialogs(props) {
   for(let a in CartData)
   {
       console.log(CartData)
-      amount = CartData[a].d_price+ amount
+      amount =  parseInt(CartData[a].d_price)+ amount
       amount = amount.toFixed(2)
       amount = parseFloat(amount)
       console.log(amount)

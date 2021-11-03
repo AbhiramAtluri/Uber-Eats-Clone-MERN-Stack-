@@ -8,7 +8,7 @@ var Customer_Registration = new Schema(
      c_dob:{type:String},
      c_city:{type:String},
      c_state:{type:String},
-     c_country:{type:String},
+     c_county:{type:String},
      c_number:{type:String},
      c_profilepic:{type:String},
      c_nickname:{type:String},

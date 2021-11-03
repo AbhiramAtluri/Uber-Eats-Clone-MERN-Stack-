@@ -40,18 +40,18 @@ console.log("In Cust by id")
 let req = {body:{...msg}};
 
 let c_id = req.body.c_id
-
-
+console.log("In fetchCustomerDetailsbyId")
+console.log(msg)
 Customer_Registration_Model.findOne({c_id:c_id},(err,resp)=>
 {
     if(resp)
     {
 
     console.log(resp)
-    OrderModel.find({c_id:resp._id}).lean().exec((err,respa)=>
+    OrderModel.find({c_id:c_id}).lean().exec((err,respa)=>
     {
      if(respa)
-     {
+     {  console.log("Orders here")
          console.log(respa);
       
 
@@ -134,5 +134,43 @@ OrderModel.updateOne({_id:o_id},{$set:{o_status:o_status}},(err,resp)=>
 
 }
 
+exports.fetchRestaurantDetailsbyId = async function(msg,callback)
 
+{
+  let req = {body:{...msg}}  
+
+let r_id = req.body.r_id
+
+Restaurant_Registration.findOne({_id:r_id},(err,resp)=>
+{
+    if(resp)
+    {
+      //  res.json(resp)
+    OrderModel.find({r_id:resp._id}).lean().exec((err,respa)=>
+    {
+        if(respa)
+     {
+         console.log(respa);
+      
+
+     for(a in respa)
+     {
+         respa[a].c_name=resp.c_name;
+     }
+
+    //   res.json(respa)
+       callback(null,respa)
+     } 
+
+    })
+        
+
+
+
+    }
+}
+)
+
+
+}
 

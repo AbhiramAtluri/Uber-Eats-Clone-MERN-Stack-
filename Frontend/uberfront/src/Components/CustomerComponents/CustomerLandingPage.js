@@ -101,7 +101,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
 
         ////Getting Customer Favs
-        axios.post(`${server}/Restaurant/GetFavRestID`,
+        axios.post(`${server}/Restaurant/GetFavRest`,
             {
                 c_id: c_id
             }
@@ -114,7 +114,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
                     }
                 )
             }
-            )
+            ).catch(err=>{console.log(err)})
 
 
         console.log(this.state.c_county + "Before component")
@@ -125,21 +125,21 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
                 ///NEAREST RESTAURANTS ARE FETCHED AFTER GETTING THE PROFILE DETAILS FROM ABOVE REQUEST
                 {
-                    if (res.data[0].c_county != "" && res.data[0].c_county != null) {
+                    if (res.data.c_county != "" && res.data.c_county != null) {
                         this.setState(
                             {
-                                c_county: res.data[0].c_county
+                                c_county: res.data.c_county
                             }
                         )
 
 
 
 
-                        this.loadLandingPageRestaurantList(res.data[0].c_county)
+                        this.loadLandingPageRestaurantList(res.data.c_county)
 
                     }
                     else {
-                        this.loadLandingPageRestaurantList("Santa Clara")
+                        this.loadLandingPageRestaurantList("Santa Clara County")
                     }
                 }
 
@@ -168,12 +168,13 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
         const responseTwo = axios.post(restallrestaurants,
             {
                 c_county: c_county
-            })
+            }) 
 
         axios.all([responseOne, responseTwo])
             .then(axios.spread((...responses) => {
                 console.log(responses[0])
                 let a = responses[0].data
+                console.log(a)
                 if ((a.message != 'NoLoc') || (a.message != 'NoLoc')) {
                     let responseN = responses[0].data
                     let responseF = responses[1].data
@@ -189,10 +190,10 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
                         r_list = r_list.filter(value => { return value.del_type == this.state.del_type || value.del_type == "s_both" })
                     }
                     if(this.state.Dish_Type!="All")
-                    {
+                    {console.log("In adll")
                         r_list = r_list.filter(value=>
                             {let found = this.state.listofrestaurantsbasedonDishType
-                            .find(element=>{return element.r_id==value.r_id })
+                            .find(element=>{return element._id==value._id })
                              return found })
                              console.log(r_list)
                     }
@@ -230,24 +231,26 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
                 res => {
                     console.log("Dish request")
                     console.log(res.data.message)
-
+                    console.log(res.data)
                     if (res.data.message != "NoDish") {
                         let r_list = res.data
+                        console.log(this.state.del_type)
                         if (this.state.del_type != "s_both") {
                             r_list = r_list.filter(value => { return value.del_type == this.state.del_type || value.del_type == "s_both" })
                         }
                         if (this.state.Dish_Type != "All") {
+                            console.log("In heere")
                             r_list = r_list.filter(value => {
                                 let found = this.state.listofrestaurantsbasedonDishType
-                                    .find(element => { return element.r_id == value.r_id })
+                                    .find(element => { return element._id == value._id })
                                 return found
                             })
                             console.log(r_list)
                         }
 
-                        //   console.log(res.data)
+                           console.log(res.data)
                         //   console.log("New List")
-                        //   console.log(r_list)
+                          // console.log(r_list)
                         this.setState(
                             {
                                 restaurantlist: r_list,
@@ -315,16 +318,17 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
                 }
             ).then(resp=>
                 {
-
+                  console.log("In Restaurant/GetRestarantsBasedonDishTypeFilter second then")
                     if (this.state.s_filter == "s_location") {
                         this.loadLandingPageRestaurantList(this.state.c_county)
                     }  
                     if (this.state.s_filter == "s_dish") {
+                        console.log("In Here")
                         this.changeLandingPageFilteredWithDishOnChange(e)
                     } 
 
                 }
-                )
+                ).catch(err=>{console.log(err)})
            
 
     }
@@ -337,15 +341,17 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
 
     changeLandingPageFilteredWithDishOnChange = (e) => {
-
+       console.log("In changeLandingPageFilteredWithDishOnChange")
         let r_list = this.state.masterList
+        console.log(r_list)
         if (e.target.value != "s_both") {
             r_list = r_list.filter(value => { return value.del_type == e.target.value || value.del_type == "s_both" })
         }
         if (this.state.Dish_Type != "All") {
+            console.log(this.state.listofrestaurantsbasedonDishType)
             r_list = r_list.filter(value => {
                 let found = this.state.listofrestaurantsbasedonDishType
-                    .find(element => { return element.r_id == value.r_id })
+                    .find(element => { return element._id == value._id })
                 return found
             })
             console.log(r_list)
@@ -432,9 +438,10 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
 
     render() {
-
+       console.log(this.state.restaurantlist)
         console.log(this.state.masterList)
         console.log(this.state.listofrestaurantsbasedonDishType)
+        console.log(this.state)
         const validationSchema = Yup.object(
             {
 
@@ -510,7 +517,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
                                                 <img style={{ width: '100%', height: '200px' }} class="card-img-top" src={value.r_picture} />
                                                 <div className="card-body">
                                                     <div ><Link to={{ pathname: "/RestaurantLanding", state: { r_email: value.r_email, view_id: "Customer", c_id: this.state.c_id } }}  ><h5 className="card-title" id="name">{value.r_name}
-                                                    </h5></Link><FavoriteBorderIcon style={{ height: "28px", width: "20px" }} color={this.FetchColour(value.r_id)} onClick={(e) => this.handleAddToFav(value.r_id, e)} /></div>
+                                                    </h5></Link><FavoriteBorderIcon style={{ height: "28px", width: "20px" }} color={this.FetchColour(value._id)} onClick={(e) => this.handleAddToFav(value._id, e)} /></div>
                                                     <p className="card-text" id="county">Location:{value.r_county}</p>
                                                     <p className="card-test" id="opentime">OpenTime : {value.r_opentime}</p>
                                                     <p className="card-test" id="closetime">CloseTime : {value.r_closetime}</p>

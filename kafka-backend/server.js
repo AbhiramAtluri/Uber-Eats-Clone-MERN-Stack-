@@ -34,8 +34,8 @@ var GetFarAwayRestaurants = require('./Services/GetFarAwayRestaurants');
 var GetRestaurantsBasedOnDish = require('./Services/GetRestaurantsBasedOnDish');
 var GetRestaurantsBasedonVegFilter = require('./Services/GetRestarantsBasedonDishTypeFilter')
 var FetchCustomerDetailsById = require('./Services/FetchCustomerDetailsById')
-
-
+var GetDish = require('./Services/GetDish')
+var GetFavRestDetails = require('./Services/GetFavRestDetailsById')
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -104,6 +104,7 @@ var options = {
   handleTopicRequest("getCustomerProfileDetails",getCustomerProfileDetails);
   handleTopicRequest("updateCustomerProfile",updateCustomerProfile);
   handleTopicRequest("getCustomerProfileBasedOnCid",getCustomerProfileBasedOnCid);
+  handleTopicRequest("GetDish",GetDish)
   handleTopicRequest("AddDish",AddDish);
   handleTopicRequest("EditDish",EditDish);
   handleTopicRequest("AddDeliveryAddress",AddDeliveryAddress);
@@ -125,3 +126,4 @@ var options = {
    handleTopicRequest("GetRestaurantsBasedOnDish",GetRestaurantsBasedOnDish);
    handleTopicRequest("GetRestarantsBasedonDishTypeFilter",GetRestaurantsBasedonVegFilter);
    handleTopicRequest("FetchCustomerDetailsById",FetchCustomerDetailsById);
+   handleTopicRequest("GetFavRestDetails",GetFavRestDetails);

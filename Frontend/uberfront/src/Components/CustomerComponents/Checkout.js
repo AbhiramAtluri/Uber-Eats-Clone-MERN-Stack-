@@ -72,6 +72,7 @@ import server from '../WebConfig';
 
         // const checkoutList = this.props.location.state.checkoutList
         const c_id = this.props.location.state.c_id
+        console.log(c_id)
         console.log(this.props.location.state.del_type)
         let checkoutList = JSON.parse(sessionStorage.getItem("cartData"))
         
@@ -105,10 +106,10 @@ import server from '../WebConfig';
             .then(res => {
 
 
-
+                console.log(res)
                 this.setState(
                     {
-                        addresslist: res.data
+                        addresslist: [...(res.data)]
                     }
                 )
 
@@ -120,12 +121,12 @@ import server from '../WebConfig';
                 c_id: c_id
             })
             .then(res => {
-                console.log(res.data[0])
+                console.log(res.data)
                 this.setState(
                     {
-                        c_number: res.data[0].c_number,
-                        c_name: res.data[0].c_name,
-                        c_email: res.data[0].c_email
+                        c_number: res.data.c_number,
+                        c_name: res.data.c_name,
+                        c_email: res.data.c_email
                     }
                 )
 

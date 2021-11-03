@@ -58,21 +58,21 @@ class RestaurantProfile extends Component {
            
         }).then(res =>
             {
-                console.log(res.data[0])
+                console.log(res.data)
                   this.setState(
                       {
                         
-                        r_email: res.data[0].r_email,
-                         r_name:res.data[0].r_name,
-                         r_picture:res.data[0].r_picture===null?"https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png":res.data[0].r_picture,
-                        r_number:res.data[0].r_number,
-                        r_county:res.data[0].r_county,
-                        r_opentime:res.data[0].r_opentime,
-                        r_closetime:res.data[0].r_closetime,
-                        r_state:res.data[0].r_state,
-                        r_description:res.data[0].r_description,
-                        del_type:res.data[0].del_type,
-                        r_address:res.data[0].r_address
+                        r_email: res.data.r_email,
+                         r_name:res.data.r_name,
+                         r_picture:res.data.r_picture===null?"https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png":res.data.r_picture,
+                        r_number:res.data.r_number,
+                        r_county:res.data.r_county,
+                        r_opentime:res.data.r_opentime,
+                        r_closetime:res.data.r_closetime,
+                        r_state:res.data.r_state,
+                        r_description:res.data.r_description,
+                        del_type:res.data.del_type,
+                        r_address:res.data.r_address
                       }
                       )
                     
@@ -107,7 +107,8 @@ class RestaurantProfile extends Component {
 ///HANDLEONSUBMIT EVENT TO CALL PROFILE UPDATE API
 
     handleOnSubmit = (e)=>
-    {
+    {  
+        console.log("In ")
         console.log(e)
         console.log(e.del_type+"Delivery type")
         axios.post(`${server}/Restaurant/RestProfUpdate`,
@@ -146,7 +147,7 @@ class RestaurantProfile extends Component {
 
 
     render() {
-
+         console.log(this.state)
         const initialValues =
         {
             r_name: this.state.r_name=== 0?"":this.state.r_name,
@@ -163,13 +164,13 @@ class RestaurantProfile extends Component {
         }
         const validationSchema = Yup.object(
             {
-                r_name: Yup.string("Enter the name"),
-                r_description : Yup.string("Enter the description").max(255,"maximum of 255 characters"),
-                r_email :Yup.string("Enter the Email ID").email("Please enter in email format"),
-                r_state:Yup.string("Enter the state").max(2,"Maximum of two characters"),
-                r_county:Yup.string("Enter the county").max(30,"Limit the county name to 30 characters"),
-                r_address:Yup.string("Enter the address").max(100,"Please limit the address to 100 characters"),
-                r_number:Yup.string("Enter the contact number").max(10,"Enter Valid Number").matches(/^[0-9]*$/,"Enter Valid Number").min(10,"Enter Valid Number").required("Please enter your contact number")
+                // r_name: Yup.string("Enter the name"),
+                // r_description : Yup.string("Enter the description").max(255,"maximum of 255 characters"),
+                // r_email :Yup.string("Enter the Email ID").email("Please enter in email format"),
+                // r_state:Yup.string("Enter the state").max(2,"Maximum of two characters"),
+                // r_county:Yup.string("Enter the county").max(30,"Limit the county name to 30 characters"),
+                // r_address:Yup.string("Enter the address").max(100,"Please limit the address to 100 characters"),
+                // r_number:Yup.string("Enter the contact number").max(10,"Enter Valid Number").matches(/^[0-9]*$/,"Enter Valid Number").min(10,"Enter Valid Number").required("Please enter your contact number")
             }
         )
 

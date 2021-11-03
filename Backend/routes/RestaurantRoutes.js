@@ -202,7 +202,7 @@ router.get("/GetAllRestaurants",(req,res)=>
 router.get('/details/:r_email',(req,res)=>
 
 {
-    console.log("Get Restaurant details from email");
+    console.log("Get Restaurant 11details from email");
     kafka.make_request("GetRestaurantDetailsFromEmail",req.params,function(err,results)
     {
     console.log("Get Details from email")
@@ -233,7 +233,26 @@ router.post('/resprof', auth.resterauntProfile)
 
 
 
-router.post('/GetDish', dishrequests.getDish)
+router.post('/GetDish',(req,res)=>
+{
+    console.log("Get Restaurant dishes")
+    kafka.make_request("GetDish",req.body,function(err,results)
+    {
+        if (err) {
+            console.log("Inside err");
+            res.json({
+                msg: "Err"
+            })
+        } else {
+            console.log("Sending postman response get dish")
+           
+            res.send(
+                Object.values(results)
+            );
+
+        }
+    })
+})
 
 
 
@@ -260,8 +279,37 @@ router.post('/AddRestToFav', (req,res)=>
         }
     })
 })
+///Get the fav rest details based on id in c_fav pagee
+router.post('/GetFavRestDetails',(req,res)=>
+{
+    kafka.make_request("GetFavRestDetails",req.body,function(err,results)
+    {
+        console.log("Get Fav Restaurants Details")
+        if(err)
+    {
+        console.log("Inside err");
+        res.json({
+            msg:"Err"
+        })
+    }else
+    {
+        console.log("Sending postman response")
+        res.send(
+            Object.values(results)
+        );
+        res.end();
+    }
 
-//router.post('/GetFavRest', restget.GetAllTheFavRestaurants)
+
+    })
+
+})
+
+
+
+
+
+
 router.post('/GetFavRest',(req,res)=>
 {
     console.log("Get Fav Restaurants")
@@ -277,9 +325,9 @@ router.post('/GetFavRest',(req,res)=>
     }else
     {
         console.log("Sending postman response")
-        res.json({
-            ...results
-        });
+        res.send(
+            Object.values(results)
+        );
         res.end();
     }
 
@@ -303,9 +351,16 @@ router.post('/GetAllNearestRestaurants', (req,res)=>{
     }else
     {
         console.log("Sending postman response after GetAllNearestRestaurants")
-        res.json({
-            ...results
-        });
+        console.log(results)
+        if(results.message == undefined)
+        {
+        res.send(
+            Object.values(results)
+        );
+        }else
+        {
+            res.send(results)
+        }
         res.end();
     }
 
@@ -332,9 +387,17 @@ router.post('/GetFarAwayRestaurants',(req,res)=>
     }else
     {
         console.log("Sending postman response Faraway")
-        res.json({
-            ...results
-        });
+
+        if(results.message!=undefined)
+         {
+         res.send(
+            Object.values(results)
+        );
+         }
+         else
+         {
+             res.send(results)
+         }
         res.end();
     }
 
@@ -358,9 +421,9 @@ router.post('/GetRestaurantsBasedOnDish', (req,res)=>
         }else
         {
             console.log("Sending postman response after Get Restaurants based on dish")
-            res.json({
-                ...results
-            });
+            res.send(
+                Object.values(results)
+            );
             res.end();
         }
 
@@ -374,9 +437,9 @@ router.post('/GetRestaurantsBasedOnDish', (req,res)=>
 //router.post('/GetRestarantsBasedonDishTypeFilter', restget.getRestaurantsBasedonVegFilter)
 
 router.post('/GetRestarantsBasedonDishTypeFilter', (req,res)=>
-{
+{  console.log("Get restaurant based  on dish type filter___-")
     console.log(req.body);
-    kafka.make_request("GetRestarantsBasedonDishTypeFilter",(req,res)=>
+    kafka.make_request("GetRestarantsBasedonDishTypeFilter",req.body,function(err,results)
     {
         console.log("Get restaurant based  on dish type filter");
 
@@ -389,9 +452,9 @@ router.post('/GetRestarantsBasedonDishTypeFilter', (req,res)=>
         }else
         {
             console.log("Sending postman response after Get Restaurants based on dish")
-            res.json({
-                ...results
-            });
+            res.send(
+                Object.values(results)
+            );
             res.end();
         }
 

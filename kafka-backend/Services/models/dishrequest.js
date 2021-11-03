@@ -53,27 +53,17 @@ console.log(req.body)
 
 }
 
-exports.getDish = async function(req,res)
+exports.getDish = async function(msg,callback)
 
-{
-    
+{console.log(msg)
+    let req= {body:{...msg}};   
    let r_id = req.body.r_id
-
-   // db.query("SELECT * FROM dishes where dishes.r_id = ?",[r_id])
-   // .then(resp =>
-   //  {
-   //      resp = Object.values(JSON.parse(JSON.stringify(resp)));  
-   //      console.log(resp[0])    
-   //             res.json(resp[0])
-
-   //  }).catch(err =>console.log(err))
-
-
-    DishModel.find({r_id:req.body.r_id},(err,resp)=>
+  DishModel.find({r_id:r_id}).lean().exec((err,resp)=>
     {
        if(resp)
        {
-          res.json(resp)
+          //res.json(resp)
+          callback(null,resp)
        }
     }
     )

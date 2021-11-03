@@ -4,9 +4,9 @@ var restget = require('./models/restgetrequests')
 function handle_request(msg,callback)
 {
 
-//console.log("hello")
-
-console.log("Get all nearest restaurants");
+console.log("hello")
+console.log(msg)
+console.log("Get restaunats based on veg non veg filter");
 
 restget.getRestaurantsBasedonVegFilter(msg,callback)
 // restget.getFarAwayRestaurants(msg,callback)

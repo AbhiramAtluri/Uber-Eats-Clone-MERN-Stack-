@@ -5,10 +5,9 @@ function handle_request(msg,callback)
 {
    
     console.log("hello")
-console.log("get restaurant details from email");
+console.log("In get fav Restaraunts details by id" );
 
-
-getRest.getRestaurantDetails(msg,callback)
+getRest.GetAllTheFavRestaurantsDetails(msg,callback);
 
 console.log("After Callback");
 }

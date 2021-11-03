@@ -47,23 +47,23 @@ const { mongoDB } = require('./config');
 
 
 
-var options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  maxPoolSize:500
+// var options = {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   maxPoolSize:500
 
-};
+// };
 
 
-mongoose.connect(mongoDB, options, (err, res) => {
-    if (err) {
-        console.log(err);
-        console.log(`MongoDB Connection Failed`);
-    } else {
-        console.log(`MongoDB Connected`);
-    }
+// mongoose.connect(mongoDB, options, (err, res) => {
+//     if (err) {
+//         console.log(err);
+//         console.log(`MongoDB Connection Failed`);
+//     } else {
+//         console.log(`MongoDB Connected`);
+//     }
  
-});
+// });
 
 
 

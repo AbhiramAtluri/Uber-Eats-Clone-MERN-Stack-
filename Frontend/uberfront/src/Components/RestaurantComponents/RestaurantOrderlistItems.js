@@ -32,7 +32,7 @@ export default class RestaurantOrderlistItems extends Component {
 
      axios.post(`${server}/customer/UpdateOrderStatus`,
      {
-         o_id:this.props.order.o_id,
+         o_id:this.props.order._id,
          r_id:this.props.order.r_id,
          o_status:e.o_status
      })
@@ -72,13 +72,13 @@ export default class RestaurantOrderlistItems extends Component {
                                 <h5 style={{marginTop:"20px"}}><Link to={{pathname:"/CustomerProfile",state:{c_id:this.props.order.c_id,view:"Rest"}}}>Order Id:{this.props.order.o_id}</Link></h5>
                             </div>
                             <div className="col-md-1">
-                                <h5 style={{marginTop:"20px"}}>Cid:{this.props.order.c_id}</h5>
+                                <p style={{marginTop:"20px"}}>id:{(this.props.order._id).substring((this.props.order._id).length-4,(this.props.order._id).length)}</p>
                             </div>
                             <div className="col-md-4">
 
                                 <table>
 
-                                    {(this.props.order.d_list).map((data, key) => {
+                                    {JSON.parse((this.props.order.d_list)).map((data, key) => {
                                         return <tr>
                                             <td>
                                                 {data.d_name}
@@ -98,7 +98,7 @@ export default class RestaurantOrderlistItems extends Component {
                                 </table>
                             </div>
                             <div className="col-md-2">
-                               <p style={{marginTop:"20px"}}> {this.props.order.d_list[0].checkoutprice}$</p>
+                               <p style={{marginTop:"20px"}}> {JSON.parse(this.props.order.d_list)[0].checkoutprice}$</p>
                             </div>
                         
                         <div className="col-md-3" style={{padding:"0px"}}>

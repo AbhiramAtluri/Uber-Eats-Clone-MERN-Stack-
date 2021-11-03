@@ -80,18 +80,18 @@ export class CustomerProfile extends Component {
                 console.log(res.data[0])
                 this.setState(
                     {
-                        c_city: res.data[0].c_city,
-                        c_name: res.data[0].c_name,
-                        c_nickname: res.data[0].c_nickname,
-                        c_profilepic: res.data[0].c_profilepic === null ? "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
-                            : res.data[0].c_profilepic,
-                        c_state: res.data[0].c_state,
-                        c_county: res.data[0].c_county,
-                        c_country: res.data[0].c_country,
-                        c_description: res.data[0].c_description,
-                        c_email: res.data[0].c_email,
-                        c_dob: res.data[0].c_dob,
-                        c_number: res.data[0].c_number
+                        c_city: res.data.c_city,
+                        c_name: res.data.c_name,
+                        c_nickname: res.data.c_nickname,
+                        c_profilepic: res.data.c_profilepic === null ? "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
+                            : res.data.c_profilepic,
+                        c_state: res.data.c_state,
+                        c_county: res.data.c_county,
+                        c_country: res.data.c_country,
+                        c_description: res.data.c_description,
+                        c_email: res.data.c_email,
+                        c_dob: res.data.c_dob,
+                        c_number: res.data.c_number
                     }
                 )
 
@@ -124,21 +124,21 @@ export class CustomerProfile extends Component {
 
         ).then(res => {
 
-            console.log(res.data[0])
+            console.log(res.data)
             this.setState(
                 {
-                    c_city: res.data[0].c_city,
-                    c_name: res.data[0].c_name,
-                    c_nickname: res.data[0].c_nickname,
-                    c_profilepic: res.data[0].c_profilepic === null ? "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
-                        : res.data[0].c_profilepic,
-                    c_state: res.data[0].c_state,
-                    c_county: res.data[0].c_county,
-                    c_country: res.data[0].c_country,
-                    c_description: res.data[0].c_description,
-                    c_email: res.data[0].c_email,
-                    c_dob: res.data[0].c_dob,
-                    c_number: res.data[0].c_number
+                    c_city: res.data.c_city,
+                    c_name: res.data.c_name,
+                    c_nickname: res.data.c_nickname,
+                    c_profilepic: res.data.c_profilepic === null ? "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
+                        : res.data.c_profilepic,
+                    c_state: res.data.c_state,
+                    c_county: res.data.c_county,
+                    c_country: res.data.c_country,
+                    c_description: res.data.c_description,
+                    c_email: res.data.c_email,
+                    c_dob: res.data.c_dob,
+                    c_number: res.data.c_number
                 }
             )
 

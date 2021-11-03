@@ -145,7 +145,7 @@ export class RestaurantLanding extends Component {
                         this.setState(
                             {
                                 r_name: res.data.r_name == 0 || null ? "Please update your profile" : res.data.r_name,
-                                r_id: res.data.r_id,
+                                r_id: res.data._id,
                                 r_picture: res.data.r_picture == null ? "data:image/png;base64,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" : res.data.r_picture,
                                 r_description: res.data.r_description == 0 || null ? "Please update your profile" : res.data.r_description,
                                 del_type: res.data.del_type,
@@ -159,7 +159,7 @@ export class RestaurantLanding extends Component {
                         )
                         let values ={r_name:res.data.r_name,
                                     r_email:res.data.r_email,
-                                    r_id:res.data.r_id               }
+                                    r_id:res.data._id               }
                         this.props.login(values)
                     }
                     else {
@@ -183,6 +183,7 @@ export class RestaurantLanding extends Component {
                          let values = {
                              dishlist:[...(res.data)]
                          }
+                        //  console.log("Current dish list")
                          this.props.setCurrentDishList(values)
                         this.setState(
                             {
@@ -203,8 +204,8 @@ export class RestaurantLanding extends Component {
     handleRemoveFromCartClick = async (e, d_name, d_price, d_picture, d_id) => {
 
         e.preventDefault()
-
-
+           
+          d_price = parseFloat(d_price)
         let cartData = JSON.parse(sessionStorage.getItem("cartData"))
         
        
@@ -260,7 +261,8 @@ export class RestaurantLanding extends Component {
         this.props.addCart()
         this.props.addRname(this.state.r_name)
         this.props.addDelType(this.state.del_type)
-        let i_price = d_price
+        console.log(d_id)
+        let i_price =parseFloat(d_price)
         e.preventDefault()
         console.log("Before enter" + this.state.cartnumber)
         if (this.state.cartnumber == 0) {
@@ -306,7 +308,7 @@ export class RestaurantLanding extends Component {
 
 
 
-        let cartItems = [{ d_name: d_name, d_price: d_price, d_picture: d_picture, d_quantity: 1, d_id: d_id, r_id: this.state.r_id, c_id: this.state.c_id, i_price: d_price }]
+        let cartItems = [{ d_name: d_name, d_price:parseFloat(d_price), d_picture: d_picture, d_quantity: 1, d_id: d_id, r_id: this.state.r_id, c_id: this.state.c_id, i_price: parseFloat(d_price) }]
 
         let cartData = JSON.parse(sessionStorage.getItem("cartData"))
         //  console.log(cartData)
@@ -320,17 +322,17 @@ export class RestaurantLanding extends Component {
             cartData = JSON.parse(sessionStorage.getItem("cartData"))
 
             let chkCart = cartData.filter(item => { return item.d_id == d_id })
-
+            console.log(chkCart)
             if (chkCart.length > 0) {
 
                 let index = cartData.findIndex((item) => { return item.d_id == d_id })
-                cartData[index].d_price = cartData[index].d_price + d_price
+                cartData[index].d_price = cartData[index].d_price + parseFloat(d_price)
                 cartData[index].d_quantity = cartData[index].d_quantity + 1
                 //cartData.push({d_name:d_name,d_price:d_price,d_picture:d_picture})
                 sessionStorage.setItem("cartData", JSON.stringify(cartData))
             }
             else {
-                cartData.push({ d_name: d_name, d_price: d_price, d_picture: d_picture, d_quantity: 1, d_id: d_id, r_id: this.state.r_id, c_id: this.state.c_id, i_price: i_price })
+                cartData.push({ d_name: d_name, d_price: parseFloat(d_price), d_picture: d_picture, d_quantity: 1, d_id: d_id, r_id: this.state.r_id, c_id: this.state.c_id, i_price: i_price })
                 sessionStorage.setItem("cartData", JSON.stringify(cartData))
             }
 
@@ -466,10 +468,10 @@ export class RestaurantLanding extends Component {
                                                         <p className="card-text" name="description" id="description">{dish.d_description}</p>
                                                         <h5 className="card-text" name="price" id="price">{dish.d_price}$</h5>
                                                         <h5 className="card-text" name="category" id="category">{dish.d_category}</h5>
-                                                        <center>  {this.state.view_id == "Customer" ? <div><button type="submit" name="AddCart" className="btn btn-primary" onClick={(e) => this.handleAddToCartClick(e, dish.d_name, dish.d_price, dish.d_picture, dish.d_id)} >+</button><button name="AddCart" className="btn btn-primary" onClick={(e) => this.handleRemoveFromCartClick(e, dish.d_name, dish.d_price, dish.d_picture, dish.d_id)} >-</button></div> :
+                                                        <center>  {this.state.view_id == "Customer" ? <div><button type="submit" name="AddCart" className="btn btn-primary" onClick={(e) => this.handleAddToCartClick(e, dish.d_name, dish.d_price, dish.d_picture, dish._id)} >+</button><button name="AddCart" className="btn btn-primary" onClick={(e) => this.handleRemoveFromCartClick(e, dish.d_name, dish.d_price, dish.d_picture, dish._id)} >-</button></div> :
                                                             <Link className="btn btn-primary" to={{
                                                                 pathname: "/Editdish", state: {
-                                                                    r_id: this.state.r_id, d_id: dish.d_id, d_name: dish.d_name, d_picture: dish.d_picture, d_description: dish.d_description
+                                                                    r_id: this.state.r_id, d_id: dish._id, d_name: dish.d_name, d_picture: dish.d_picture, d_description: dish.d_description
                                                                     , d_price: dish.d_price, d_category: dish.d_category
                                                                 }
                                                             }} >Edit dish</Link>

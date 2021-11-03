@@ -39,24 +39,46 @@ exports.fetchRestaurantDetailsbyId = async function(req,res)
 
 let r_id = req.body.r_id
 
-// db.query("SELECT t2.r_name,t1.* FROM uber_eats.orders t1 inner join res_reg t2 on t1.r_id=t2.r_id where t1.r_id=?",[r_id])
-// .then(resp =>
-//     {
-//           res.json(resp[0])
-//     }
-//     )
-// .catch(err=>{res.json(err)})
-Restaurant_Registration.find({_id:r_id},(err,resp)=>
+Restaurant_Registration.findOne({_id:r_id},(err,resp)=>
 {
     if(resp)
     {
-        res.json(resp)
+      //  res.json(resp)
+    OrderModel.find({r_id:resp._id}).lean().exec((err,respa)=>
+    {
+        if(respa)
+     {
+         console.log(respa);
+      
+
+     for(a in respa)
+     {
+         respa[a].c_name=resp.c_name;
+     }
+
+      res.json(respa)
+    //   callback(null,respa)
+     } 
+
+    })
+        
+
+
+
     }
 }
 )
 
 
 }
+
+
+
+
+
+
+
+
 
 
 

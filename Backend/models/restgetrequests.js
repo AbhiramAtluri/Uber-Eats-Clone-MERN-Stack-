@@ -293,17 +293,32 @@ exports.GetAllTheFavRestaurants = async function(req,res)
 //         }
 //         )
 console.log(req.body.c_id)
-FavouriteModel.find({c_id:req.body.c_id},(err,data)=>
-{  if(data)
+
+
+FavouriteModel.find({c_id:req.body.c_id}).lean().exec((err,data)=>
+{
+    if(data)
     {
-    res.json(data)
+        console.log(data)
+        let restlist = [];
+ 
+        for(a in data)
+      {
+          restlist.push(data[a].r_id)
+      }
+
+        Restaurant_Registration.find({_id:{$in:restlist}}).exec((err,data)=>
+        {
+        
+            res.send(data)
+        })
+
+
     }
-    if(err)
-    {
-        console.log(err)
-    }
-}
-)
+})
+
+
+
 
 
 }
