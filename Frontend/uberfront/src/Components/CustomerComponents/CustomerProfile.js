@@ -69,11 +69,12 @@ export class CustomerProfile extends Component {
             this.FetchProfileDetails(c_email)
 
         } else {
+            // axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             axios.post(`${server}/customer/CustomerProfileBasedOnId`,
                 {
                     c_id: c_id,
 
-                }
+                },{'authorization':localStorage.getItem('token')}
 
             ).then(res => {
 
@@ -116,13 +117,13 @@ export class CustomerProfile extends Component {
 
 
     FetchProfileDetails = (c_email) => {
+        console.log("In  FetchProfileDetails ")
+         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         axios.post(`${server}/customer/CustomerProfileFetch`,
             {
                 c_email: c_email,
 
-            }
-
-        ).then(res => {
+            }).then(res => {
 
             console.log(res.data)
             this.setState(

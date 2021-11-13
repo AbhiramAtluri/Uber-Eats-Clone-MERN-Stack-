@@ -109,7 +109,9 @@ exports.resterauntLogin = async function (msg,callback) {
    console.log(rest.r_password)
       if(validPass)
       {
-       callback(null,{message:"Login successfull"})
+       callback(null,{r_id:rest._id,
+           r_email:rest.r_email,
+           message:"Login successfull"})
       }else{
         callback(null,{message:"Invalid credentials"})
      } 

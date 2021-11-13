@@ -36,6 +36,9 @@ var GetRestaurantsBasedonVegFilter = require('./Services/GetRestarantsBasedonDis
 var FetchCustomerDetailsById = require('./Services/FetchCustomerDetailsById')
 var GetDish = require('./Services/GetDish')
 var GetFavRestDetails = require('./Services/GetFavRestDetailsById')
+var CancelOrderCustomer = require('./Services/CancelOrderCustomer')
+
+
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -127,3 +130,4 @@ var options = {
    handleTopicRequest("GetRestarantsBasedonDishTypeFilter",GetRestaurantsBasedonVegFilter);
    handleTopicRequest("FetchCustomerDetailsById",FetchCustomerDetailsById);
    handleTopicRequest("GetFavRestDetails",GetFavRestDetails);
+   handleTopicRequest("CancelOrderCustomer",CancelOrderCustomer);

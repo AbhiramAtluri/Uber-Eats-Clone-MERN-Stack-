@@ -12,13 +12,15 @@ var indexRouter = require('./routes/index');
 var RestRouter = require('./routes/RestaurantRoutes');
 var custrouter = require('./routes/custroutes')
 var app = express();
+const { auth } = require("./utils/passport");
+const passport = require("passport");
 const ipaddress = "localhost"
 app.set('view engine', 'jade');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-
-
-app.use(cors({origin:`http://${ipaddress}:3000`,credentials:true}))
+auth()
+app.use(passport.initialize());
+ app.use(cors({origin:`http://${ipaddress}:3000`,credentials:true}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(bodyparser.json())
@@ -28,6 +30,9 @@ app.use(fileupload())
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+const {frontendURL} = require('./config');
+// app.use(cors({ origin: frontendURL, credentials: true }));
 app.use(session({
   secret: 'cmpe273uber',
   resave:false,
@@ -35,6 +40,19 @@ app.use(session({
 }))
 
 const mongoose = require('mongoose');
+
+
+
+app.use(function (req, res, next) {
+  //  res.setHeader('Access-Control-Allow-Origin', frontendURL);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+  res.setHeader('Cache-Control', 'no-cache');
+  next();
+});
+
+
 
 app.use('/', indexRouter);
 app.use('/Restaurant', RestRouter);
@@ -47,23 +65,23 @@ const { mongoDB } = require('./config');
 
 
 
-// var options = {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   maxPoolSize:500
+var options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  maxPoolSize:500
 
-// };
+};
 
 
-// mongoose.connect(mongoDB, options, (err, res) => {
-//     if (err) {
-//         console.log(err);
-//         console.log(`MongoDB Connection Failed`);
-//     } else {
-//         console.log(`MongoDB Connected`);
-//     }
+mongoose.connect(mongoDB, options, (err, res) => {
+    if (err) {
+        console.log(err);
+        console.log(`MongoDB Connection Failed`);
+    } else {
+        console.log(`MongoDB Connected`);
+    }
  
-// });
+});
 
 
 

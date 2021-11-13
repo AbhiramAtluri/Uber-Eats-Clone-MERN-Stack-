@@ -13,7 +13,8 @@ var Order = new Schema(
         o_status:{type: String},
         o_date:{type: String},
         o_time:{type: String},
-        r_name:{type: String}
+        r_name:{type: String},
+        instructions:{type:String}
     },{
         versionKey:false
     }

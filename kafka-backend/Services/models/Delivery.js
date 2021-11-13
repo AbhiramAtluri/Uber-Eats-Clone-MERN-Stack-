@@ -112,7 +112,8 @@ exports.placingOrder =async function(msg,callback)
             o_date:req.body.o_date,
             o_time:req.body.o_time,
             r_name:req.body.r_name,
-            o_status:req.body.o_status  
+            o_status:req.body.o_status,
+            instructions:req.body.instructions  
          }
          )
         newOrder.save((err,data)=>

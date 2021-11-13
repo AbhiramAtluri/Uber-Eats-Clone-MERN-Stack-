@@ -41,7 +41,8 @@ import { removeCart } from '../../Redux/CartReducerfile/Cartactions';
 import { addRname } from '../../Redux/CartReducerfile/Cartactions';
 import { removeRname,addDelType,removeDelType } from '../../Redux/CartReducerfile/Cartactions';
 import { setCurrentDishList } from '../../Redux/DishesReduxFile/DishActions';
-
+import { store } from "../../Redux/Store";
+import { useSelector, useDispatch } from 'react-redux'
 export class RestaurantLanding extends Component {
 
 
@@ -100,7 +101,7 @@ export class RestaurantLanding extends Component {
 
         if (this.props.location.state.view_id == "Customer") {
 
-
+           console.log(this.props.location.state.c_id)
             this.setState(
                 {
                     view_id: this.props.location.state.view_id,
@@ -121,7 +122,7 @@ export class RestaurantLanding extends Component {
             }
         }
 
-    
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         axios.get(`${server}/Restaurant/details/${this.props.location.state.r_email}`)
             .then(
                 res => {
@@ -135,12 +136,13 @@ export class RestaurantLanding extends Component {
                     } else 
                     {
                       
-                        seshstorage_rid = res.data.r_id
+                        seshstorage_rid = res.data._id
                     }
 
-                   console.log(seshstorage_rid) 
-                   console.log(res.data.r_id)
-                    if (seshstorage_rid == res.data.r_id) {
+                   console.log(seshstorage_rid)
+                   console.log(res.data) 
+                   console.log(res.data._id)
+                    if (seshstorage_rid == res.data._id) {
                         console.log(res.data)
                         this.setState(
                             {
@@ -201,6 +203,29 @@ export class RestaurantLanding extends Component {
 
 
     }
+
+    //  cartval =""
+    //  r_name = ""
+    //  del_type = ""
+     subscriber=store.subscribe(()=>{
+        console.log(store.getState().cart.c_number)
+    
+          let  cartval=store.getState().cart.c_number
+           let r_name = store.getState().cart.r_name
+           let del_type = store.getState().cart.del_type
+           
+           this.setState(
+               {
+                   cartnumber:cartval
+               })
+    
+    })
+    
+
+ 
+
+
+
     handleRemoveFromCartClick = async (e, d_name, d_price, d_picture, d_id) => {
 
         e.preventDefault()

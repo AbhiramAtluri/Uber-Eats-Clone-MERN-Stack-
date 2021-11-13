@@ -58,7 +58,8 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
             favList: [],
             Dish_Type: "All",
             listofrestaurantsbasedonDishType: [],
-            handleLogoff:false
+            handleLogoff:false,
+            searchedresult:false
 
 
         }
@@ -101,6 +102,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
 
         ////Getting Customer Favs
+         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         axios.post(`${server}/Restaurant/GetFavRest`,
             {
                 c_id: c_id
@@ -116,7 +118,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
             }
             ).catch(err=>{console.log(err)})
 
-
+        console.log(this.state.c_county)
         console.log(this.state.c_county + "Before component")
         if (this.state.c_county === "") {
             axios.post(`${server}/customer/CustomerProfileFetch`, { c_email: c_email })
@@ -125,6 +127,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
                 ///NEAREST RESTAURANTS ARE FETCHED AFTER GETTING THE PROFILE DETAILS FROM ABOVE REQUEST
                 {
+                    console.log(res.data.c_county)
                     if (res.data.c_county != "" && res.data.c_county != null) {
                         this.setState(
                             {
@@ -139,7 +142,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
                     }
                     else {
-                        this.loadLandingPageRestaurantList("Santa Clara County")
+                        this.loadLandingPageRestaurantList("Santa Clara")
                     }
                 }
 
@@ -154,7 +157,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
     }
 
 
-    loadLandingPageRestaurantList(c_county) {
+    loadLandingPageRestaurantList(c_county,search=false) {
         console.log(this.state)
         ////Fetching the nearest and farthest restaurants  
         let nearbyrestaurants = `${server}/Restaurant/GetAllNearestRestaurants`
@@ -183,8 +186,19 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
                     console.log(responseN)
                     console.log(responseF)
+                    if(search  == false)
+                    {
                     var r_list = responseN.concat(responseF)
-
+                    }
+                    else
+                    {
+                    var r_list = responseN
+                    this.setState(
+                        {
+                            searchedresult:true
+                        }
+                        )
+                    }
                     console.log(r_list)
                     if (this.state.del_type != "s_both") {
                         r_list = r_list.filter(value => { return value.del_type == this.state.del_type || value.del_type == "s_both" })
@@ -272,7 +286,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
         console.log(e.target.s_data.value)
         console.log(e.target.s_filter.value)
         if (e.target.s_filter.value == "s_location") {
-            this.loadLandingPageRestaurantList(e.target.s_data.value)
+            this.loadLandingPageRestaurantList(e.target.s_data.value,true)
         }
         if (e.target.s_filter.value == "s_dish") {
             this.loadLandingPageBasedOnDish(e)
@@ -288,7 +302,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
             }
         )
         if (this.state.s_filter == "s_location") {
-            this.loadLandingPageRestaurantList(this.state.c_county)
+            this.loadLandingPageRestaurantList(this.state.c_county,this.state.searchedresult)
         }
         if (this.state.s_filter == "s_dish") {
             //    this.loadLandingPageBasedOnDish(e)

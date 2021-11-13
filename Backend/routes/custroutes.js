@@ -1,13 +1,19 @@
 var express = require('express');
 var router = express.Router();
-var auth = require('../models/authentication')
+//var auth = require('../models/authentication')
 var delivery = require('../models/Delivery')
 var Order = require('../models/Orderrequest')
-var kafka = require('../kafka/client')
+var kafka = require('../kafka/client');
+const { secret } = require('../config');
+const jwt = require('jsonwebtoken');
 
+// const { auth } = require("../utils/passport");
 //Router listening
-
+// auth
 // router.post('/custreg',auth.customerRegistration)
+const { checkAuth } = require("../utils/passport");
+
+
  router.post('/custlog',(req,res)=>
  {
      console.log(req.body)
@@ -24,10 +30,16 @@ var kafka = require('../kafka/client')
          }else
          {
              console.log("Sending postman response")
-             res.json({
-                 ...results
-             });
-             res.end();
+             
+              if(results.message=="Login successfull")
+              {    console.log(results.c_id)
+                  const payload = {message:"Success",_id:results.c_id,c_email:results.c_email,type:"cust"};
+                  const token = jwt.sign(payload,secret,{ expiresIn: 1008000})
+                  res.status(200).json({token: 'JWT '+ token,c_id:results.c_id,c_email:results.c_email,message:"Login successfull"}); 
+                
+              }   
+              
+            
          }
      })
  })
@@ -59,7 +71,7 @@ router.post('/custreg',(req,res)=>
     })
 })
 //Fetching Customer Profile
-router.post('/CustomerProfileFetch',(req,res)=>
+router.post('/CustomerProfileFetch',checkAuth,(req,res)=>
 {
  console.log("Customer profile fetch")
   kafka.make_request('getCustomerProfileDetails',req.body,function(err,results)
@@ -84,7 +96,7 @@ router.post('/CustomerProfileFetch',(req,res)=>
 })
 
 
-router.post('/CustomerProfileUpdate',(req,res)=>
+router.post('/CustomerProfileUpdate',checkAuth,(req,res)=>
 {
     console.log("Customer profile update")
     console.log(req.body)
@@ -113,7 +125,7 @@ router.post('/CustomerProfileUpdate',(req,res)=>
 })
 
 /// get Profile based on Id
-router.post('/CustomerProfileBasedOnId',(req,res)=>
+router.post('/CustomerProfileBasedOnId',checkAuth,(req,res)=>
 {
     console.log("Get Csutomer profile based on Cid")
     console.log(req.body)
@@ -141,7 +153,7 @@ router.post('/CustomerProfileBasedOnId',(req,res)=>
 
 })
 ///Adding addresses
-router.post('/AddDeliveryAddress',(req,res)=>
+router.post('/AddDeliveryAddress',checkAuth,(req,res)=>
 {
     console.log("Add the Delivery address")
     console.log(req.body)
@@ -165,7 +177,7 @@ router.post('/AddDeliveryAddress',(req,res)=>
     })
 })
 //Fetching delivery address
-router.post('/FetchDelAddress',(req,res)=>
+router.post('/FetchDelAddress',checkAuth,(req,res)=>
 {
 console.log("Fetch Delivery Address")
 console.log(req.body)
@@ -191,7 +203,7 @@ kafka.make_request("FetchDelAddress",req.body,function(err,results)
 })
 
 // router.post('/FetchDelAddressInCustomerOrders',delivery.FetchDelAddressInCustomerOrders)
-router.post('/FetchDelAddressInCustomerOrders', (req,res)=>
+router.post('/FetchDelAddressInCustomerOrders',checkAuth, (req,res)=>
 {
     console.log("Fetch Delivery Address in customer orders")
 console.log(req.body)
@@ -217,7 +229,7 @@ kafka.make_request("FetchDelAddressInCustomerOrders",req.body,function(err,resul
 })
 //Placing order
 
-router.post('/PlaceOrder',(req,res)=>
+router.post('/PlaceOrder',checkAuth, (req,res)=>
 {
 
 console.log("Place order");
@@ -245,7 +257,7 @@ kafka.make_request("PlaceOrder",req.body,function(err,results)
 })
 //Fetching  cust number in final checkout page
 //router.post('/FetchCustNumber',delivery.fetchingCustNumber)
-router.post('/FetchCustNumber',(req,res)=>
+router.post('/FetchCustNumber',checkAuth, (req,res)=>
 {
     kafka.make_request("FetchCustNumber",req.body,function(err,results)
 {
@@ -269,7 +281,7 @@ router.post('/FetchCustNumber',(req,res)=>
 }
 )
 //Fetching Orders list
-router.post('/FetchOrderList',(req,res)=>
+router.post('/FetchOrderList',checkAuth, (req,res)=>
 {
     kafka.make_request("FetchOrders",req.body,function(err,results)
     {
@@ -293,7 +305,7 @@ router.post('/FetchOrderList',(req,res)=>
 
     })
 })
-router.post('/UpdateOrderStatus',(req,res)=>
+router.post('/UpdateOrderStatus',checkAuth, (req,res)=>
 {
     kafka.make_request("UpdateOrderStatus",req.body,function(err,results)
     {
@@ -322,7 +334,7 @@ router.post('/UpdateOrderStatus',(req,res)=>
 
 // router.post('/FetchRestaurantDetailsById',Order.fetchRestaurantDetailsbyId)
 // Fetching restaurant orders by id
-router.post('/FetchRestaurantDetailsById',(req,res)=>
+router.post('/FetchRestaurantDetailsById',checkAuth, (req,res)=>
 {
    console.log("Fest restarant details by id")
     kafka.make_request("FetchRestaurantDetailsById",req.body,function(err,results)
@@ -347,7 +359,7 @@ router.post('/FetchRestaurantDetailsById',(req,res)=>
 
 })
 
-router.post('/FetchRestaurantNameFromCustId',(req,res)=>
+router.post('/FetchRestaurantNameFromCustId',checkAuth, (req,res)=>
 {
     console.log("Fetch Restaurant name from cust ID")
     kafka.make_request("FetchRestaurantNameFromCustId",req.body,function(err,results)
@@ -376,7 +388,7 @@ router.post('/FetchRestaurantNameFromCustId',(req,res)=>
 
 //router.post('/FetchCustomerDetailsById',Order.fetchCustomerDetailsbyId)
 
-router.post('/FetchCustomerDetailsById',(req,res)=>
+router.post('/FetchCustomerDetailsById',checkAuth, (req,res)=>
 {
  console.log("Fetch Customer details by id");
  kafka.make_request("FetchCustomerDetailsById",req.body,function(err,results)
@@ -400,6 +412,26 @@ router.post('/FetchCustomerDetailsById',(req,res)=>
 
 }
 )
+
+router.post('/CancelOrderCustomer',checkAuth, (req,res)=>
+{
+    console.log("Cancel order customer route");
+    console.log(req.body)
+    kafka.make_request("CancelOrderCustomer",req.body,function(err,results)
+    {
+        console.log(req.body)
+        if(err)
+        {
+            console.log("Inside  err");
+            res.json({
+                msg:"err"
+            })
+        }else
+        {
+            res.send(results);
+        }
+    })
+})
 
 
 

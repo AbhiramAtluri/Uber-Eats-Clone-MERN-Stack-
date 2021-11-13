@@ -33,7 +33,7 @@ class RestauranOrderList extends Component {
    {
    let r_id = this.props.location.state.r_id
 
-
+   axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios.post(`${server}/customer/FetchRestaurantDetailsById`,
    
       {
@@ -86,6 +86,19 @@ class RestauranOrderList extends Component {
 
 
 
+        if(e.target.value == "Cancelled")
+       {
+       let Norder_details = this.state.MasterOrderList.filter(order=>{return order.o_status == "Cancelled"  })
+       console.log(Norder_details)
+       this.setState(
+           {
+               FetchedOrderList:Norder_details
+           }
+       )
+        }
+
+
+
        if(e.target.value =="All Orders")
         {
             this.setState(
@@ -125,7 +138,7 @@ class RestauranOrderList extends Component {
                            <option value = "All Orders">All Orders</option>
                             <option value = "Order Delivered">Order Delivered</option>
                             <option value = "New Order">New Order</option>
-                            <option value ="Cancelled Order">Cancelled order</option>
+                            <option value ="Cancelled">Cancelled order</option>
                             </select>  
                          </div>
                      

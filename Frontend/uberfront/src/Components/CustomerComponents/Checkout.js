@@ -63,7 +63,7 @@ import server from '../WebConfig';
     }
     static mapDispatchtoProps = dispatch =>
     {
-        return bindActionCreators({clearCart,placed_order},dispatch)
+        return bindActionCreators({clearCart,placed_order,add_Instructions },dispatch)
     }
 
 
@@ -105,14 +105,17 @@ import server from '../WebConfig';
         )
             .then(res => {
 
-
-                console.log(res)
+                console.log(res.data[0])
+                console.log(res.data._id)
                 this.setState(
                     {
                         addresslist: [...(res.data)]
                     }
                 )
 
+            //  console.log(this.state.addresslist)
+            //  console.log(this.state.addresslist[0])
+            //  console.log(this.state.addresslist[0]._id)
 
             })
         ///Fetching customer number
@@ -349,6 +352,18 @@ import server from '../WebConfig';
         this.props.clearCart()
         sessionStorage.clear()
     }
+    // else
+    // {
+    //   await this.setState(
+    //       {
+    //           del_type:"s_pickup"
+    //       }
+    //   )
+    //   this.props.clearCart()
+    //   sessionStorage.clear()
+
+
+    // }
    let date = new Date()
 
    let idate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
@@ -393,7 +408,7 @@ import server from '../WebConfig';
             r_name:this.state.r_name}
 
             this.props.placed_order(values)
-
+            this.props.clearCart()
             sessionStorage.clear()
            }
         }
@@ -411,7 +426,7 @@ import server from '../WebConfig';
         console.log("inp")
         let cartData = JSON.parse(sessionStorage.getItem("cartData"))
         console.log(cartData)
-        if(this.state.del_type == "s_both")
+        if(this.state.del_type == "s_both"  && this.state.selected_delivery_type!="")
         {
            await this.setState(
                 {
@@ -419,6 +434,16 @@ import server from '../WebConfig';
                 }
             )
         }
+        else
+        {
+            await this.setState(
+                {
+                    del_type:"s_pickup"
+                }
+            )
+
+        }
+        
         let date = new Date()
         let idate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
    
@@ -437,7 +462,8 @@ import server from '../WebConfig';
             del_id:null,
             o_date:idate,
             o_time: time,
-            r_name:this.state.r_name
+            r_name:this.state.r_name,
+            instructions:this.state.instructions
         }
         )
         .then(res=>
@@ -571,6 +597,10 @@ import server from '../WebConfig';
              instructions:e.target.instructions.value
          }
         this.props.add_Instructions(values)
+        this.setState(
+            {
+                openAddInstructions:false
+            })
 
        }
 
@@ -686,7 +716,7 @@ import server from '../WebConfig';
                                         <Field style={{ width: "100%", height: "50px" }} as ="select" name="s_address" >
                                             {this.state.addresslist != null ?
                                                 this.state.addresslist.map((address, key) => {
-                                                    return (<option  value={address.del_id} style={{ width: "100%", height: "50px" }} >{" " + address.d_add_1 + "," + address.d_add_2 + "," + address.d_zipcode}</option>)
+                                                    return (<option  value={address._id} style={{ width: "100%", height: "50px" }} >{" " + address.d_add_1 + "," + address.d_add_2 + "," + address.d_zipcode}</option>)
                                                 }
                                                 ) : <option value="none">No Address Added</option>}
                                         </Field>
@@ -806,7 +836,7 @@ import server from '../WebConfig';
 
                 </div>
                 {this.state.openAddInstructions == true?<div>
-                 <Dialog open={this.state.openAddInstructions} onClose={this.handleOnAddClose} fullWidth={true}  >
+                 <Dialog open={this.state.openAddInstructions}  onClose={this.handleOnAddClose} fullWidth={true}  >
                  <DialogTitle>
                  <center> <h5>Add your instructions</h5></center>
                  </DialogTitle>

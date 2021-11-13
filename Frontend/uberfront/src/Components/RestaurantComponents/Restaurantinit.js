@@ -19,7 +19,7 @@ import server from '../WebConfig';
 import  { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { login } from '../../Redux/RestaurantloginandReg/RestaurantActions';
-
+const jwt_decode = require('jwt-decode');
 
 export class Restaurantinit extends Component {
 
@@ -30,7 +30,8 @@ export class Restaurantinit extends Component {
 
             redirect : false,
             loginvalid :"",
-            r_email : ""
+            r_email : "",
+            token:""
 
         }
     }
@@ -51,6 +52,18 @@ export class Restaurantinit extends Component {
 
 
     render() {
+
+        if(this.state.token.length>0)
+        {
+          localStorage.setItem("token", this.state.token);
+  
+           var decoded = jwt_decode(this.state.token.split(' ')[1]);
+           localStorage.setItem("r_id", decoded._id);
+           localStorage.setItem("r_email", decoded.r_email);
+        }
+
+
+
 
        if(this.state.redirect === false)
        {
@@ -110,7 +123,8 @@ export class Restaurantinit extends Component {
                                                    this.setState(
                                                        {
                                                            redirect : true,
-                                                           r_email:datasend.r_email
+                                                           r_email:datasend.r_email,
+                                                           token:res.data.token
                                                        }
                                                    )
                                                }

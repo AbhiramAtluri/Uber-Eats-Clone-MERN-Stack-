@@ -174,3 +174,32 @@ Restaurant_Registration.findOne({_id:r_id},(err,resp)=>
 
 }
 
+exports.CancelOrderCustomer =async function(msg,callback)
+{
+console.log("Inside cancel order model")
+console.log(msg)
+OrderModel.find({_id:msg.o_id},(err,resp)=>
+{
+    if(resp[0].o_status == null || resp[0].o_status == undefined || resp.o_status =="Order Received")
+    {
+        // callback(null,{message:"Success"})
+        console.log(resp)
+        console.log(resp[0].o_status)
+        OrderModel.updateOne({_id:msg.o_id},{$set:{o_status:msg.o_status}},(err,response)=>
+        {
+            if(response)
+            {
+                callback(null,{message:"Success"})
+            }
+        })
+        
+
+    }
+    else
+    {
+        callback(null,{message:"Fail"})
+    }
+})
+
+}
+

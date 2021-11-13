@@ -42,7 +42,7 @@ class CustomerOrders extends Component {
 
 
     componentDidMount(props) {
-
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         axios.post(`${server}/customer/FetchCustomerDetailsById`,
             {
                 c_id: this.props.location.state.c_id
@@ -50,6 +50,7 @@ class CustomerOrders extends Component {
             })
             .then(res => {
                 console.log(res)
+                console.log(res.data.length)
                 this.setState(
                     {
                         order_details: res.data,
@@ -59,7 +60,7 @@ class CustomerOrders extends Component {
                 )
 
                
-
+                console.log(Math.ceil(this.state.order_details.length / this.state.itemsPerPage))
                 this.setState({
                     noOfPages: Math.ceil(this.state.order_details.length / this.state.itemsPerPage)
                 })
@@ -125,6 +126,10 @@ class CustomerOrders extends Component {
             itemsPerPage:e.target.value
 
         })
+        this.setState({
+            noOfPages: Math.ceil(this.state.order_details.length / e.target.value)
+        })
+
 
     }
 
@@ -160,6 +165,7 @@ class CustomerOrders extends Component {
                                                     <option value="Pick up ready">Pick up Ready</option>
                                                     <option value="Picked up">Picked up</option>
                                                     <option value="Order Preparing">Order Preparing</option>
+                                                    <option value="Cancelled">Cancelled</option>
                                                 </select>
                                             </div>
                                         </div>

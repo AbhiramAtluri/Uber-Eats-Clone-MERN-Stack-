@@ -68,6 +68,7 @@ handleOnclose=()=>
 FetchDelAdd=()=>
 {
   let add =""
+  console.log(this.props.order)
  if(this.props.order.del_id!=null)
  {
 
@@ -96,7 +97,23 @@ FetchDelAdd=()=>
   }
 
 }
-
+handleOnCancel = () =>
+{
+  axios.post(`${server}/customer/CancelOrderCustomer`,{
+    o_id:this.props.order._id,
+    o_status:"Cancelled"
+  }).then(res=>
+    {
+      console.log(res);
+      if(res.data.message == "Success")
+      {
+        alert("Order Cancelled");
+      }else
+      {
+        alert("Order is already being prepared");
+      } 
+    })
+}
 
 
     render() {
@@ -118,7 +135,7 @@ console.log(this.state)
                         <button className="btn btn-primary" onClick={this.handleOnClick}   >View Reciept</button>
                      </div>
                      <div className="col-md-2">
-                     <button className="btn btn-primary" >Cancel</button>
+                     <button className="btn btn-primary" onClick={this.handleOnCancel}>Cancel</button>
                       </div> 
                  </div>
                 {this.state.popup_display == true?
@@ -158,6 +175,9 @@ console.log(this.state)
                      <div className = "row">
                     <h5>Status :{this.props.order.o_status==null?<h5>Order Received</h5>:this.props.order.o_status}</h5>
                      </div>
+                     <div className = "row">
+                       <h5>Instructions:{this.props.order.instructions}</h5>
+                       </div>
                     </div>
                     <div className="col-md-6">
                     <div className = "row" style={{marginTop:"15px"}}>
