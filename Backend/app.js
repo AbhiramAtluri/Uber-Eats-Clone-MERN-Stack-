@@ -12,6 +12,12 @@ var indexRouter = require('./routes/index');
 var RestRouter = require('./routes/RestaurantRoutes');
 var custrouter = require('./routes/custroutes')
 var app = express();
+const { ApolloServer } = require('apollo-server');
+const typeDefs = require('./graphQL/typeDefs')
+const resolvers = require('./graphQL/resolvers/rindex')
+
+
+
 const { auth } = require("./utils/passport");
 const passport = require("passport");
 const ipaddress = "localhost"
@@ -54,9 +60,9 @@ app.use(function (req, res, next) {
 
 
 
-app.use('/', indexRouter);
-app.use('/Restaurant', RestRouter);
-app.use('/customer',custrouter)
+// app.use('/', indexRouter);
+// app.use('/Restaurant', RestRouter);
+// app.use('/customer',custrouter)
 
 
 
@@ -73,15 +79,35 @@ var options = {
 };
 
 
-mongoose.connect(mongoDB, options, (err, res) => {
-    if (err) {
-        console.log(err);
-        console.log(`MongoDB Connection Failed`);
-    } else {
-        console.log(`MongoDB Connected`);
-    }
+const servers = new ApolloServer({
+  typeDefs,
+  resolvers
+})
+
+
+mongoose.connect(mongoDB, options).then(()=>
+{
+  console.log('MongoDB Connected');
+  return servers.listen({ port: 3030 });
+}) 
+.then((res)=>{
+  console.log(`Server runningat ${res.url}`)
+})
+.catch(err=>
+  {
+    console.error(err) })
+
+
+//   (err, res) => {
+//     if (err) {
+//         console.log(err);
+//         console.log(`MongoDB Connection Failed`);
+//     } else {
+//         console.log(`MongoDB Connected`);
+//         return servers.listen({port:3030})
+//     }
  
-});
+// });
 
 
 
@@ -104,8 +130,8 @@ app.use(function(err, req, res, next) {
 
 
 
-var session = require('express-session');
-app.listen(3030,()=>{console.log("listening on 3030")})
+// var session = require('express-session');
+// app.listen(3030,()=>{console.log("listening on 3030")})
 
 
  module.exports = app;

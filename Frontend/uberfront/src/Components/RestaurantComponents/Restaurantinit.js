@@ -19,6 +19,7 @@ import server from '../WebConfig';
 import  { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { login } from '../../Redux/RestaurantloginandReg/RestaurantActions';
+import {REST_LOGIN_QUERY} from '../Queries'
 const jwt_decode = require('jwt-decode');
 
 export class Restaurantinit extends Component {
@@ -100,21 +101,24 @@ export class Restaurantinit extends Component {
                                     <Formik initialValues={initialValues}
                                         validationSchema={validationSchema}
                                         enableReinitialize
-                                        onSubmit={(datasend) => {
+                                        onSubmit={async (datasend) => {
                                             console.log(datasend)
-                                           
-                                            axios.post(`${server}/Restaurant/reslog`, {
 
-                                                r_email:datasend.r_email,
-                                                r_password:datasend.r_password,
-                                                
+                                            let query =REST_LOGIN_QUERY 
+
+                                            let variables = {
+                                                   
+                                                rEmail:datasend.r_email,
+                                                rPassword:datasend.r_password,
 
 
-                                            }).then((res) =>
+                                            }
+
+                                            axios.post(`${server}/`,{query,variables}).then(res=>
                                             {
-                                                // console.log("hi")
+                                                   console.log("hi")
                                                 console.log(res)
-                                               if(res.data.message === 'Login successfull')
+                                               if(res.data.data.restLogin === 'Login successfull')
                                                { console.log("sdad")
                                                    const { cookies } = this.props
                                                 //    sessionStorage.setItem("isAuthenticated","true")
@@ -124,7 +128,7 @@ export class Restaurantinit extends Component {
                                                        {
                                                            redirect : true,
                                                            r_email:datasend.r_email,
-                                                           token:res.data.token
+                                                        //    token:res.data.token
                                                        }
                                                    )
                                                }
@@ -138,9 +142,56 @@ export class Restaurantinit extends Component {
                                                     }
                                                 )
                                                }
-                                            })
-                                            
+
+
+
+
+
+                                            }
+
+                                            ).catch(err=>{console.log(err)})
+
                                         }}
+
+                                           
+                                            // axios.post(`${server}/Restaurant/reslog`, {
+
+                                            //     r_email:datasend.r_email,
+                                            //     r_password:datasend.r_password,
+                                                
+
+
+                                            // }).then((res) =>
+                                            // {
+                                            //     // console.log("hi")
+                                            //     console.log(res)
+                                            //    if(res.data.message === 'Login successfull')
+                                            //    { console.log("sdad")
+                                            //        const { cookies } = this.props
+                                            //     //    sessionStorage.setItem("isAuthenticated","true")
+                                            //        cookies.set("uber","isAuth",{expires:0})
+                                                 
+                                            //        this.setState(
+                                            //            {
+                                            //                redirect : true,
+                                            //                r_email:datasend.r_email,
+                                            //                token:res.data.token
+                                            //            }
+                                            //        )
+                                            //    }
+                                            //    else
+                                            //    {
+                                            //        console.log("Invalid")
+                                                      
+                                            //     this.setState(
+                                            //         {
+                                            //             loginvalid :"Invalid credentials"
+                                            //         }
+                                            //     )
+                                            //    }
+                                            // })
+                                            
+                                   
 
                                     >
                                         <Form>

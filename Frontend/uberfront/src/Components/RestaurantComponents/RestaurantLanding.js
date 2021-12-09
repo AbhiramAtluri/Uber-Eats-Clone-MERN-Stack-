@@ -43,6 +43,8 @@ import { removeRname,addDelType,removeDelType } from '../../Redux/CartReducerfil
 import { setCurrentDishList } from '../../Redux/DishesReduxFile/DishActions';
 import { store } from "../../Redux/Store";
 import { useSelector, useDispatch } from 'react-redux'
+import {GET_RESTAURANT_PROFILE} from '../Queries'
+import {GET_DISHES} from '../Queries'
 export class RestaurantLanding extends Component {
 
 
@@ -121,12 +123,20 @@ export class RestaurantLanding extends Component {
                 )
             }
         }
-
-        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-        axios.get(`${server}/Restaurant/details/${this.props.location.state.r_email}`)
+                     let query = GET_RESTAURANT_PROFILE
+                     let variables = {
+                         rId:"61af083d930eccfbf217f96b"
+                     }
+        // axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+        axios.post(`${server}/Restaurant/details/${this.props.location.state.r_email}`,{query,variables})
             .then(
                 res => {
+                    console.log(res.data)
+                    console.log(res.data.data)
+                    console.log(res.data.getRestaurantProfile)
                     //Setting the name of the restaurant after successfully fetching the data
+                     res = {data:res.data.data.getRestaurantProfile}
+                    console.log(res)
                     let cartData = JSON.parse(sessionStorage.getItem("cartData"))
                     let seshstorage_rid = 0
                     if (cartData != null && cartData != undefined && cartData.length >0) {
@@ -174,13 +184,21 @@ export class RestaurantLanding extends Component {
                 })
             ///Fetching Dish data after r_id has been set
             .then(res => {
-            axios.post(`${server}/Restaurant/GetDish`,
-                    {
-                        r_id: this.state.r_id
-                    }
+              
+                
+            let query = GET_DISHES
+            let variables = {
+                r_id: this.state.r_id
+            }
+ 
+            axios.post(`${server}/Restaurant/GetDish`,{query,variables}
                     //Dish data gets collected in below then function
                 ).then(
                     res => {
+                        console.log(res.data.data)
+                        res = {data:res.data.data.getDish}
+                        console.log(res.data.data)
+
                            
                          let values = {
                              dishlist:[...(res.data)]

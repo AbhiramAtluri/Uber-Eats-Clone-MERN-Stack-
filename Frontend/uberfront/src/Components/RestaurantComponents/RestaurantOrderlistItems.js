@@ -12,7 +12,7 @@ import {
   } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import server from '../WebConfig';
-
+import {UPDATE_ORDER_STATUS} from '../Mutation'
 
 export default class RestaurantOrderlistItems extends Component {
 
@@ -29,16 +29,19 @@ export default class RestaurantOrderlistItems extends Component {
     handleOnUpdate =(e)=>
     
     {
-
+    
+        let query=UPDATE_ORDER_STATUS
+       let variables = {
+            oId: this.props.order._id,
+            oStatus: e.o_status
+        }
      axios.post(`${server}/customer/UpdateOrderStatus`,
      {
-         o_id:this.props.order._id,
-         r_id:this.props.order.r_id,
-         o_status:e.o_status
+      query,variables
      })
      .then(res=>
         {
-            if(res.data.message == "success")
+            if(res.data.data.UpdateOrderStatus == "success")
             {
                 console.log(res)
                 alert("Dish Status Updated")
@@ -79,7 +82,7 @@ export default class RestaurantOrderlistItems extends Component {
 
                                 <table>
 
-                                    {JSON.parse((this.props.order.d_list)).map((data, key) => {
+                                    {(this.props.order.d_list).map((data, key) => {
                                         return <tr>
                                             <td>
                                                 {data.d_name}
@@ -99,7 +102,7 @@ export default class RestaurantOrderlistItems extends Component {
                                 </table>
                             </div>
                             <div className="col-md-2">
-                               <p style={{marginTop:"20px"}}> {JSON.parse(this.props.order.d_list)[0].checkoutprice}$</p>
+                               <p style={{marginTop:"20px"}}> {(this.props.order.d_list)[0].checkoutprice}$</p>
                             </div>
                         
                         <div className="col-md-3" style={{padding:"0px"}}>

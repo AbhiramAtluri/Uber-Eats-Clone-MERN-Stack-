@@ -12,6 +12,7 @@ import { bindActionCreators } from 'redux';
 import { c_order_list } from '../../Redux/CustomerLoginandReg/CustomerActions';
 import Pagination from "@material-ui/lab/Pagination";
 import { Box } from "@material-ui/core";
+import {FETCH_CUSTOMER_ORDERS} from '../Queries'
 
 class CustomerOrders extends Component {
 
@@ -21,10 +22,10 @@ class CustomerOrders extends Component {
         this.state = {
 
             c_id: "",
-            order_details: [],
+            order_details: [{d_name:"French Fries",d_price:12,d_picture:"https://uberbucket98.s3-us-east-2.amazonaws.com/media/r2pnzxnzhu6sn0q6pxtum.jpeg",d_quantity:1,c_id:"61af9f0dcb8ef91e4a453d8e",i_price:12,checkoutprice:12}],
             testOrder: [],
             filter: "",
-            MasterOrderDetails: [],
+            MasterOrderDetails: [{d_name:"French Fries",d_price:12,d_picture:"https://uberbucket98.s3-us-east-2.amazonaws.com/media/r2pnzxnzhu6sn0q6pxtum.jpeg",d_quantity:1,c_id:"61af9f0dcb8ef91e4a453d8e",i_price:12,checkoutprice:12}],
             itemsPerPage: 5,
             page: 1,
             noOfPages: 0
@@ -42,7 +43,9 @@ class CustomerOrders extends Component {
 
 
     componentDidMount(props) {
-        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+        // axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+      
+
         axios.post(`${server}/customer/FetchCustomerDetailsById`,
             {
                 c_id: this.props.location.state.c_id
@@ -51,13 +54,13 @@ class CustomerOrders extends Component {
             .then(res => {
                 console.log(res)
                 console.log(res.data.length)
-                this.setState(
-                    {
-                        order_details: res.data,
-                        MasterOrderDetails: res.data,
-                        c_id: this.props.location.state.c_id
-                    }
-                )
+                // this.setState(
+                //     {
+                //         order_details: res.data,
+                //         MasterOrderDetails: res.data,
+                //         c_id: this.props.location.state.c_id
+                //     }
+                // )
 
                
                 console.log(Math.ceil(this.state.order_details.length / this.state.itemsPerPage))

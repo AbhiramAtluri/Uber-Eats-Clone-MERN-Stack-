@@ -13,7 +13,7 @@ import  { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { updateRestProfile } from '../../Redux/RestaurantProfile/RestProfileActionTypes';
 
-
+import {GET_RESTAURANT_PROFILE} from '../Queries'
 
 class RestaurantProfile extends Component {
 
@@ -51,13 +51,17 @@ class RestaurantProfile extends Component {
         const r_id = this.props.location.state.r_id
         const r_email = this.props.location.state.r_name
         // console.log(r_id,r_email)
+      
+        let query = GET_RESTAURANT_PROFILE
+                     let variables = {
+                         rId:"61af083d930eccfbf217f96b"
+                     }
 
-        axios.post(`${server}/Restaurant/getRestaurantProfileDetails`,
-        { 
-            r_id:r_id
-           
-        }).then(res =>
-            {
+
+
+        axios.post(`${server}/Restaurant/getRestaurantProfileDetails`,{query,variables}).then(res =>
+            {   
+                res = {data:res.data.data.getRestaurantProfile}
                 console.log(res.data)
                   this.setState(
                       {
@@ -109,6 +113,7 @@ class RestaurantProfile extends Component {
     handleOnSubmit = (e)=>
     {  
         console.log("In ")
+        alert("Profile Update success")
         console.log(e)
         console.log(e.del_type+"Delivery type")
         axios.post(`${server}/Restaurant/RestProfUpdate`,

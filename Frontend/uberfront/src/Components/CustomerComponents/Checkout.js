@@ -25,6 +25,7 @@ import { clearCart } from '../../Redux/CartReducerfile/Cartactions';
 import { placed_order,add_Instructions } from '../../Redux/CustomerLoginandReg/CustomerActions';
 import NavbarCust from './CustomerNavBar';
 import server from '../WebConfig';
+import {PLACE_ORDER} from '../Mutation'
 
 
 
@@ -451,25 +452,42 @@ import server from '../WebConfig';
         var min = date.getMinutes()
         var sec = date.getSeconds()
         var time = hours+":"+min+":"+sec
-    
-        axios.post(`${server}/customer/PlaceOrder`,
-        {
+       
+      let query = PLACE_ORDER
+      
+      let variables = {
+        cId: this.state.c_id,
+        rId: this.state.r_id,
+        dList:"test",
+        delType:this.state.del_type,
+        delId: null,
+        oDate: idate,
+        oTime: time,
+        rName:this.state.r_name,
+        oStatus: null
+      }
+
+    //   {
               
-            c_id:this.state.c_id,
-            r_id:this.state.r_id,
-            d_list:cartData,
-            del_type:this.state.del_type,
-            del_id:null,
-            o_date:idate,
-            o_time: time,
-            r_name:this.state.r_name,
-            instructions:this.state.instructions
-        }
-        )
+    //     c_id:this.state.c_id,
+    //     r_id:this.state.r_id,
+    //     d_list:cartData,
+    //     del_type:this.state.del_type,
+    //     del_id:null,
+    //     o_date:idate,
+    //     o_time: time,
+    //     r_name:this.state.r_name,
+    //     instructions:this.state.instructions
+    // }
+
+
+        axios.post(`${server}/customer/PlaceOrder`, {query,variables})
         .then(res=>
             {
-               if(res.data.message == "Successful")
-               {console.log("hi")
+               console.log(res)
+               console.log(res.data)
+                res = {data:res.data.data.PlacingOrder}
+             
 
                let values = {c_id:this.state.c_id,
                 r_id:this.state.r_id,
@@ -489,7 +507,7 @@ import server from '../WebConfig';
                    )
                    this.props.clearCart()
                    sessionStorage.clear()
-               }
+               
             }
             )       
 

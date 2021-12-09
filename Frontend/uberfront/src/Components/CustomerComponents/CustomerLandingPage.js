@@ -37,8 +37,9 @@ import { bindActionCreators } from 'redux'
 import { c_logoff } from '../../Redux/CustomerLoginandReg/CustomerActions';
 import NavbarCustland from './CustLandNavBar'
 import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
-
-
+import {GET_CUSTOMER_PROFILE} from '../Queries'
+import {GET_ALL_NEAREST_RESTAURANTS} from '../Queries'
+import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
 // import NavbarRest from './CustomerNavBar';
 
  class CustomerLandingPage extends Component {
@@ -99,7 +100,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
             }
         )
-
+     
 
         ////Getting Customer Favs
          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
@@ -121,10 +122,15 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
         console.log(this.state.c_county)
         console.log(this.state.c_county + "Before component")
         if (this.state.c_county === "") {
-            axios.post(`${server}/customer/CustomerProfileFetch`, { c_email: c_email })
+
+            let query =GET_CUSTOMER_PROFILE
+            let variables = {
+                cEmail:"Mike@test.com"
+            }
+
+
+            axios.post(`${server}/customer/CustomerProfileFetch`, {query,variables})
                 .then(res =>
-
-
                 ///NEAREST RESTAURANTS ARE FETCHED AFTER GETTING THE PROFILE DETAILS FROM ABOVE REQUEST
                 {
                     console.log(res.data.c_county)
@@ -142,7 +148,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
 
                     }
                     else {
-                        this.loadLandingPageRestaurantList("Santa Clara")
+                        this.loadLandingPageRestaurantList("San Jose")
                     }
                 }
 
@@ -162,24 +168,28 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
         ////Fetching the nearest and farthest restaurants  
         let nearbyrestaurants = `${server}/Restaurant/GetAllNearestRestaurants`
         let restallrestaurants = `${server}/Restaurant/GetFarAwayRestaurants`
-
+          
+        var query = GET_ALL_NEAREST_RESTAURANTS
+        var variables = {cCounty:c_county}
 
         const responseOne = axios.post(nearbyrestaurants,
-            {
-                c_county: c_county
+            {query,variables
             })
+        var query =GET_FAR_AWAY_RESTAURANTS
         const responseTwo = axios.post(restallrestaurants,
             {
-                c_county: c_county
+               query,variables
             }) 
 
         axios.all([responseOne, responseTwo])
             .then(axios.spread((...responses) => {
                 console.log(responses[0])
-                let a = responses[0].data
+
+                let a = responses[0].data.data.getAllnearestRestaurants
                 console.log(a)
+                console.log(responses[1])
                 if ((a.message != 'NoLoc') || (a.message != 'NoLoc')) {
-                    let responseN = responses[0].data
+                    let responseN = responses[0].data.data.getAllnearestRestaurants
                     let responseF = responses[1].data
 
 
@@ -188,7 +198,7 @@ import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
                     console.log(responseF)
                     if(search  == false)
                     {
-                    var r_list = responseN.concat(responseF)
+                    var r_list = responseN
                     }
                     else
                     {

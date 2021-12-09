@@ -17,7 +17,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik"
 //  const bcrypt = require('bcrypt');
 //  var bcrypt = require('bcryptjs');
 import server from '../WebConfig';
-
+import {CUST_REGISTRATION} from '../Mutation'
 
 export class CustomerRegistration extends Component {
 
@@ -79,16 +79,21 @@ export class CustomerRegistration extends Component {
                                                 {
                                                     // var salt = bcrypt.genSaltSync(10);
                                                     // var hash = bcrypt.hashSync(, salt); 
-                                                    
+                                                    const query = CUST_REGISTRATION
 
-                                                    axios.post(`${server}/customer/custreg`,
-                                                    {
-                                                           c_name :data.c_name,
-                                                           c_email :data.c_email,
-                                                           c_password :data.c_password
+                                                    let variables = {
+                                                        cName :data.c_name,
+                                                        cEmail :data.c_email,
+                                                        cPassword :data.c_password
                                                     }
+
+                                                    axios.post(`${server}/customer/custreg`,{          
+                                                                                 query,variables}
+                                                 
                                                     ).then((res) =>
-                                                    {
+                                                    {   
+                                                        console.log(res)
+                                                        res = {data:res.data.data.customerRegistration}
                                                        if(res.data == "Invalid") 
                                                        {
                                                         

@@ -4,7 +4,7 @@ var auth = require('../models/authentication')
 var restget = require('../models/restgetrequests')
 var dishrequests = require('../models/dishrequest')
 var kafka = require('../kafka/client')
-const { checkAuth } = require("../utils/passport");
+// const { } = require("../utils/passport");
 const { secret } = require('../config');
 const jwt = require('jsonwebtoken');
 /* RestPost requests listing. */
@@ -63,7 +63,7 @@ router.post('/reslog', (req, res) => {
 ///Profile API'S
 
 
-router.post('/RestProfUpdate',checkAuth, (req, res) => {
+router.post('/RestProfUpdate', (req, res) => {
     console.log("In rest Profile Update");
     kafka.make_request('updateRestaurantProfile', req.body, function (err, results) {
         console.log(
@@ -85,33 +85,12 @@ router.post('/RestProfUpdate',checkAuth, (req, res) => {
     })
 })
 //Get Restaurant Profile.
-router.post('/getRestaurantProfileDetails',checkAuth,(req,res)=>{
-    console.log("Get Restaurant Profile")
-    kafka.make_request('getRestaurantProfile', req.body, function (err, results) {
-        console.log(req.body)
-        console.log(
-            "get Restaurant Profile"
-        )
-        console.log(results);
-        if (err) {
-            console.log("Inside err");
-            res.json({
-                msg: "Err"
-            })
-        } else {
-            console.log("Sending postman response get rest profile")
-            res.json({
-                ...results
-            });
-
-        }
-    })
+router.post('/getRestaurantProfileDetails',restget.getRestaurantDetails)
 
 
 
 
-})
-router.post('/addish',checkAuth, (req,res)=>
+router.post('/addish', (req,res)=>
 {
     console.log("Add dish")
     kafka.make_request("AddDish",req.body,function(err,results)
@@ -135,7 +114,7 @@ router.post('/addish',checkAuth, (req,res)=>
     })
 })
 ///Editing Dishes
-router.post('/EditDish',checkAuth, (req,res)=>
+router.post('/EditDish', (req,res)=>
 {
     console.log("Edit Dishes")
     kafka.make_request("EditDish",req.body,function(err,results)
@@ -158,7 +137,7 @@ router.post('/EditDish',checkAuth, (req,res)=>
 })
 auth.getCustomerProfileBasedOnCid
 ///Getting customer profile based on c_id
-router.get('/ProfileBasedOnCid',checkAuth,(req,res)=>
+router.get('/ProfileBasedOnCid',(req,res)=>
 {
     console.log("Get Customer Profile based on Cid")
     kafka.make_request("ProfileBasedOnCid",req.body,function(err,results)
@@ -181,34 +160,34 @@ router.get('/ProfileBasedOnCid',checkAuth,(req,res)=>
 } )
 
 ///Customer landing page Rest get API'S
-//router.get('/GetAllRestaurants', restget.getAllRestaurants)
-router.get("/GetAllRestaurants",checkAuth,(req,res)=>
-{
-    // console.log(req.body)
-    console.log("Get All Restaurants")
-   kafka.make_request("GetAllRestaurants","Restaurant Get Request",function(err,results)
-   {
-       console.log("Get All Restaurants")
-       console.log(results)
-       if(err)
-       {
-           console.log("Inside err");
-           res.json({
-               msg:"Err"
-           })
-       }else
-       {
-           console.log("Sending postman response")
-           res.json({
-               ...results
-           });
-           res.end();
-       }
-   })
-})
+router.get('/GetAllRestaurants', restget.getAllRestaurants)
+// router.get("/GetAllRestaurants",(req,res)=>
+// {
+//     // console.log(req.body)
+//     console.log("Get All Restaurants")
+//    kafka.make_request("GetAllRestaurants","Restaurant Get Request",function(err,results)
+//    {
+//        console.log("Get All Restaurants")
+//        console.log(results)
+//        if(err)
+//        {
+//            console.log("Inside err");
+//            res.json({
+//                msg:"Err"
+//            })
+//        }else
+//        {
+//            console.log("Sending postman response")
+//            res.json({
+//                ...results
+//            });
+//            res.end();
+//        }
+//    })
+// })
 //Get Restaurant details from Email
 //router.get('/details/:r_email', restget.getRestaurantDetails)
-router.get('/details/:r_email',checkAuth,(req,res)=>
+router.get('/details/:r_email',(req,res)=>
 
 {
     console.log("Get Restaurant 11details from email");
@@ -242,7 +221,7 @@ router.post('/resprof', auth.resterauntProfile)
 
 
 
-router.post('/GetDish',checkAuth,(req,res)=>
+router.post('/GetDish',(req,res)=>
 {
     console.log("Get Restaurant dishes")
     kafka.make_request("GetDish",req.body,function(err,results)
@@ -268,7 +247,7 @@ router.post('/GetDish',checkAuth,(req,res)=>
 //Adding Restaurant to favourites
 
 //router.post('/AddRestToFav', restget.AddRestaurantToFavourites)
-router.post('/AddRestToFav',checkAuth, (req,res)=>
+router.post('/AddRestToFav', (req,res)=>
 {
     console.log("Add Restaurant to Favourites")
     kafka.make_request("AddRestToFav",req.body,function(err,results)
@@ -289,7 +268,7 @@ router.post('/AddRestToFav',checkAuth, (req,res)=>
     })
 })
 ///Get the fav rest details based on id in c_fav pagee
-router.post('/GetFavRestDetails',checkAuth,(req,res)=>
+router.post('/GetFavRestDetails',(req,res)=>
 {
     kafka.make_request("GetFavRestDetails",req.body,function(err,results)
     {
@@ -319,7 +298,7 @@ router.post('/GetFavRestDetails',checkAuth,(req,res)=>
 
 
 
-router.post('/GetFavRest',checkAuth,(req,res)=>
+router.post('/GetFavRest',(req,res)=>
 {
     console.log("Get Fav Restaurants")
     kafka.make_request("GetFavRest",req.body,function(err,results)
@@ -346,7 +325,7 @@ router.post('/GetFavRest',checkAuth,(req,res)=>
 
 //router.post('/GetAllNearestRestaurants', restget.getAllnearestRestaurants)
 
-router.post('/GetAllNearestRestaurants',checkAuth, (req,res)=>{
+router.post('/GetAllNearestRestaurants', (req,res)=>{
     console.log(req.body);
     kafka.make_request("getAllNearestRestaurants1",req.body,function(err,results)
     {
@@ -380,7 +359,7 @@ router.post('/GetAllNearestRestaurants',checkAuth, (req,res)=>{
 //router.post('/GetFarAwayRestaurants', restget.getFarAwayRestaurants)
 
 
-router.post('/GetFarAwayRestaurants',checkAuth,(req,res)=>
+router.post('/GetFarAwayRestaurants',(req,res)=>
 {
     console.log("Get Far Fav Restaurants")
     console.log(req.body)
@@ -415,7 +394,7 @@ router.post('/GetFarAwayRestaurants',checkAuth,(req,res)=>
 })
 //Get Restaurant based on dish
 // router.post('/GetRestaurantsBasedOnDish', restget.getRestaurantsBasedOnDish)
-router.post('/GetRestaurantsBasedOnDish',checkAuth, (req,res)=>
+router.post('/GetRestaurantsBasedOnDish', (req,res)=>
 {
     console.log(req.body)
     kafka.make_request("GetRestaurantsBasedOnDish",req.body,function(err,results)
@@ -445,7 +424,7 @@ router.post('/GetRestaurantsBasedOnDish',checkAuth, (req,res)=>
 
 //router.post('/GetRestarantsBasedonDishTypeFilter', restget.getRestaurantsBasedonVegFilter)
 
-router.post('/GetRestarantsBasedonDishTypeFilter',checkAuth, (req,res)=>
+router.post('/GetRestarantsBasedonDishTypeFilter', (req,res)=>
 {  console.log("Get restaurant based  on dish type filter___-")
     console.log(req.body);
     kafka.make_request("GetRestarantsBasedonDishTypeFilter",req.body,function(err,results)

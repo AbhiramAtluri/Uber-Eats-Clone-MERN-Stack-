@@ -18,12 +18,6 @@ exports.AddDish = async function(req,res)
      let d_description = req.body.d_description
      let d_type = req.body.d_type
      
-
-   //   db.query("INSERT INTO dishes(r_id,d_name,d_price,d_category,d_picture,d_description,d_type) VALUES(?,?,?,?,?,?,?)",[r_id,d_name,d_price,d_category,d_picture,d_description,d_type])
-   //   .then(resp =>
-   //      {
-   //         res.send("Success")         
-   //      }).catch(err =>res.send("Invalid"))
 console.log("heu")
 console.log(req.body)
    let newDish = new DishModel(
@@ -60,15 +54,6 @@ exports.getDish = async function(req,res)
     console.log("In Get dsish node backend")
    let r_id = req.body.r_id
 
-   // db.query("SELECT * FROM dishes where dishes.r_id = ?",[r_id])
-   // .then(resp =>
-   //  {
-   //      resp = Object.values(JSON.parse(JSON.stringify(resp)));  
-   //      console.log(resp[0])    
-   //             res.json(resp[0])
-
-   //  }).catch(err =>console.log(err))
-
 
     DishModel.find({r_id:req.body.r_id},(err,resp)=>
     {
@@ -86,14 +71,7 @@ exports.editDish = async function (req,res) {
 
    console.log("In edit dish")
    
-   // db.query("UPDATE dishes SET d_name = ?,d_price = ?,d_category = ?, d_picture =?, d_description = ? where d_id = ?",
-   // [req.body.d_name,req.body.d_price,req.body.d_category,req.body.d_picture,req.body.d_description, req.body.d_id,])
-   // .then(resp=>{
 
-   //    res.send("Success")
-   
-   // })
-   // .catch(err=>{console.log(err)})
    console.log(req.body)
     
   DishModel.updateOne({_id:req.body.d_id},{$set:{d_name:req.body.d_name,d_price:req.body.d_price,d_category:req.body.d_category,d_picture:req.body.d_picture,d_description:req.body.d_description}},(err,resp)=>

@@ -13,7 +13,7 @@ import server from '../WebConfig';
 import  { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { updateCustProfile } from '../../Redux/CustomerProfile/CustomerProfileActions';
-
+import {GET_CUSTOMER_PROFILE} from '../Queries'
 
 export class CustomerProfile extends Component {
 
@@ -70,15 +70,14 @@ export class CustomerProfile extends Component {
 
         } else {
             // axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-            axios.post(`${server}/customer/CustomerProfileBasedOnId`,
-                {
-                    c_id: c_id,
+            const query = GET_CUSTOMER_PROFILE
+            let variables = {
+                c_email:"Mike@test.com"
+            }
+            axios.post(`${server}/`, {query,variables},).then(res => {
 
-                },{'authorization':localStorage.getItem('token')}
-
-            ).then(res => {
-
-                console.log(res.data[0])
+                console.log(res.data)
+                res = {data:res.data.data.customerRegistration}
                 this.setState(
                     {
                         c_city: res.data.c_city,
@@ -118,13 +117,16 @@ export class CustomerProfile extends Component {
 
     FetchProfileDetails = (c_email) => {
         console.log("In  FetchProfileDetails ")
-         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-        axios.post(`${server}/customer/CustomerProfileFetch`,
-            {
-                c_email: c_email,
+        //  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+        const query = GET_CUSTOMER_PROFILE
+        let variables = {
+            cEmail:"Mike@test.com"
+        }
 
-            }).then(res => {
+        axios.post(`${server}/customer/CustomerProfileFetch`,{query,variables}).then(res => {
 
+            console.log(res.data)
+            res = {data:res.data.data.getCustomerProfileDetails}
             console.log(res.data)
             this.setState(
                 {
