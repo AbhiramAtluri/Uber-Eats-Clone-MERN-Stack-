@@ -7,10 +7,12 @@ import config from "../S3upload"
 import S3 from 'react-aws-s3';
 import NavbarRest from './RestaurantNavBar';
 import server from '../WebConfig';
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import {NewAddedDish} from '../../Redux/DishesReduxFile/DishActions';
+import  { ADD_DISH} from '../Mutation'
 
-
-
-export default class AddDish extends Component {
+ class AddDish extends Component {
 
     constructor(props) {
         super(props)
@@ -23,12 +25,24 @@ export default class AddDish extends Component {
         }
     }
 
+
+    static mapStateToProps = state =>
+    {
+        return {Rest: state.values}
+    }
+    static mapDispatchtoProps = dispatch =>
+    {
+        return bindActionCreators({NewAddedDish},dispatch)
+    }
+
+
+
     componentDidMount(props)
     {
         // console.log(this.props.location.state.r_id)
      this.setState(
          {
-              r_id:this.props.location.state.r_id,
+              r_id:"61af0a1c930eccfbf217f96e",
               r_name:this.props.location.state.r_name
          }
      )
@@ -39,20 +53,33 @@ export default class AddDish extends Component {
     handleonSubmit =(e)=>
     {
          console.log(e)
-        axios.post(`${server}/Restaurant/addish`,
-        { 
-            r_id:this.state.r_id,
-            d_name:e.d_name,
-            d_price:e.d_price,
-            d_category:e.d_category,
+         const query = ADD_DISH
+         
+         let variables ={ 
+            rId:this.state.r_id,
+            dName:e.d_name,
+            dPrice:e.d_price,
+            dCategory:e.d_category,
             d_description:e.d_description,
-            d_picture:this.state.d_picture,
-            d_type:e.d_type
+            dPicture:this.state.d_picture,
+            dType:e.d_type
            
-        }).then(res =>
+        }
+        axios.post(`${server}/Restaurant/addish`,{query,variables}).then(res =>
             {alert("Dish added Successfully")
-            
-              window.location.reload()
+               
+            let value = {
+                dish:[{r_id:this.state.r_id,
+                    d_name:e.d_name,
+                    d_price:e.dPrice,
+                    d_category:e.d_category,
+                    d_description:e.d_description,
+                    d_picture:this.state.d_picture,
+                    d_type:e.d_type}]
+            }
+            this.props.NewAddedDish(value)
+
+              
              }
             )
         .catch(err=>{console.log(err)})
@@ -186,3 +213,5 @@ export default class AddDish extends Component {
         )
     }
 }
+
+export default   connect(AddDish.mapStateToProps,AddDish.mapDispatchtoProps)(AddDish)
