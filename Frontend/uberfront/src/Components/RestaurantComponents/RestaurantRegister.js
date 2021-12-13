@@ -6,7 +6,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik"
 import StateList from './Rstates';
 import Navbar from '../Navbar';
 import server from '../WebConfig';
-import {RESTAURANT_REGISTER} from '../Mutation'
+
 
 import {
     BrowserRouter as Router,
@@ -44,22 +44,19 @@ export class RestaurantRegister extends Component {
       
         const regex = new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$')
   
-        const query = RESTAURANT_REGISTER
+        
+        axios.post(`${server}/Restaurant/resreg`, {
 
-        let variables ={
-
-            rEmail: event.r_email,
-            rName: event.r_name,
-            rPassword: event.r_password,
-            rState: event.r_state
+            r_email: event.r_email,
+            r_name: event.r_name,
+            r_password: event.r_password,
+            r_state: event.r_state
            
 
-        }
-
-         axios.post(`${server}/`,{query,variables}).then(res=>{
-
-             console.log(res)
-              if(res.data.message =="Invalid")
+        }).then(res => { 
+            // console.log(object)
+            console.log(res)
+              if(res.data =="Invalid")
                {
                     alert("Regsistration unsuccessfull")
                }
@@ -73,49 +70,13 @@ export class RestaurantRegister extends Component {
                 )
                    
                }
-
-
-
-
-
-            })
-   
-
-
-
-        
-        // axios.post(`${server}/Restaurant/resreg`, {
-
-        //     r_email: event.r_email,
-        //     r_name: event.r_name,
-        //     r_password: event.r_password,
-        //     r_state: event.r_state
-           
-
-        // }).then(res => { 
-        //     // console.log(object)
-        //     console.log(res)
-        //       if(res.data =="Invalid")
-        //        {
-        //             alert("Regsistration unsuccessfull")
-        //        }
-        //        else{
-        //         console.log("Hello");
-        //        alert("Registration Successfull")
-        //         this.setState(
-        //             {
-        //                 redirect : true
-        //             }
-        //         )
-                   
-        //        }
             
-        //     }
+            }
               
         
-        // ).catch(err => { 
-        //     console.log(err) 
-        // })
+        ).catch(err => { 
+            console.log(err) 
+        })
     }
 
   

@@ -19,17 +19,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import  { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { clearCart } from '../../Redux/CartReducerfile/Cartactions';
-import { placed_order,add_Instructions } from '../../Redux/CustomerLoginandReg/CustomerActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Typography from '@mui/material/Typography';
 import NavbarCust from './CustomerNavBar';
 import server from '../WebConfig';
-import {PLACE_ORDER} from '../Mutation'
 
-
-
- class Checkout extends Component {
+export default class Checkout extends Component {
 
 
     constructor(props) {
@@ -51,29 +47,15 @@ import {PLACE_ORDER} from '../Mutation'
             Selected_Address:"",
             open_dialog:false,
             redirect:false,
-            r_name:"",
-            openAddInstructions:false,
-            instructions:""
+            r_name:""
             
         }
     }
-
-    static mapStateToProps = state =>
-    {
-        return {Cust: state.values}
-    }
-    static mapDispatchtoProps = dispatch =>
-    {
-        return bindActionCreators({clearCart,placed_order,add_Instructions },dispatch)
-    }
-
-
 
     componentDidMount(props) {
 
         // const checkoutList = this.props.location.state.checkoutList
         const c_id = this.props.location.state.c_id
-        console.log(c_id)
         console.log(this.props.location.state.del_type)
         let checkoutList = JSON.parse(sessionStorage.getItem("cartData"))
         
@@ -106,17 +88,14 @@ import {PLACE_ORDER} from '../Mutation'
         )
             .then(res => {
 
-                console.log(res.data[0])
-                console.log(res.data._id)
+
+
                 this.setState(
                     {
-                        addresslist: [...(res.data)]
+                        addresslist: res.data
                     }
                 )
 
-            //  console.log(this.state.addresslist)
-            //  console.log(this.state.addresslist[0])
-            //  console.log(this.state.addresslist[0]._id)
 
             })
         ///Fetching customer number
@@ -125,12 +104,12 @@ import {PLACE_ORDER} from '../Mutation'
                 c_id: c_id
             })
             .then(res => {
-                console.log(res.data)
+                console.log(res.data[0])
                 this.setState(
                     {
-                        c_number: res.data.c_number,
-                        c_name: res.data.c_name,
-                        c_email: res.data.c_email
+                        c_number: res.data[0].c_number,
+                        c_name: res.data[0].c_name,
+                        c_email: res.data[0].c_email
                     }
                 )
 
@@ -230,22 +209,11 @@ import {PLACE_ORDER} from '../Mutation'
           {
              if(res.data.message == "Successful")
              {
-              let values = [{c_id:this.state.c_id,
-                r_id:this.state.r_id,
-                d_list:cartData,
-                del_type:this.state.del_type,
-                del_id:data.s_address,
-                o_date:idate,
-              o_time: time,
-              r_name:this.state.r_name}]
-                   this.props.placed_order(values)
-
                 this.setState(
                     {
                         open_dialog:true
                     }
                 )
-                this.props.clearCart()
                 sessionStorage.clear() 
              }
           }
@@ -350,21 +318,8 @@ import {PLACE_ORDER} from '../Mutation'
                 del_type:this.state.selected_delivery_type
             }
         )
-        this.props.clearCart()
         sessionStorage.clear()
     }
-    // else
-    // {
-    //   await this.setState(
-    //       {
-    //           del_type:"s_pickup"
-    //       }
-    //   )
-    //   this.props.clearCart()
-    //   sessionStorage.clear()
-
-
-    // }
    let date = new Date()
 
    let idate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
@@ -398,18 +353,6 @@ import {PLACE_ORDER} from '../Mutation'
                 }
                 
             )
-
-          let values = {    c_id:this.state.c_id,
-            r_id:this.state.r_id,
-            d_list:cartData,
-            del_type:this.state.del_type,
-            del_id:del_id,
-            o_date:idate,
-            o_time: time,
-            r_name:this.state.r_name}
-
-            this.props.placed_order(values)
-            this.props.clearCart()
             sessionStorage.clear()
            }
         }
@@ -427,7 +370,7 @@ import {PLACE_ORDER} from '../Mutation'
         console.log("inp")
         let cartData = JSON.parse(sessionStorage.getItem("cartData"))
         console.log(cartData)
-        if(this.state.del_type == "s_both"  && this.state.selected_delivery_type!="")
+        if(this.state.del_type == "s_both")
         {
            await this.setState(
                 {
@@ -435,16 +378,6 @@ import {PLACE_ORDER} from '../Mutation'
                 }
             )
         }
-        else
-        {
-            await this.setState(
-                {
-                    del_type:"s_pickup"
-                }
-            )
-
-        }
-        
         let date = new Date()
         let idate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
    
@@ -452,62 +385,31 @@ import {PLACE_ORDER} from '../Mutation'
         var min = date.getMinutes()
         var sec = date.getSeconds()
         var time = hours+":"+min+":"+sec
-       
-      let query = PLACE_ORDER
-      
-      let variables = {
-        cId: this.state.c_id,
-        rId: this.state.r_id,
-        dList:"test",
-        delType:this.state.del_type,
-        delId: null,
-        oDate: idate,
-        oTime: time,
-        rName:this.state.r_name,
-        oStatus: null
-      }
-
-    //   {
+    
+        axios.post(`${server}/customer/PlaceOrder`,
+        {
               
-    //     c_id:this.state.c_id,
-    //     r_id:this.state.r_id,
-    //     d_list:cartData,
-    //     del_type:this.state.del_type,
-    //     del_id:null,
-    //     o_date:idate,
-    //     o_time: time,
-    //     r_name:this.state.r_name,
-    //     instructions:this.state.instructions
-    // }
-
-
-        axios.post(`${server}/customer/PlaceOrder`, {query,variables})
+            c_id:this.state.c_id,
+            r_id:this.state.r_id,
+            d_list:cartData,
+            del_type:this.state.del_type,
+            del_id:null,
+            o_date:idate,
+            o_time: time,
+            r_name:this.state.r_name
+        }
+        )
         .then(res=>
             {
-               console.log(res)
-               console.log(res.data)
-                res = {data:res.data.data.PlacingOrder}
-             
-
-               let values = {c_id:this.state.c_id,
-                r_id:this.state.r_id,
-                d_list:cartData,
-                del_type:this.state.del_type,
-                del_id:null,
-                o_date:idate,
-                o_time: time,
-                r_name:this.state.r_name}
-                this.props.placed_order(values)
-
-
+               if(res.data.message == "Successful")
+               {console.log("hi")
                    this.setState(
                        {
                            open_dialog:true
                        }
                    )
-                   this.props.clearCart()
                    sessionStorage.clear()
-               
+               }
             }
             )       
 
@@ -586,44 +488,8 @@ import {PLACE_ORDER} from '../Mutation'
         })
     }
 
-    handleAddInstructions = ()=>
-    {
-        this.setState(
-            {
-                openAddInstructions:true
-            }
-        )
-    }
-    handleOnAddClose = ()=>
-    {
-        this.setState(
-            {
-                openAddInstructions:false
-            })
-    }
-
-    handleAddInstSubmit = (e)=>
-       {
-          e.preventDefault()  
-         console.log(e.target.instructions.value)
-         this.setState(
-             {
-                 instructions:e.target.instructions.value
-             }
-         )
-         let values = {
-             instructions:e.target.instructions.value
-         }
-        this.props.add_Instructions(values)
-        this.setState(
-            {
-                openAddInstructions:false
-            })
-
-       }
 
     render() {
-        console.log(this.state)
 
         const initialValues = {
             d_name: this.state.c_name,
@@ -734,7 +600,7 @@ import {PLACE_ORDER} from '../Mutation'
                                         <Field style={{ width: "100%", height: "50px" }} as ="select" name="s_address" >
                                             {this.state.addresslist != null ?
                                                 this.state.addresslist.map((address, key) => {
-                                                    return (<option  value={address._id} style={{ width: "100%", height: "50px" }} >{" " + address.d_add_1 + "," + address.d_add_2 + "," + address.d_zipcode}</option>)
+                                                    return (<option  value={address.del_id} style={{ width: "100%", height: "50px" }} >{" " + address.d_add_1 + "," + address.d_add_2 + "," + address.d_zipcode}</option>)
                                                 }
                                                 ) : <option value="none">No Address Added</option>}
                                         </Field>
@@ -815,9 +681,6 @@ import {PLACE_ORDER} from '../Mutation'
                                                 <div className="col-md-3"  >
                                                     <center>  <h5>{this.state.total_price}$</h5> </center>
                                                 </div>
-                                                <div className="col-md-5">
-                                                  <button style={{marginLeft:"92px",height:"35px"}} onClick={this.handleAddInstructions} className="btn btn-primary">Add Instructions</button> 
-                                                 </div>   
                                             </div>
                                             {this.state.del_type == "s_both"?
                                             <div className="col-md-12" style={{paddingTop:"15px"}} >
@@ -853,27 +716,8 @@ import {PLACE_ORDER} from '../Mutation'
                    }
 
                 </div>
-                {this.state.openAddInstructions == true?<div>
-                 <Dialog open={this.state.openAddInstructions}  onClose={this.handleOnAddClose} fullWidth={true}  >
-                 <DialogTitle>
-                 <center> <h5>Add your instructions</h5></center>
-                 </DialogTitle>
-                 <DialogContent>
-                    <center>
-                        <form onSubmit={e=>{this.handleAddInstSubmit(e)}} >
-                        <textarea name="instructions" style={{width:"100%"}}></textarea>
-                         <button className="btn btn-primary" type="submit" >Add instructions</button> 
-                        </form>
-                    </center>                              
-
-                 </DialogContent>
-                 </Dialog>
-                </div>:""
-
-                }
+                
             </div>
         )
     }
 }
-
-export default   connect(Checkout.mapStateToProps,Checkout.mapDispatchtoProps)(Checkout)

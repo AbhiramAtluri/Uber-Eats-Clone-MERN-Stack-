@@ -12,21 +12,14 @@ var indexRouter = require('./routes/index');
 var RestRouter = require('./routes/RestaurantRoutes');
 var custrouter = require('./routes/custroutes')
 var app = express();
-const { ApolloServer } = require('apollo-server');
-const typeDefs = require('./graphQL/typeDefs')
-const resolvers = require('./graphQL/resolvers/rindex')
-
-
-
-const { auth } = require("./utils/passport");
-const passport = require("passport");
-const ipaddress = "localhost"
+const ipaddress = "18.222.154.155"
 app.set('view engine', 'jade');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-auth()
-app.use(passport.initialize());
- app.use(cors({origin:`http://${ipaddress}:3000`,credentials:true}))
+
+
+
+app.use(cors({origin:`http://${ipaddress}:3000`,credentials:true}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(bodyparser.json())
@@ -36,79 +29,17 @@ app.use(fileupload())
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-const {frontendURL} = require('./config');
-// app.use(cors({ origin: frontendURL, credentials: true }));
-app.use(session({
-  secret: 'cmpe273uber',
-  resave:false,
-  saveUninitialized:false
-}))
-
-const mongoose = require('mongoose');
+// app.use(session({
+//   secret: 'cmpe273uber',
+//   resave:false,
+//   saveUninitialized:false
+// }))
 
 
 
-app.use(function (req, res, next) {
-  //  res.setHeader('Access-Control-Allow-Origin', frontendURL);
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-  res.setHeader('Cache-Control', 'no-cache');
-  next();
-});
-
-
-
-// app.use('/', indexRouter);
-// app.use('/Restaurant', RestRouter);
-// app.use('/customer',custrouter)
-
-
-
-const { mongoDB } = require('./config');
-
-
-
-
-var options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  maxPoolSize:500
-
-};
-
-
-const servers = new ApolloServer({
-  typeDefs,
-  resolvers
-})
-
-
-mongoose.connect(mongoDB, options).then(()=>
-{
-  console.log('MongoDB Connected');
-  return servers.listen({ port: 3030 });
-}) 
-.then((res)=>{
-  console.log(`Server runningat ${res.url}`)
-})
-.catch(err=>
-  {
-    console.error(err) })
-
-
-//   (err, res) => {
-//     if (err) {
-//         console.log(err);
-//         console.log(`MongoDB Connection Failed`);
-//     } else {
-//         console.log(`MongoDB Connected`);
-//         return servers.listen({port:3030})
-//     }
- 
-// });
-
+app.use('/', indexRouter);
+app.use('/Restaurant', RestRouter);
+app.use('/customer',custrouter)
 
 
 // catch 404 and forward to error handler
@@ -130,8 +61,8 @@ app.use(function(err, req, res, next) {
 
 
 
-// var session = require('express-session');
-// app.listen(3030,()=>{console.log("listening on 3030")})
+var session = require('express-session');
+app.listen(3030,()=>{console.log("listening on 3030")})
 
 
  module.exports = app;

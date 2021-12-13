@@ -7,12 +7,10 @@ import config from "../S3upload"
 import S3 from 'react-aws-s3';
 import NavbarRest from './RestaurantNavBar';
 import server from '../WebConfig';
-import  { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import {NewAddedDish} from '../../Redux/DishesReduxFile/DishActions';
-import  { ADD_DISH} from '../Mutation'
 
- class AddDish extends Component {
+
+
+export default class AddDish extends Component {
 
     constructor(props) {
         super(props)
@@ -25,24 +23,12 @@ import  { ADD_DISH} from '../Mutation'
         }
     }
 
-
-    static mapStateToProps = state =>
-    {
-        return {Rest: state.values}
-    }
-    static mapDispatchtoProps = dispatch =>
-    {
-        return bindActionCreators({NewAddedDish},dispatch)
-    }
-
-
-
     componentDidMount(props)
     {
         // console.log(this.props.location.state.r_id)
      this.setState(
          {
-              r_id:"61af0a1c930eccfbf217f96e",
+              r_id:this.props.location.state.r_id,
               r_name:this.props.location.state.r_name
          }
      )
@@ -53,33 +39,20 @@ import  { ADD_DISH} from '../Mutation'
     handleonSubmit =(e)=>
     {
          console.log(e)
-         const query = ADD_DISH
-         
-         let variables ={ 
-            rId:this.state.r_id,
-            dName:e.d_name,
-            dPrice:e.d_price,
-            dCategory:e.d_category,
+        axios.post(`${server}/Restaurant/addish`,
+        { 
+            r_id:this.state.r_id,
+            d_name:e.d_name,
+            d_price:e.d_price,
+            d_category:e.d_category,
             d_description:e.d_description,
-            dPicture:this.state.d_picture,
-            dType:e.d_type
+            d_picture:this.state.d_picture,
+            d_type:e.d_type
            
-        }
-        axios.post(`${server}/Restaurant/addish`,{query,variables}).then(res =>
+        }).then(res =>
             {alert("Dish added Successfully")
-               
-            let value = {
-                dish:[{r_id:this.state.r_id,
-                    d_name:e.d_name,
-                    d_price:e.dPrice,
-                    d_category:e.d_category,
-                    d_description:e.d_description,
-                    d_picture:this.state.d_picture,
-                    d_type:e.d_type}]
-            }
-            this.props.NewAddedDish(value)
-
-              
+            
+              window.location.reload()
              }
             )
         .catch(err=>{console.log(err)})
@@ -213,5 +186,3 @@ import  { ADD_DISH} from '../Mutation'
         )
     }
 }
-
-export default   connect(AddDish.mapStateToProps,AddDish.mapDispatchtoProps)(AddDish)

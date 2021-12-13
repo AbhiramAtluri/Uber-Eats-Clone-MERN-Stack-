@@ -1,10 +1,6 @@
 const db = require("../database/db")
 const path = require('path')
 const url = require('url')
-const Restaurant_Registration = require('../MongoModels/RestaurantModel');
-const Customer_Registration_Model = require("../MongoModels/CustomerModel");
-const FavouriteModel = require("../MongoModels/CustomerFavouritesModel");
-const DishModel = require("../MongoModels/Dishes");
 
 exports.getRestaurantDetails = async function(req,res)
 {
@@ -38,7 +34,9 @@ exports.getRestaurantDetails = async function(req,res)
         console.log(err)
     })
     
-
+//    console.log("hello rst details")
+//     console.log(req.url)
+//     console.log(req.params['r_email'])
 
 }
 
@@ -46,14 +44,11 @@ exports.getRestaurantDetails = async function(req,res)
 exports.getAllRestaurants = async function(req,res)
 {
 
-Restaurant_Registration.find({},(err,resp)=>
-{
-    if(resp)
-    {
-        res.json(resp)
-    }
-})
+db.query("Select * from res_reg ").then(resp=>{
 
+  res.json(resp[0])
+
+})
 }
 
 //GET ALL RESTAURANTS FROM NEAREST LOCATION
@@ -66,23 +61,29 @@ exports.getAllnearestRestaurants = async function(req,res)
   }
   else
   {
- Restaurant_Registration.find({r_county:req.body.c_county},(err,rest)=>
- {
-     if(rest)
-     {
-         console.log(rest)
-         res.json(rest)
-     }else
-     {
-         res.json({
-             message:"NoLoc"
-         })
-     }
-
- })
+   
+console.log(req.body.c_county)
+    db.query("select * from res_reg where r_county =?",[req.body.c_county])
+    .then(
+        resp=>{
+            if(resp[0].length>=1)
+            {
+            res.json(resp[0])
+            }
+            else
+            {
+                res.json(
+                    {
+                        message:"NoLoc"
+                    })
+            }
+        }
+        )
+    .catch(err=>{
+        console.log(err)
+    })
 
 }
-
 } 
 
 //GET RESTERAUNTS AWAY FROM LOCATION
@@ -91,13 +92,13 @@ exports.getFarAwayRestaurants = async function(req,res)
 
 {
     console.log(req.body.c_county)
-    Restaurant_Registration.find({r_county :{$ne:req.body.c_county}},(err,resp)=>
-    {     
-             if(resp)
-             {   console.log(resp)
-                 res.json(resp)
-             }
-    }
+
+    db.query("select * from res_reg where r_county !=?",[req.body.c_county])
+    .then(
+     resp=>
+     {
+         res.json(resp[0])
+     }
     )
 
 }
@@ -108,52 +109,44 @@ exports.getRestaurantsBasedOnDish = async function(req,res)
 
   {
       console.log(req.body.s_dish)
-      let s_dish = /req.body.s_dish/
-var regex = new RegExp(req.body.s_dish)
+      let s_dish = '%' + req.body.s_dish+ '%'
 
-console.log(regex)
-    DishModel.find({d_name:regex},(err,resp)=>
+  db.query("SELECT  *  FROM res_reg WHERE r_id IN(SELECT r_id from dishes where d_name LIKE N?)",[s_dish] )
+  .then(resp=>
     {
-        console.log(resp)
-        if(resp)
-        {
-            res.json(resp)
-        }
-    })
+
+      if(resp[0].length>1)
+      {  
+      res.json(resp[0])
+      }
+      else
+      {
+          res.json({
+              message : "NoDish"
+          })
+      }
+
+
+    }
+    ).catch(err=>{console.log(err)})
 }
 
 exports.getRestaurantsBasedonVegFilter = async function(req,res)
 {
     console.log(req.body.d_type)
-    console.log("In Here")
+
     let d_type = req.body.d_type
-    
-
-     DishModel.find({d_type:req.body.d_type},(err,resp)=>
-     {    console.log("sdad")
-         if(resp)
-         {
-         console.log(resp)
-
-        let r_list = [];
-        for(let a in resp) 
+    db.query("select  r_id from res_reg where r_id IN(SELECT r_id from dishes where d_type = ?)",[d_type])
+    .then(resp=>
         {
-            r_list.push(resp[a].r_id)
+            console.log(resp)
+            res.json
+            (
+                    resp[0]
+            )
         }
-        
-        console.log(r_list)
-
-         }
-         else
-         {
-             console.log("Error")
-         }
-        // Restaurant_Registration.find({})
-        
-
-     })
-
-
+        )
+        .catch(err=>{console.log(err)})
 }
 
 
@@ -162,62 +155,38 @@ exports.getRestaurantsBasedonVegFilter = async function(req,res)
 
 exports.AddRestaurantToFavourites = async function(req,res)
 {
-  
-    var newFav = new FavouriteModel(
+
+    db.query("INSERT INTO c_fav(c_id,r_id) VALUES(?,?)",[req.body.c_id,req.body.r_id])
+    .then(resp=>
         {
-            c_id:req.body.c_id,
-            r_id:req.body.r_id
-
-        }
-       
-        
-        )
-
-        newFav.save((err,data)=>
-        {  if(err)
-            {
-                res.send(err)
-            }else
-            {
-                console.log(data)
-                res.send(data)
-            }
-            
+            res.json(resp)
         })
+     .catch
+     (
+         err=>{
+             res.json(err)
+         }
+     )   
+
+
 }
 
 //GETTING ALL THE FAVOURITE RESTAURANTS
 
 exports.GetAllTheFavRestaurants = async function(req,res)
 {
-
-console.log(req.body.c_id)
-
-
-FavouriteModel.find({c_id:req.body.c_id}).lean().exec((err,data)=>
-{
-    if(data)
+   db.query("SELECT  t1.r_name, t1.r_state,t1.r_email,t1.r_county,t1.r_opentime,t1.r_closetime,t1.r_id,t1.r_picture FROM res_reg t1 INNER JOIN  c_fav t2 ON t1.r_id=t2.r_id WHERE t2.c_id=? GROUP BY t2.r_id  ",[req.body.c_id])
+   .then(resp=>
     {
-        console.log(data)
-        let restlist = [];
- 
-        for(a in data)
-      {
-          restlist.push(data[a].r_id)
-      }
-
-        Restaurant_Registration.find({_id:{$in:restlist}}).exec((err,data)=>
-        {
-        
-            res.send(data)
-        })
-
+       res.json(resp[0])
 
     }
-})
-
-
-
+    )
+    .catch(err =>
+        {
+            res.json(err)
+        }
+        )
 
 
 }
@@ -227,20 +196,11 @@ FavouriteModel.find({c_id:req.body.c_id}).lean().exec((err,data)=>
 
 exports.GetFavResterauntIds = async function(req,res)
 {
-
-console.log("hey")
-  FavouriteModel.find({c_id:req.body.c_id},(err,data)=>
-{  if(data)
-    {
-        //console.log(data)
-    res.json(data)
-    }
-    if(err)
-    {
-        console.log(err)
-    }
-}
-)
+// console.log("in fav rest")
+//   console.log(req.body.c_id)  
+  db.query("SELECT r_id FROM c_fav WHERE c_id =?",[req.body.c_id])
+  .then(resp=>{res.json(resp[0])})
+  .catch(err=>{res.json(err)})
 
 
 }

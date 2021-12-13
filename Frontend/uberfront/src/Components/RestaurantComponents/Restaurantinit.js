@@ -16,11 +16,7 @@ import Navbar from '../Navbar';
 import { instanceOf } from "prop-types";
 import { withCookies, Cookies } from "react-cookie";
 import server from '../WebConfig';
-import  { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { login } from '../../Redux/RestaurantloginandReg/RestaurantActions';
-import {REST_LOGIN_QUERY} from '../Queries'
-const jwt_decode = require('jwt-decode');
+
 
 export class Restaurantinit extends Component {
 
@@ -31,8 +27,7 @@ export class Restaurantinit extends Component {
 
             redirect : false,
             loginvalid :"",
-            r_email : "",
-            token:""
+            r_email : ""
 
         }
     }
@@ -41,30 +36,8 @@ export class Restaurantinit extends Component {
       };
 
 
-      static mapStateToProps = state =>
-      {
-          return {Rest: state.values}
-      }
-      static mapDispatchtoProps = dispatch =>
-      {
-          return bindActionCreators({login},dispatch)
-      }
-
-
 
     render() {
-
-        if(this.state.token.length>0)
-        {
-          localStorage.setItem("token", this.state.token);
-  
-           var decoded = jwt_decode(this.state.token.split(' ')[1]);
-           localStorage.setItem("r_id", decoded._id);
-           localStorage.setItem("r_email", decoded.r_email);
-        }
-
-
-
 
        if(this.state.redirect === false)
        {
@@ -101,24 +74,21 @@ export class Restaurantinit extends Component {
                                     <Formik initialValues={initialValues}
                                         validationSchema={validationSchema}
                                         enableReinitialize
-                                        onSubmit={async (datasend) => {
+                                        onSubmit={(datasend) => {
                                             console.log(datasend)
+                                           
+                                            axios.post(`${server}/Restaurant/reslog`, {
 
-                                            let query =REST_LOGIN_QUERY 
-
-                                            let variables = {
-                                                   
-                                                rEmail:datasend.r_email,
-                                                rPassword:datasend.r_password,
+                                                r_email:datasend.r_email,
+                                                r_password:datasend.r_password,
+                                                
 
 
-                                            }
-
-                                            axios.post(`${server}/`,{query,variables}).then(res=>
+                                            }).then((res) =>
                                             {
-                                                   console.log("hi")
+                                                // console.log("hi")
                                                 console.log(res)
-                                               if(res.data.data.restLogin === 'Login successfull')
+                                               if(res.data.message === 'Login successfull')
                                                { console.log("sdad")
                                                    const { cookies } = this.props
                                                 //    sessionStorage.setItem("isAuthenticated","true")
@@ -127,8 +97,7 @@ export class Restaurantinit extends Component {
                                                    this.setState(
                                                        {
                                                            redirect : true,
-                                                           r_email:datasend.r_email,
-                                                        //    token:res.data.token
+                                                           r_email:datasend.r_email
                                                        }
                                                    )
                                                }
@@ -142,56 +111,9 @@ export class Restaurantinit extends Component {
                                                     }
                                                 )
                                                }
-
-
-
-
-
-                                            }
-
-                                            ).catch(err=>{console.log(err)})
-
-                                        }}
-
-                                           
-                                            // axios.post(`${server}/Restaurant/reslog`, {
-
-                                            //     r_email:datasend.r_email,
-                                            //     r_password:datasend.r_password,
-                                                
-
-
-                                            // }).then((res) =>
-                                            // {
-                                            //     // console.log("hi")
-                                            //     console.log(res)
-                                            //    if(res.data.message === 'Login successfull')
-                                            //    { console.log("sdad")
-                                            //        const { cookies } = this.props
-                                            //     //    sessionStorage.setItem("isAuthenticated","true")
-                                            //        cookies.set("uber","isAuth",{expires:0})
-                                                 
-                                            //        this.setState(
-                                            //            {
-                                            //                redirect : true,
-                                            //                r_email:datasend.r_email,
-                                            //                token:res.data.token
-                                            //            }
-                                            //        )
-                                            //    }
-                                            //    else
-                                            //    {
-                                            //        console.log("Invalid")
-                                                      
-                                            //     this.setState(
-                                            //         {
-                                            //             loginvalid :"Invalid credentials"
-                                            //         }
-                                            //     )
-                                            //    }
-                                            // })
+                                            })
                                             
-                                   
+                                        }}
 
                                     >
                                         <Form>
@@ -241,4 +163,4 @@ export class Restaurantinit extends Component {
 }
 
 
-export default  withCookies( connect(Restaurantinit.mapStateToProps,Restaurantinit.mapDispatchtoProps)(Restaurantinit))
+export default  withCookies(Restaurantinit)

@@ -32,14 +32,6 @@ import NavbarCust from './CustomerNavBar';
 import { withCookies, Cookies } from "react-cookie";
 import { instanceOf } from "prop-types";
 import server from '../WebConfig';
-import  { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { c_logoff } from '../../Redux/CustomerLoginandReg/CustomerActions';
-import NavbarCustland from './CustLandNavBar'
-import {clearCart} from '../../Redux/CartReducerfile/Cartactions'
-import {GET_CUSTOMER_PROFILE} from '../Queries'
-import {GET_ALL_NEAREST_RESTAURANTS} from '../Queries'
-import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
 // import NavbarRest from './CustomerNavBar';
 
  class CustomerLandingPage extends Component {
@@ -59,8 +51,7 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
             favList: [],
             Dish_Type: "All",
             listofrestaurantsbasedonDishType: [],
-            handleLogoff:false,
-            searchedresult:false
+            handleLogoff:false
 
 
         }
@@ -70,20 +61,6 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
       };
-
-      static mapStateToProps = state =>
-      {
-          return {Cust: state.values}
-      }
-      static mapDispatchtoProps = dispatch =>
-      {
-          return bindActionCreators({c_logoff,clearCart},dispatch)
-      }
-
-
-
-
-
     componentDidMount(props) {
         const c_id = this.props.location.state.c_id
         const c_email = this.props.location.state.c_email
@@ -100,11 +77,10 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
 
             }
         )
-     
+
 
         ////Getting Customer Favs
-         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-        axios.post(`${server}/Restaurant/GetFavRest`,
+        axios.post(`${server}/Restaurant/GetFavRestID`,
             {
                 c_id: c_id
             }
@@ -117,38 +93,32 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
                     }
                 )
             }
-            ).catch(err=>{console.log(err)})
+            )
 
-        console.log(this.state.c_county)
+
         console.log(this.state.c_county + "Before component")
         if (this.state.c_county === "") {
-
-            let query =GET_CUSTOMER_PROFILE
-            let variables = {
-                cEmail:"Mike@test.com"
-            }
-
-
-            axios.post(`${server}/customer/CustomerProfileFetch`, {query,variables})
+            axios.post(`${server}/customer/CustomerProfileFetch`, { c_email: c_email })
                 .then(res =>
+
+
                 ///NEAREST RESTAURANTS ARE FETCHED AFTER GETTING THE PROFILE DETAILS FROM ABOVE REQUEST
                 {
-                    console.log(res.data.c_county)
-                    if (res.data.c_county != "" && res.data.c_county != null) {
+                    if (res.data[0].c_county != "" && res.data[0].c_county != null) {
                         this.setState(
                             {
-                                c_county: res.data.c_county
+                                c_county: res.data[0].c_county
                             }
                         )
 
 
 
 
-                        this.loadLandingPageRestaurantList(res.data.c_county)
+                        this.loadLandingPageRestaurantList(res.data[0].c_county)
 
                     }
                     else {
-                        this.loadLandingPageRestaurantList("San Jose")
+                        this.loadLandingPageRestaurantList("Santa Clara")
                     }
                 }
 
@@ -163,61 +133,45 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
     }
 
 
-    loadLandingPageRestaurantList(c_county,search=false) {
+    loadLandingPageRestaurantList(c_county) {
         console.log(this.state)
         ////Fetching the nearest and farthest restaurants  
         let nearbyrestaurants = `${server}/Restaurant/GetAllNearestRestaurants`
         let restallrestaurants = `${server}/Restaurant/GetFarAwayRestaurants`
-          
-        var query = GET_ALL_NEAREST_RESTAURANTS
-        var variables = {cCounty:c_county}
+
 
         const responseOne = axios.post(nearbyrestaurants,
-            {query,variables
+            {
+                c_county: c_county
             })
-        var query =GET_FAR_AWAY_RESTAURANTS
         const responseTwo = axios.post(restallrestaurants,
             {
-               query,variables
-            }) 
+                c_county: c_county
+            })
 
         axios.all([responseOne, responseTwo])
             .then(axios.spread((...responses) => {
                 console.log(responses[0])
-
-                let a = responses[0].data.data.getAllnearestRestaurants
-                console.log(a)
-                console.log(responses[1])
+                let a = responses[0].data
                 if ((a.message != 'NoLoc') || (a.message != 'NoLoc')) {
-                    let responseN = responses[0].data.data.getAllnearestRestaurants
+                    let responseN = responses[0].data
                     let responseF = responses[1].data
 
 
 
                     console.log(responseN)
                     console.log(responseF)
-                    if(search  == false)
-                    {
-                    var r_list = responseN
-                    }
-                    else
-                    {
-                    var r_list = responseN
-                    this.setState(
-                        {
-                            searchedresult:true
-                        }
-                        )
-                    }
+                    var r_list = responseN.concat(responseF)
+
                     console.log(r_list)
                     if (this.state.del_type != "s_both") {
                         r_list = r_list.filter(value => { return value.del_type == this.state.del_type || value.del_type == "s_both" })
                     }
                     if(this.state.Dish_Type!="All")
-                    {console.log("In adll")
+                    {
                         r_list = r_list.filter(value=>
                             {let found = this.state.listofrestaurantsbasedonDishType
-                            .find(element=>{return element._id==value._id })
+                            .find(element=>{return element.r_id==value.r_id })
                              return found })
                              console.log(r_list)
                     }
@@ -255,26 +209,24 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
                 res => {
                     console.log("Dish request")
                     console.log(res.data.message)
-                    console.log(res.data)
+
                     if (res.data.message != "NoDish") {
                         let r_list = res.data
-                        console.log(this.state.del_type)
                         if (this.state.del_type != "s_both") {
                             r_list = r_list.filter(value => { return value.del_type == this.state.del_type || value.del_type == "s_both" })
                         }
                         if (this.state.Dish_Type != "All") {
-                            console.log("In heere")
                             r_list = r_list.filter(value => {
                                 let found = this.state.listofrestaurantsbasedonDishType
-                                    .find(element => { return element._id == value._id })
+                                    .find(element => { return element.r_id == value.r_id })
                                 return found
                             })
                             console.log(r_list)
                         }
 
-                           console.log(res.data)
+                        //   console.log(res.data)
                         //   console.log("New List")
-                          // console.log(r_list)
+                        //   console.log(r_list)
                         this.setState(
                             {
                                 restaurantlist: r_list,
@@ -296,7 +248,7 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
         console.log(e.target.s_data.value)
         console.log(e.target.s_filter.value)
         if (e.target.s_filter.value == "s_location") {
-            this.loadLandingPageRestaurantList(e.target.s_data.value,true)
+            this.loadLandingPageRestaurantList(e.target.s_data.value)
         }
         if (e.target.s_filter.value == "s_dish") {
             this.loadLandingPageBasedOnDish(e)
@@ -312,7 +264,7 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
             }
         )
         if (this.state.s_filter == "s_location") {
-            this.loadLandingPageRestaurantList(this.state.c_county,this.state.searchedresult)
+            this.loadLandingPageRestaurantList(this.state.c_county)
         }
         if (this.state.s_filter == "s_dish") {
             //    this.loadLandingPageBasedOnDish(e)
@@ -342,17 +294,16 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
                 }
             ).then(resp=>
                 {
-                  console.log("In Restaurant/GetRestarantsBasedonDishTypeFilter second then")
+
                     if (this.state.s_filter == "s_location") {
                         this.loadLandingPageRestaurantList(this.state.c_county)
                     }  
                     if (this.state.s_filter == "s_dish") {
-                        console.log("In Here")
                         this.changeLandingPageFilteredWithDishOnChange(e)
                     } 
 
                 }
-                ).catch(err=>{console.log(err)})
+                )
            
 
     }
@@ -365,17 +316,15 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
 
 
     changeLandingPageFilteredWithDishOnChange = (e) => {
-       console.log("In changeLandingPageFilteredWithDishOnChange")
+
         let r_list = this.state.masterList
-        console.log(r_list)
         if (e.target.value != "s_both") {
             r_list = r_list.filter(value => { return value.del_type == e.target.value || value.del_type == "s_both" })
         }
         if (this.state.Dish_Type != "All") {
-            console.log(this.state.listofrestaurantsbasedonDishType)
             r_list = r_list.filter(value => {
                 let found = this.state.listofrestaurantsbasedonDishType
-                    .find(element => { return element._id == value._id })
+                    .find(element => { return element.r_id == value.r_id })
                 return found
             })
             console.log(r_list)
@@ -448,9 +397,7 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
     {
         const { cookies } = this.props
         cookies.remove("uber")
-        
-        this.props.c_logoff()
-        this.props.clearCart()
+
        this.setState(
         {
                 handleLogoff:true
@@ -462,10 +409,9 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
 
 
     render() {
-       console.log(this.state.restaurantlist)
+
         console.log(this.state.masterList)
         console.log(this.state.listofrestaurantsbasedonDishType)
-        console.log(this.state)
         const validationSchema = Yup.object(
             {
 
@@ -479,7 +425,7 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
         {
         return (
             <div className="container-fluid" style={{ margin: 0, padding: 0 }}>
-                <NavbarCustland c_id ={this.state.c_id}></NavbarCustland>
+                <NavbarCust></NavbarCust>
                 <div className="row" style={{ margin: 0, padding: 0 }} >
                     <div className="col-md-1" style={{ padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
 
@@ -541,7 +487,7 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
                                                 <img style={{ width: '100%', height: '200px' }} class="card-img-top" src={value.r_picture} />
                                                 <div className="card-body">
                                                     <div ><Link to={{ pathname: "/RestaurantLanding", state: { r_email: value.r_email, view_id: "Customer", c_id: this.state.c_id } }}  ><h5 className="card-title" id="name">{value.r_name}
-                                                    </h5></Link><FavoriteBorderIcon style={{ height: "28px", width: "20px" }} color={this.FetchColour(value._id)} onClick={(e) => this.handleAddToFav(value._id, e)} /></div>
+                                                    </h5></Link><FavoriteBorderIcon style={{ height: "28px", width: "20px" }} color={this.FetchColour(value.r_id)} onClick={(e) => this.handleAddToFav(value.r_id, e)} /></div>
                                                     <p className="card-text" id="county">Location:{value.r_county}</p>
                                                     <p className="card-test" id="opentime">OpenTime : {value.r_opentime}</p>
                                                     <p className="card-test" id="closetime">CloseTime : {value.r_closetime}</p>
@@ -569,4 +515,4 @@ import {GET_FAR_AWAY_RESTAURANTS} from '../Queries'
     }
 }
 
-export default  withCookies(connect(CustomerLandingPage.mapStateToProps,CustomerLandingPage.mapDispatchtoProps)(CustomerLandingPage))
+export default  withCookies(CustomerLandingPage)

@@ -8,11 +8,9 @@ import config from "../S3upload"
 import S3 from 'react-aws-s3';
 import server from '../WebConfig';
 import NavbarRest from './RestaurantNavBar';
-import  { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { LatestEditedDish } from '../../Redux/DishesReduxFile/DishActions';
 
-class EditDish extends Component {
+
+export default class EditDish extends Component {
 
    
    constructor(props) {
@@ -30,14 +28,6 @@ class EditDish extends Component {
        }
    }
    
-   static mapStateToProps = state =>
-   {
-       return {Rest: state.values}
-   }
-   static mapDispatchtoProps = dispatch =>
-   {
-       return bindActionCreators({LatestEditedDish},dispatch)
-   }
 
 
     componentDidMount(props)
@@ -78,18 +68,6 @@ class EditDish extends Component {
        
     }).then(res =>
         {alert("Dish Edited Successfully")
-         
-         let values = {
-             dish:{r_id:this.state.r_id,
-                d_name:e.d_name,
-                d_price:e.d_price,
-                d_category:e.d_category,
-                d_description:e.d_description,
-                d_picture:this.state.d_picture,
-                d_id:this.state.d_id}
-         }
-
-        this.props.LatestEditedDish(values)
           
          }
         )
@@ -220,5 +198,3 @@ handlepicupload = (e)=>
         )
     }
 }
-
-export default connect(EditDish.mapStateToProps,EditDish.mapDispatchtoProps)(EditDish)
