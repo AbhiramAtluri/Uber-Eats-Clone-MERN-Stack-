@@ -3,10 +3,11 @@ import axios from 'axios'
 import RestaurantOrderlistItems from './RestaurantOrderlistItems'
 import NavbarRest from './RestaurantNavBar'
 import server from '../WebConfig'
-
-
-
-export default class RestauranOrderList extends Component {
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import {Set_R_Orders} from '../../Redux/RestaurantloginandReg/RestaurantActions';
+import {GET_RESTAURANT_ORDERS} from '../Queries'
+class RestauranOrderList extends Component {
 
    constructor(props) {
        super(props)
@@ -14,37 +15,63 @@ export default class RestauranOrderList extends Component {
        this.state = {
               
       r_id:"",
-      FetchedOrderList:[],
+      FetchedOrderList:[{
+        o_id: null,
+        c_id: "61af9f0dcb8ef91e4a453d8e",
+        r_id: "61af083d930eccfbf217f96b",
+        d_list: [{d_name:"French Fries",d_price:12,d_picture:"https://uberbucket98.s3-us-east-2.amazonaws.com/media/r2pnzxnzhu6sn0q6pxtum.jpeg",d_quantity:1,c_id:"61af9f0dcb8ef91e4a453d8e",i_price:12,checkoutprice:12}],
+        del_type: "s_pickup",
+        del_id: null,
+        o_status: null,
+        o_date: "7/12/2021",
+        o_time: "11:30:20",
+        r_name: "Jack in the Box",
+        c_name: null,
+        _id: "61afb64cf4b5f3ec4476536a"
+      }],
       MasterOrderList:[]
 
        }
    }
-   
+   static mapStateToProps = state =>
+   {
+       return {Rest: state.values}
+   }
+   static mapDispatchtoProps = dispatch =>
+   {
+       return bindActionCreators({Set_R_Orders},dispatch)
+   }
 
    componentDidMount(props) 
    {
    let r_id = this.props.location.state.r_id
 
+//    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+
+let query = GET_RESTAURANT_ORDERS
+let variables = {
+    rId:"61af083d930eccfbf217f96b"
+}
 
     axios.post(`${server}/customer/FetchRestaurantDetailsById`,
-   
       {
-          r_id:r_id 
- 
+        query,variables
       }
    
    )
    .then(resp=>
     {
      console.log(resp.data)
-     this.setState(
-         {
-           FetchedOrderList:resp.data,
-           MasterOrderList:resp.data
-         }
-         )
-
-
+     resp = {data:resp.data.data.fetchRestaurantDetailsbyId}
+     console.log(resp.data)
+    //  this.setState(
+    //      {
+    //        FetchedOrderList:resp.data,
+    //        MasterOrderList:resp.data
+    //      }
+    //      )
+    //      let values = {orders:resp.data}
+    //    this.props.Set_R_Orders(values)
     }
     )
 
@@ -68,6 +95,19 @@ export default class RestauranOrderList extends Component {
        if(e.target.value == "Order Delivered")
        {
        let Norder_details = this.state.MasterOrderList.filter(order=>{return order.o_status == "Order Delivered"  })
+       console.log(Norder_details)
+       this.setState(
+           {
+               FetchedOrderList:Norder_details
+           }
+       )
+        }
+
+
+
+        if(e.target.value == "Cancelled")
+       {
+       let Norder_details = this.state.MasterOrderList.filter(order=>{return order.o_status == "Cancelled"  })
        console.log(Norder_details)
        this.setState(
            {
@@ -117,7 +157,7 @@ export default class RestauranOrderList extends Component {
                            <option value = "All Orders">All Orders</option>
                             <option value = "Order Delivered">Order Delivered</option>
                             <option value = "New Order">New Order</option>
-                            <option value ="Cancelled Order">Cancelled order</option>
+                            <option value ="Cancelled">Cancelled order</option>
                             </select>  
                          </div>
                      
@@ -141,3 +181,5 @@ export default class RestauranOrderList extends Component {
 
     }
 }
+
+export default connect(RestauranOrderList.mapStateToProps,RestauranOrderList.mapDispatchtoProps)(RestauranOrderList)

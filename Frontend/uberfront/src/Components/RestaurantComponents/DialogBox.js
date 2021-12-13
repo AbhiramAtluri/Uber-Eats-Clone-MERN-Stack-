@@ -19,7 +19,9 @@ import {
     useRouteMatch,
     useParams
 } from "react-router-dom";
-
+import { useSelector, useDispatch } from 'react-redux'
+import { addCart } from '../../Redux/CartReducerfile/Cartactions';
+import { removeCart } from '../../Redux/CartReducerfile/Cartactions';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuDialogContent-root': {
@@ -61,12 +63,22 @@ BootstrapDialogTitle.propTypes = {
 
 export default function CustomizedDialogs(props) {
     const [open, setOpen] = React.useState(false);
+    let checkoutListretreived = JSON.parse(sessionStorage.getItem("cartData"))
+
+    console.log(checkoutListretreived)
+    const [checkoutList, setcheckoutList] = React.useState(checkoutListretreived);
+    const[total_price,setTotalPrice] = React.useState(0)
+    const dispatch = useDispatch()
+
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
         setOpen(false);
     };
+    const handleUpdateCart = (cartData) =>{
+        setcheckoutList(cartData)
+    }  
 
     // console.log(props.del_type)
 
@@ -74,29 +86,122 @@ export default function CustomizedDialogs(props) {
     let c_id = null
     console.log(CartData)
    let amount=0
-
+      
    if(CartData!=null && CartData.length >0 )
    { 
+    
     c_id = CartData[0].c_id
 
   for(let a in CartData)
   {
       console.log(CartData)
-      amount = CartData[a].d_price+ amount
+      amount =  parseInt(CartData[a].d_price)+ amount
       amount = amount.toFixed(2)
       amount = parseFloat(amount)
       console.log(amount)
   }
- const onAddToCart=(price)=>
- {
 
-    console.log("In add to cart")
-    console.log(price)
-
- } 
 
   
 }
+const onAddToCart=(e,d_name,d_price,i_price,d_id)=>
+{
+
+   console.log("In add to cart")
+   console.log(d_price)
+   console.log(i_price)
+   console.log(d_id)
+   console.log(d_name)
+   console.log(e)
+   let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+   let cartvalue = JSON.parse(sessionStorage.getItem("cartValue"))
+   cartvalue.value = cartvalue.value + 1
+   dispatch(addCart())
+   let chkCart = cartData.filter(item => { return item.d_id == d_id })
+   if (chkCart.length > 0) {
+
+       let index = cartData.findIndex((item) => { return item.d_id == d_id })
+       cartData[index].d_price = cartData[index].d_price + i_price
+       cartData[index].d_quantity = cartData[index].d_quantity + 1
+       sessionStorage.setItem("cartValue", JSON.stringify(cartvalue))
+       //cartData.push({d_name:d_name,d_price:d_price,d_picture:d_picture})
+       sessionStorage.setItem("cartData", JSON.stringify(cartData))
+
+       handleUpdateCart(cartData)
+
+       calculateTotalPrice()
+   }
+
+
+
+} 
+const removeItemfromCart = async (e,d_name,d_price,i_price,d_id) => {
+    console.log("hello")
+    d_price = parseFloat(i_price)
+    console.log(d_price)
+    let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+    console.log(cartData)
+    let index = cartData.findIndex((item) => { return item.d_id == d_id })
+    if (index >= 0) {
+        let cartvalue = JSON.parse(sessionStorage.getItem("cartValue"))
+        cartvalue.value = cartvalue.value - 1
+        dispatch(removeCart())
+        sessionStorage.setItem("cartValue", JSON.stringify(cartvalue))
+        let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+        let index = cartData.findIndex((item) => { return item.d_id == d_id })
+        cartData[index].d_quantity = cartData[index].d_quantity - 1
+        cartData[index].d_price = cartData[index].d_price - d_price
+        if (cartData[index].d_quantity <= 0) {
+            cartData.splice(index, 1)
+            sessionStorage.setItem("cartData", JSON.stringify(cartData))
+            await handleUpdateCart(cartData)
+            calculateTotalPrice()
+
+        }
+        else {
+            sessionStorage.setItem("cartData", JSON.stringify(cartData))
+           await handleUpdateCart(cartData)
+            calculateTotalPrice()
+        }
+
+    }
+
+}
+
+
+
+
+const  calculateTotalPrice = () => 
+{
+
+    let templist = JSON.parse(sessionStorage.getItem("cartData"))
+    console.log(templist)
+    let Total_price = 0
+    for (let a in templist) {
+
+        Total_price = Total_price + templist[a].d_price
+        Total_price = Total_price.toFixed(2)
+        Total_price = parseFloat(Total_price)
+
+    }
+    console.log(total_price)
+    setTotalPrice(Total_price)
+    console.log(total_price)
+
+
+    let cartData = JSON.parse(sessionStorage.getItem("cartData"))
+        if(cartData != null && cartData !=undefined && cartData.length>0) 
+        {
+         cartData[0].checkoutprice = Total_price 
+        // console.log(cartData[0].checkoutprice) 
+        }
+        sessionStorage.setItem("cartData",JSON.stringify(cartData))
+        
+
+}
+
+
+
 
     return (
         <div>
@@ -153,7 +258,7 @@ export default function CustomizedDialogs(props) {
                                                     <h5>X {cartItem.d_quantity}</h5>
                                                 </div>
                                                 <div className="col-md-1" style={{ display: "inline-flex" }}>
-                                                    {/* <button className="btn btn-primary" style={{ height: "50%" }} >+</button ><button className="btn btn-primary" style={{ height: "50%" }} >-</button> */}
+                                                    <button className="btn btn-primary" onClick={(e)=>onAddToCart(e,cartItem.d_name,cartItem.d_price,cartItem.i_price,cartItem.d_id)} style={{ height: "50%" }} >+</button ><button className="btn btn-primary" style={{ height: "50%" }} onClick={(e)=>{removeItemfromCart(e,cartItem.d_name,cartItem.d_price,cartItem.i_price,cartItem.d_id)}}>-</button>
                                                 </div>
                                             </div>
                                         </div>

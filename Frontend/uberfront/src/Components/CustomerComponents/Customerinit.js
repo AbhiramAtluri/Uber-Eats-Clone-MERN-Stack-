@@ -15,7 +15,12 @@ import Navbar from '../Navbar';
 import { withCookies, Cookies } from "react-cookie";
 import { instanceOf } from "prop-types";
 import server from '../WebConfig';
-
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { c_login } from '../../Redux/CustomerLoginandReg/CustomerActions';
+import {CUST_LOGIN } from '../Queries'
+ const jwt_decode = require('jwt-decode');
+//import * as jwt_decode from 'jwt-decode';
 
 export class Customerinit extends Component {
    
@@ -26,19 +31,38 @@ export class Customerinit extends Component {
                redirect : false,
                loginvalid:"",
                c_email:"",
-               c_id:""
+               c_id:"",
+               token:""
         }
     }
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
       };
     
-
+      static mapStateToProps = state =>
+    {
+        return {Cust: state.values}
+    }
+    static mapDispatchtoProps = dispatch =>
+    {
+        return bindActionCreators({c_login},dispatch)
+    }
 
 
 
 
     render() {
+
+    //   if(this.state.token.length>0)
+    //   {
+    //     // localStorage.setItem("token", this.state.token);
+
+    //     //  var decoded = jwt_decode(this.state.token.split(' ')[1]);
+    //     //  localStorage.setItem("c_id", decoded.c_id);
+    //     //  localStorage.setItem("c_email", decoded.c_email);
+    //   }
+
+
           
         if(this.state.redirect === false)
         {
@@ -64,6 +88,8 @@ export class Customerinit extends Component {
 
 
         return (
+            <div>
+
             <div className="container-fluid" style={{margin:"0px",padding:"0px"}}>
                 <Navbar></Navbar>
                 <div className="container"  >
@@ -78,18 +104,23 @@ export class Customerinit extends Component {
                               
                               onSubmit={(data) => {
                                 console.log(data)
-                            
+                                  
+                                let query = CUST_LOGIN
+                                let variables = {
+                                    cEmail: data.c_email,
+  cPassword: data.c_password
+                                }
+
+                                
                                 axios.post(`${server}/customer/custlog`, {
-
-                                    c_email:data.c_email,
-                                    c_password:data.c_password,
-                                    
-
+                                 query,variables
 
                                 }).then((res) =>
                                 {
                                     // console.log("hi")
+                                    res = {data:res.data.data.customerLogin}
                                     console.log(res)
+                                    console.log(res.data.message)
                                    if(res.data.message === 'Login successfull')
                                    {
                                    
@@ -100,14 +131,17 @@ export class Customerinit extends Component {
                                            {   
                                                c_email:res.data.c_email,
                                                c_id:res.data.c_id,
+                                            //    token:res.data.token,
                                                redirect : true,
                                                
                                            }
                                        )
-
-                                       
-
-
+                                       console.log()
+                                       let values = {
+                                           c_email:res.data.c_email,
+                                           c_id:res.data.c_id
+                                       }
+                                       this.props.c_login(values)
                                    }
                                    else
                                    {
@@ -153,6 +187,7 @@ export class Customerinit extends Component {
                     
                                </div>
             </div>
+            </div>
         )
     }else
     {
@@ -162,4 +197,4 @@ export class Customerinit extends Component {
 }  
 }
 
-export default  withCookies(Customerinit)
+export default  withCookies(connect(Customerinit.mapStateToProps,Customerinit.mapDispatchtoProps)(Customerinit))

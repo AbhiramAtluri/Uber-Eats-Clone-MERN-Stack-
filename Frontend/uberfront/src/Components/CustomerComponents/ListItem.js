@@ -33,9 +33,9 @@ export default class ListItem extends Component {
     
 componentDidMount(props)
 {
-    console.log(this.props.order)
+    console.log(this.props.order.del_id)
     console.log(this.props.r_name)
-
+    console.log(this.props.order)
     if(this.props.order !=null && this.props.order != undefined)
     {
 
@@ -68,31 +68,52 @@ handleOnclose=()=>
 FetchDelAdd=()=>
 {
   let add =""
+  console.log(this.props.order)
  if(this.props.order.del_id!=null)
  {
+
   axios.post(`${server}/customer/FetchDelAddressInCustomerOrders`,
   {
     del_id:this.props.order.del_id
   }).then(res=>
     {
       console.log(res)
+      console.log(res.data)
       //  add = res.data[0].d_add_1
       //  if(res.data[0].d_add_1!=undefined && res.data[0].d_add_1!=undefined && res.data[0].d_zipcode!=undefined)
-      if(res.data!=undefined)
+      if(res.data[0]!=undefined)
        {
        this.setState(
          {
            del_add: res.data[0].d_add_1 +","+res.data[0].d_add_2+","+res.data[0].d_zipcode
          })
         }
+        // console.log(res.data[0].d_add_1 +","+res.data[0].d_add_2+","+res.data[0].d_zipcode)
     })
+    
   }
   else{
     this.setState({del_add:"This is a Pickup Order"})
   }
 
 }
-
+handleOnCancel = () =>
+{
+  axios.post(`${server}/customer/CancelOrderCustomer`,{
+    o_id:this.props.order._id,
+    o_status:"Cancelled"
+  }).then(res=>
+    {
+      console.log(res);
+      if(res.data.message == "Success")
+      {
+        alert("Order Cancelled");
+      }else
+      {
+        alert("Order is already being prepared");
+      } 
+    })
+}
 
 
     render() {
@@ -100,6 +121,8 @@ FetchDelAdd=()=>
 // console.log(this.props.testOrder)
 
 console.log(this.state)
+console.log(this.props.order)
+console.log(this.props.order.d_list)
         return (
              <li className="list-group-item" style={{marginTop:"15px"}}>
                  <div className = "row" style={{margin:0,padding:0}}>
@@ -108,11 +131,14 @@ console.log(this.state)
                     <p style={{margin:"0"}} >Time:{this.props.order.o_time} Date:{this.props.order.o_date}  </p>
                     </div>
                     <div className = "col-md-4">
-                    <p style={{marginTop:"7px"}}>Status: {this.props.order.o_status==null?"Order Received":this.props.order.o_status}</p>
+                    <p style={{marginTop:"7px"}}>Status: {this.props.order.o_status==null?"Order Picked Up":this.props.order.o_status}</p>
                     </div>
-                    <div className = "col-md-4">
+                    <div className = "col-md-2">
                         <button className="btn btn-primary" onClick={this.handleOnClick}   >View Reciept</button>
                      </div>
+                     <div className="col-md-2">
+                     <button className="btn btn-primary" onClick={this.handleOnCancel}>Cancel</button>
+                      </div> 
                  </div>
                 {this.state.popup_display == true?
                <Dialog open={this.state.popup_display} onClose={this.handleOnclose} fullWidth={true} >
@@ -124,24 +150,24 @@ console.log(this.state)
                    <div className ="row">
                    <div className="col-md-12" style={{fontFamily:"sans-serif"}}>
                    <div className = "row"> 
-                       <h4>Total : {this.props.order.d_list[0].checkoutprice}$</h4>
+                       <h4>Total : 12$</h4>
                        </div>
-                       {this.props.order.d_list.map((data,key)=>{
+          
                      
                      
-                     return   <div className = "row"> 
+                        <div className = "row"> 
                        <div className="col-md-4" style={{marginTop:"15px"}}>
-                       <h5>{data.d_name}</h5>
+                       <h5>French Fries</h5>
                        </div>
                        <div className="col-md-4"style={{textAlign:"center",marginTop:"15px"}}  >
-                       <h5> {data.d_price}$</h5>
+                       <h5> 12$</h5>
                        </div>
                        <div className="col-md-4" style={{textAlign:"center",marginTop:"15px"}}>
-                       <h5>X {data.d_quantity}</h5>
+                       <h5>X 1</h5>
                        </div>
                        </div>
                        
-                      } )}
+                    
                       <div className="row" style={{borderTop:"groove"}}>
                      <div className= "col-md-6"style={{marginTop:"15px"}}>
                      <div className = "row">
@@ -149,8 +175,11 @@ console.log(this.state)
                      </div>
                      
                      <div className = "row">
-                    <h5>Status :{this.props.order.o_status==null?<h5>Order Received</h5>:this.props.order.o_status}</h5>
+                    <h5>Status :{this.props.order.o_status==null?<h5>Order Picked up</h5>:this.props.order.o_status}</h5>
                      </div>
+                     <div className = "row">
+                       <h5>Instructions:{this.props.order.instructions}</h5>
+                       </div>
                     </div>
                     <div className="col-md-6">
                     <div className = "row" style={{marginTop:"15px"}}>

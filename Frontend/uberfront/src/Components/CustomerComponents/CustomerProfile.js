@@ -10,6 +10,11 @@ import config from "../S3upload"
 import S3 from 'react-aws-s3';
 import NavbarCust from './CustomerNavBar';
 import server from '../WebConfig';
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { updateCustProfile } from '../../Redux/CustomerProfile/CustomerProfileActions';
+import {GET_CUSTOMER_PROFILE} from '../Queries'
+
 export class CustomerProfile extends Component {
 
 
@@ -36,6 +41,15 @@ export class CustomerProfile extends Component {
         }
     }
 
+    static mapStateToProps = state =>
+    {
+        return {CustomerProfile: state.values}
+    }
+    static mapDispatchtoProps = dispatch =>
+    {
+        return bindActionCreators({updateCustProfile},dispatch)
+    }
+
 
     componentDidMount(props) {
 
@@ -55,29 +69,29 @@ export class CustomerProfile extends Component {
             this.FetchProfileDetails(c_email)
 
         } else {
-            axios.post(`${server}/customer/CustomerProfileBasedOnId`,
-                {
-                    c_id: c_id,
+            // axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+            const query = GET_CUSTOMER_PROFILE
+            let variables = {
+                c_email:"Mike@test.com"
+            }
+            axios.post(`${server}/`, {query,variables},).then(res => {
 
-                }
-
-            ).then(res => {
-
-                console.log(res.data[0])
+                console.log(res.data)
+                res = {data:res.data.data.customerRegistration}
                 this.setState(
                     {
-                        c_city: res.data[0].c_city,
-                        c_name: res.data[0].c_name,
-                        c_nickname: res.data[0].c_nickname,
-                        c_profilepic: res.data[0].c_profilepic === null ? "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
-                            : res.data[0].c_profilepic,
-                        c_state: res.data[0].c_state,
-                        c_county: res.data[0].c_county,
-                        c_country: res.data[0].c_country,
-                        c_description: res.data[0].c_description,
-                        c_email: res.data[0].c_email,
-                        c_dob: res.data[0].c_dob,
-                        c_number: res.data[0].c_number
+                        c_city: res.data.c_city,
+                        c_name: res.data.c_name,
+                        c_nickname: res.data.c_nickname,
+                        c_profilepic: res.data.c_profilepic === null ? "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
+                            : res.data.c_profilepic,
+                        c_state: res.data.c_state,
+                        c_county: res.data.c_county,
+                        c_country: res.data.c_country,
+                        c_description: res.data.c_description,
+                        c_email: res.data.c_email,
+                        c_dob: res.data.c_dob,
+                        c_number: res.data.c_number
                     }
                 )
 
@@ -102,29 +116,32 @@ export class CustomerProfile extends Component {
 
 
     FetchProfileDetails = (c_email) => {
-        axios.post(`${server}/customer/CustomerProfileFetch`,
-            {
-                c_email: c_email,
+        console.log("In  FetchProfileDetails ")
+        //  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+        const query = GET_CUSTOMER_PROFILE
+        let variables = {
+            cEmail:"Mike@test.com"
+        }
 
-            }
+        axios.post(`${server}/customer/CustomerProfileFetch`,{query,variables}).then(res => {
 
-        ).then(res => {
-
-            console.log(res.data[0])
+            console.log(res.data)
+            res = {data:res.data.data.getCustomerProfileDetails}
+            console.log(res.data)
             this.setState(
                 {
-                    c_city: res.data[0].c_city,
-                    c_name: res.data[0].c_name,
-                    c_nickname: res.data[0].c_nickname,
-                    c_profilepic: res.data[0].c_profilepic === null ? "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
-                        : res.data[0].c_profilepic,
-                    c_state: res.data[0].c_state,
-                    c_county: res.data[0].c_county,
-                    c_country: res.data[0].c_country,
-                    c_description: res.data[0].c_description,
-                    c_email: res.data[0].c_email,
-                    c_dob: res.data[0].c_dob,
-                    c_number: res.data[0].c_number
+                    c_city: res.data.c_city,
+                    c_name: res.data.c_name,
+                    c_nickname: res.data.c_nickname,
+                    c_profilepic: res.data.c_profilepic === null ? "https://w7.pngwing.com/pngs/613/636/png-transparent-computer-icons-user-profile-male-avatar-avatar-heroes-logo-black-thumbnail.png"
+                        : res.data.c_profilepic,
+                    c_state: res.data.c_state,
+                    c_county: res.data.c_county,
+                    c_country: res.data.c_country,
+                    c_description: res.data.c_description,
+                    c_email: res.data.c_email,
+                    c_dob: res.data.c_dob,
+                    c_number: res.data.c_number
                 }
             )
 
@@ -177,10 +194,27 @@ export class CustomerProfile extends Component {
                 c_number: e.c_number
             }
         ).then(res => {
+            
+          let values = {
+            c_id: this.state.c_id,
+            c_email: e.c_email,
+            c_city: e.c_city,
+            c_name: e.c_name,
+            c_nickname: e.c_nickname,
+            c_profilepic: this.state.c_profilepic,
+            c_state: e.c_state,
+            c_county: e.c_county,
+            c_country: e.c_country,
+            c_description: e.c_description,
+            c_dob: e.c_dob,
+            c_number: e.c_number
+          }
+          
+          this.props.updateCustProfile(values)
 
             console.log(res)
             alert("Profile Updation Successfull")
-
+            
         })
     }
 
@@ -352,4 +386,4 @@ export class CustomerProfile extends Component {
     }
 }
 
-export default CustomerProfile
+export default  connect(CustomerProfile.mapStateToProps,CustomerProfile.mapDispatchtoProps)(CustomerProfile)

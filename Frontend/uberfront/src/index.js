@@ -7,12 +7,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "react-image-gallery/styles/css/image-gallery.css";
 import {Provider} from 'react-redux'
 import store from './Redux/Store'
-
+import { PersistGate } from 'redux-persist/integration/react'
+import { persiststore } from './Redux/Store'
 
 
 ReactDOM.render(
   <React.StrictMode>
+
+<Provider store={store}>
+   <PersistGate loading={null} persistor={persiststore}>
      <App />
+     </PersistGate>
+</Provider>
+
+
   </React.StrictMode>,
  document.getElementById('root')
 );

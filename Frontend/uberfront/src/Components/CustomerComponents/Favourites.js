@@ -3,8 +3,13 @@ import axios from 'axios'
 import { Link } from "react-router-dom"
 import NavbarCust from './CustomerNavBar';
 import server from '../WebConfig';
+import  { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { c_fav_list } from '../../Redux/CustomerLoginandReg/CustomerActions';
 
-export default class Favourites extends Component {
+
+
+ class Favourites extends Component {
 
     constructor(props) {
         super(props)
@@ -15,10 +20,21 @@ export default class Favourites extends Component {
         }
     }
 
+    static mapStateToProps = state =>
+    {
+        return {Cust: state.values}
+    }
+    static mapDispatchtoProps = dispatch =>
+    {
+        return bindActionCreators({c_fav_list},dispatch)
+    }
+
+
+
     componentDidMount(props) {
 
         //  axios.pos
-        axios.post(`${server}/Restaurant/GetFavRest`,
+        axios.post(`${server}/Restaurant/GetFavRestDetails`,
             {
                 c_id: this.props.location.state.c_id
             })
@@ -31,7 +47,12 @@ export default class Favourites extends Component {
                     }
                 )
 
+               let values = {
+                FavoriteList:res.data
+               }
 
+                this.props.c_fav_list(values)
+            console.log(values)
 
             }
             )
@@ -91,3 +112,5 @@ export default class Favourites extends Component {
         )
     }
 }
+
+export default connect(Favourites.mapStateToProps,Favourites.mapDispatchtoProps)(Favourites)

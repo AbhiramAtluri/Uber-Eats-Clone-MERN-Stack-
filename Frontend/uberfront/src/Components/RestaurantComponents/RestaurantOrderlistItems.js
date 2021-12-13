@@ -12,7 +12,7 @@ import {
   } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import server from '../WebConfig';
-
+import {UPDATE_ORDER_STATUS} from '../Mutation'
 
 export default class RestaurantOrderlistItems extends Component {
 
@@ -29,16 +29,19 @@ export default class RestaurantOrderlistItems extends Component {
     handleOnUpdate =(e)=>
     
     {
-
+    
+        let query=UPDATE_ORDER_STATUS
+       let variables = {
+            oId: this.props.order._id,
+            oStatus: e.o_status
+        }
      axios.post(`${server}/customer/UpdateOrderStatus`,
      {
-         o_id:this.props.order.o_id,
-         r_id:this.props.order.r_id,
-         o_status:e.o_status
+      query,variables
      })
      .then(res=>
         {
-            if(res.data.message == "success")
+            if(res.data.data.UpdateOrderStatus == "success")
             {
                 console.log(res)
                 alert("Dish Status Updated")
@@ -49,6 +52,7 @@ export default class RestaurantOrderlistItems extends Component {
     }
 
     render() {
+        console.log(this.props.order.o_status)
     const initialValues = {
         o_status:this.props.order.o_status==null?"Order Received":this.props.order.o_status
 
@@ -72,7 +76,7 @@ export default class RestaurantOrderlistItems extends Component {
                                 <h5 style={{marginTop:"20px"}}><Link to={{pathname:"/CustomerProfile",state:{c_id:this.props.order.c_id,view:"Rest"}}}>Order Id:{this.props.order.o_id}</Link></h5>
                             </div>
                             <div className="col-md-1">
-                                <h5 style={{marginTop:"20px"}}>Cid:{this.props.order.c_id}</h5>
+                                <p style={{marginTop:"20px"}}>id:{(this.props.order._id).substring((this.props.order._id).length-4,(this.props.order._id).length)}</p>
                             </div>
                             <div className="col-md-4">
 
@@ -98,10 +102,12 @@ export default class RestaurantOrderlistItems extends Component {
                                 </table>
                             </div>
                             <div className="col-md-2">
-                               <p style={{marginTop:"20px"}}> {this.props.order.d_list[0].checkoutprice}$</p>
+                               <p style={{marginTop:"20px"}}> {(this.props.order.d_list)[0].checkoutprice}$</p>
                             </div>
                         
                         <div className="col-md-3" style={{padding:"0px"}}>
+                           {this.props.order.o_status !="Cancelled"?
+                            <div>
                             {this.props.order.del_type == "s_pickup" ?
                                 <div>
                                     <Formik initialValues={initialValues} enableReinitialize onSubmit={e=>{this.handleOnUpdate(e)}}   >
@@ -111,6 +117,8 @@ export default class RestaurantOrderlistItems extends Component {
                                         <option value="Order Preparing">Order Preparing</option>
                                         <option value="Pick up ready">Pick up ready</option>
                                         <option value="Picked up">Picked up</option>
+                                        <option value="Cancelled">Cancel the order</option>
+                                      
                                     </Field>
                                     <button style={{marginLeft:"5px"}} type="submit" className="btn btn-primary">Update</button>
                                     </Form>
@@ -123,12 +131,13 @@ export default class RestaurantOrderlistItems extends Component {
                                   <option value ="Order Preparing">Order Preparing</option>
                                   <option value ="On the way">On the way</option>
                                   <option value ="Order Delivered">Order Delivered</option> 
+                                  <option value="Cancelled">Cancel the order</option>
                                     </Field>
                                     <button style={{marginLeft:"5px"}}  type="submit" className="btn btn-primary">Update</button>
                                     </Form>
                                  </Formik>
                                 </div> }
-
+                            </div>:<div>Order Cancelled</div>}
                         </div>
                         </div>
                     </div>
