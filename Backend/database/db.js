@@ -2,11 +2,11 @@ const mysql = require("mysql2")
 
 const conn = mysql.createConnection(
     {
-       host:"uber-1.cgufr2o7hllp.us-east-2.rds.amazonaws.com",
-       user:"admin",
-       database:"uber_eats",
-       password:"qwertyui",
-       port:3307,
+//        host:,
+//        user:"admin",
+//        database:"uber_eats",
+//        password:"qwertyui",
+//        port:3307,
        
 
     }
